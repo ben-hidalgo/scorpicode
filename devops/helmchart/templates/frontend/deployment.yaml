@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.frontend.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Chart.Name }}
+      app.kubernetes.io/name: {{ .Values.frontend.name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: {{ .Chart.Name }}
+        app.kubernetes.io/name: {{ .Values.frontend.name }}  
+    spec:
+      containers:
+      - name: {{ .Values.frontend.name }}
+        image: {{ .Values.common.repository }}{{ .Values.frontend.name }}:{{ .Values.frontend.tag }}
+        imagePullPolicy: {{ .Values.common.pullPolicy }}
+        resources:
+          limits:
+            memory: {{ .Values.frontend.limitsMemory | quote }}
+            cpu: {{ .Values.frontend.limitsCpu | quote }}
+        ports:
+        - containerPort: {{ .Values.frontend.port }}
+          name: http
+        env:
+          - name: PLACEHOLDER
+            value: "placeholder"

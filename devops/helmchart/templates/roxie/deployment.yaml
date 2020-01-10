@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.roxie.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Chart.Name }}
+      app.kubernetes.io/name: {{ .Values.roxie.name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: {{ .Chart.Name }}
+        app.kubernetes.io/name: {{ .Values.roxie.name }}  
+    spec:
+      containers:
+      - name: {{ .Values.roxie.name }}
+        image: {{ .Values.common.repository }}{{ .Values.roxie.name }}:{{ .Values.roxie.tag }}
+        imagePullPolicy: {{ .Values.common.pullPolicy }}
+        resources:
+          limits:
+            memory: {{ .Values.roxie.limitsMemory | quote }}
+            cpu: {{ .Values.roxie.limitsCpu | quote }}
+        ports:
+        - containerPort: {{ .Values.roxie.port }}
+          name: http
+        env:
+          - name: APP_NAME
+            value: {{ .Values.roxie.name | quote }}
+          - name: LISTEN_ADDRESS
+            value: {{ .Values.roxie.listendAddress | quote }}
+          - name: SITE_PREFIX
+            value: {{ .Values.roxie.sitePrefix | quote }}
+          - name: FRONTEND_PREFIX
+            value: {{ .Values.roxie.frontendPrefix | quote }}
+          - name: HATS_PREFIX
+            value: {{ .Values.roxie.hatsPrefix | quote }}

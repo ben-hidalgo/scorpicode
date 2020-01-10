@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.hats.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Chart.Name }}
+      app.kubernetes.io/name: {{ .Values.hats.name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: {{ .Chart.Name }}
+        app.kubernetes.io/name: {{ .Values.hats.name }}  
+    spec:
+      containers:
+      - name: {{ .Values.hats.name }}
+        image: {{ .Values.common.repository }}{{ .Values.hats.name }}:{{ .Values.hats.tag }}
+        imagePullPolicy: {{ .Values.common.pullPolicy }}
+        resources:
+          limits:
+            memory: {{ .Values.hats.limitsMemory | quote }}
+            cpu: {{ .Values.hats.limitsCpu | quote }}
+        ports:
+        - containerPort: {{ .Values.hats.port }}
+          name: http
+        env:
+          - name: APP_NAME
+            value: {{ .Values.hats.name | quote }}
+          - name: LISTEN_ADDRESS
+            value: {{ .Values.hats.listendAddress | quote }}
+          - name: MIN_SIZE_INCHES
+            value: {{ .Values.hats.minSizeInches | quote }}
+  

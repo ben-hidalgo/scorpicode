@@ -1,0 +1,54 @@
+# local values
+
+common:
+  repository:
+  pullPolicy: Never
+
+frontend:
+  name: frontend
+  replicaCount: 1
+  limitsMemory: 1028Mi
+  limitsCpu: 1000m
+  port: 80
+  serviceType: ClusterIP
+
+hats:
+  name: hats
+  replicaCount: 1
+  limitsMemory: 128Mi
+  limitsCpu: 50m
+  port: 8080
+  serviceType: ClusterIP
+
+  listendAddress: :8080
+  minSizeInches: 6
+
+site:
+  name: site
+  replicaCount: 1
+  limitsMemory: 128Mi
+  limitsCpu: 50m
+  port: 8080
+  serviceType: ClusterIP
+
+  listendAddress: :8080
+  staticPath: ./cmd/site/static
+
+roxie:
+  name: roxie
+  replicaCount: 1
+  limitsMemory: 128Mi
+  limitsCpu: 50m
+  port: 8080
+  serviceType: LoadBalancer
+
+  listendAddress: :8080
+  hatsPrefix: http://hats:8080
+  sitePrefix: http://site:8080
+  frontendPrefix: http://frontend
+
+ingress:
+  enabled: false
+
+nginx:
+  enabled: false

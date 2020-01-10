@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.site.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Chart.Name }}
+      app.kubernetes.io/name: {{ .Values.site.name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: {{ .Chart.Name }}
+        app.kubernetes.io/name: {{ .Values.site.name }}
+    spec:
+      containers:
+      - name: {{ .Values.site.name }}
+        image: {{ .Values.common.repository }}{{ .Values.site.name }}:{{ .Values.site.tag }}
+        imagePullPolicy: {{ .Values.common.pullPolicy }}
+        resources:
+          limits:
+            memory: {{ .Values.site.limitsMemory | quote }}
+            cpu: {{ .Values.site.limitsCpu | quote }}
+        ports:
+        - containerPort: {{ .Values.site.port }}
+          name: http
+        env:
+        - name: APP_NAME
+          value: {{ .Values.site.name | quote }}
+        - name: LISTEN_ADDRESS
+          value: {{ .Values.site.listendAddress | quote }}
+        - name: STATIC_PATH
+          value: {{ .Values.site.staticPath | quote }}

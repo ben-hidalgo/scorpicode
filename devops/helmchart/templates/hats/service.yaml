@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.hats.name }}
+spec:
+  type: {{ .Values.hats.serviceType }}
+  ports:
+    - name: http
+      port: {{ .Values.hats.port }}
+      targetPort: http
+  selector:
+    app.kubernetes.io/instance: {{ .Chart.Name }}
+    app.kubernetes.io/name: {{ .Values.hats.name }}

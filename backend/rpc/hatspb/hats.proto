@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package hats;
+
+option go_package = "hatspb";
+
+// Hats service makes hats for clients.
+service Hats {
+  // MakeHat produces a hat of mysterious, randomly-selected color!
+  rpc MakeHat(Size) returns (Hat);
+  rpc Shutdown(ShutdownRequest) returns (ShutdownResponse);
+}
+
+// Size of a Hat, in inches.
+message Size {
+  int32 inches = 1; // must be > 0
+}
+
+// A Hat is a piece of headwear made by a Hats.
+message Hat {
+  int32 inches = 1;
+  string color = 2; // anything but "invisible"
+  string name = 3; // i.e. "bowler"
+}
+
+message ShutdownRequest {
+}
+message ShutdownResponse {
+}
