@@ -7,7 +7,7 @@ TAG=$(shell find . -type f -not -path "./frontend/node_modules/*" -exec md5 {} '
 
 images:
 	docker build . -f devops/dockerfiles/hats.Dockerfile     -t hats:$(TAG)
-	docker build . -f devops/dockerfiles/site.Dockerfile     -t site:$(TAG)
+	docker build . -f devops/dockerfiles/website.Dockerfile  -t website:$(TAG)
 	docker build . -f devops/dockerfiles/frontend.Dockerfile -t frontend:$(TAG)
 	docker build . -f devops/dockerfiles/roxie.Dockerfile    -t roxie:$(TAG)
 
@@ -15,7 +15,7 @@ upgrade: images
 	helm upgrade --install scorpicode ./devops/helmchart \
 	-f devops/helmchart/local.yaml \
 	--set hats.tag=$(TAG) \
-	--set site.tag=$(TAG) \
+	--set website.tag=$(TAG) \
 	--set roxie.tag=$(TAG) \
 	--set frontend.tag=$(TAG)
 

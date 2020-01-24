@@ -12,7 +12,7 @@ RUN go mod download
 
 # build
 ADD ./backend/ /app/
-RUN go build cmd/site/main.go
+RUN go build cmd/website/main.go
 
 # run
 RUN adduser -S -D -H -h /app mainapp
