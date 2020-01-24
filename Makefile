@@ -2,7 +2,8 @@
 # DO NOT FORGET
 # eval $(minikube docker-env)
 
-TAG=$(shell find . -type f -exec md5 {} ';' | md5)
+
+TAG=$(shell find . -type f -not -path "./frontend/node_modules/*" -exec md5 {} ';' | md5)
 
 images:
 	docker build . -f devops/dockerfiles/hats.Dockerfile     -t hats:$(TAG)
@@ -10,7 +11,7 @@ images:
 	docker build . -f devops/dockerfiles/frontend.Dockerfile -t frontend:$(TAG)
 	docker build . -f devops/dockerfiles/roxie.Dockerfile    -t roxie:$(TAG)
 
-upgrade:
+upgrade: images
 	helm upgrade --install scorpicode ./devops/helmchart \
 	-f devops/helmchart/local.yaml \
 	--set hats.tag=$(TAG) \
