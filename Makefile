@@ -35,3 +35,7 @@ protobufs:
 	--twirp_out=./rpc/hatspb/  \
 	--go_out=./rpc/hatspb/     \
 	rpc/hatspb/hats.proto)
+
+minikube-start:
+	minikube start --cpus 4 --memory 4096
+	minikube addons enable ingress
