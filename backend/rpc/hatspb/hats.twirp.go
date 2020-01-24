@@ -38,6 +38,8 @@ type Hats interface {
 	MakeHat(context.Context, *Size) (*Hat, error)
 
 	Shutdown(context.Context, *ShutdownRequest) (*ShutdownResponse, error)
+
+	ListHats(context.Context, *ListHatsRequest) (*ListHatsResponse, error)
 }
 
 // ====================
@@ -46,7 +48,7 @@ type Hats interface {
 
 type hatsProtobufClient struct {
 	client HTTPClient
-	urls   [2]string
+	urls   [3]string
 	opts   twirp.ClientOptions
 }
 
@@ -63,9 +65,10 @@ func NewHatsProtobufClient(addr string, client HTTPClient, opts ...twirp.ClientO
 	}
 
 	prefix := urlBase(addr) + HatsPathPrefix
-	urls := [2]string{
+	urls := [3]string{
 		prefix + "MakeHat",
 		prefix + "Shutdown",
+		prefix + "ListHats",
 	}
 
 	return &hatsProtobufClient{
@@ -115,13 +118,33 @@ func (c *hatsProtobufClient) Shutdown(ctx context.Context, in *ShutdownRequest) 
 	return out, nil
 }
 
+func (c *hatsProtobufClient) ListHats(ctx context.Context, in *ListHatsRequest) (*ListHatsResponse, error) {
+	ctx = ctxsetters.WithPackageName(ctx, "hats")
+	ctx = ctxsetters.WithServiceName(ctx, "Hats")
+	ctx = ctxsetters.WithMethodName(ctx, "ListHats")
+	out := new(ListHatsResponse)
+	err := doProtobufRequest(ctx, c.client, c.opts.Hooks, c.urls[2], in, out)
+	if err != nil {
+		twerr, ok := err.(twirp.Error)
+		if !ok {
+			twerr = twirp.InternalErrorWith(err)
+		}
+		callClientError(ctx, c.opts.Hooks, twerr)
+		return nil, err
+	}
+
+	callClientResponseReceived(ctx, c.opts.Hooks)
+
+	return out, nil
+}
+
 // ================
 // Hats JSON Client
 // ================
 
 type hatsJSONClient struct {
 	client HTTPClient
-	urls   [2]string
+	urls   [3]string
 	opts   twirp.ClientOptions
 }
 
@@ -138,9 +161,10 @@ func NewHatsJSONClient(addr string, client HTTPClient, opts ...twirp.ClientOptio
 	}
 
 	prefix := urlBase(addr) + HatsPathPrefix
-	urls := [2]string{
+	urls := [3]string{
 		prefix + "MakeHat",
 		prefix + "Shutdown",
+		prefix + "ListHats",
 	}
 
 	return &hatsJSONClient{
@@ -176,6 +200,26 @@ func (c *hatsJSONClient) Shutdown(ctx context.Context, in *ShutdownRequest) (*Sh
 	ctx = ctxsetters.WithMethodName(ctx, "Shutdown")
 	out := new(ShutdownResponse)
 	err := doJSONRequest(ctx, c.client, c.opts.Hooks, c.urls[1], in, out)
+	if err != nil {
+		twerr, ok := err.(twirp.Error)
+		if !ok {
+			twerr = twirp.InternalErrorWith(err)
+		}
+		callClientError(ctx, c.opts.Hooks, twerr)
+		return nil, err
+	}
+
+	callClientResponseReceived(ctx, c.opts.Hooks)
+
+	return out, nil
+}
+
+func (c *hatsJSONClient) ListHats(ctx context.Context, in *ListHatsRequest) (*ListHatsResponse, error) {
+	ctx = ctxsetters.WithPackageName(ctx, "hats")
+	ctx = ctxsetters.WithServiceName(ctx, "Hats")
+	ctx = ctxsetters.WithMethodName(ctx, "ListHats")
+	out := new(ListHatsResponse)
+	err := doJSONRequest(ctx, c.client, c.opts.Hooks, c.urls[2], in, out)
 	if err != nil {
 		twerr, ok := err.(twirp.Error)
 		if !ok {
@@ -243,6 +287,9 @@ func (s *hatsServer) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 		return
 	case "/twirp/hats.Hats/Shutdown":
 		s.serveShutdown(ctx, resp, req)
+		return
+	case "/twirp/hats.Hats/ListHats":
+		s.serveListHats(ctx, resp, req)
 		return
 	default:
 		msg := fmt.Sprintf("no handler for path %q", req.URL.Path)
@@ -487,6 +534,135 @@ func (s *hatsServer) serveShutdownProtobuf(ctx context.Context, resp http.Respon
 	}
 	if respContent == nil {
 		s.writeError(ctx, resp, twirp.InternalError("received a nil *ShutdownResponse and nil error while calling Shutdown. nil responses are not supported"))
+		return
+	}
+
+	ctx = callResponsePrepared(ctx, s.hooks)
+
+	respBytes, err := proto.Marshal(respContent)
+	if err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to marshal proto response"))
+		return
+	}
+
+	ctx = ctxsetters.WithStatusCode(ctx, http.StatusOK)
+	resp.Header().Set("Content-Type", "application/protobuf")
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
+	resp.WriteHeader(http.StatusOK)
+	if n, err := resp.Write(respBytes); err != nil {
+		msg := fmt.Sprintf("failed to write response, %d of %d bytes written: %s", n, len(respBytes), err.Error())
+		twerr := twirp.NewError(twirp.Unknown, msg)
+		callError(ctx, s.hooks, twerr)
+	}
+	callResponseSent(ctx, s.hooks)
+}
+
+func (s *hatsServer) serveListHats(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	header := req.Header.Get("Content-Type")
+	i := strings.Index(header, ";")
+	if i == -1 {
+		i = len(header)
+	}
+	switch strings.TrimSpace(strings.ToLower(header[:i])) {
+	case "application/json":
+		s.serveListHatsJSON(ctx, resp, req)
+	case "application/protobuf":
+		s.serveListHatsProtobuf(ctx, resp, req)
+	default:
+		msg := fmt.Sprintf("unexpected Content-Type: %q", req.Header.Get("Content-Type"))
+		twerr := badRouteError(msg, req.Method, req.URL.Path)
+		s.writeError(ctx, resp, twerr)
+	}
+}
+
+func (s *hatsServer) serveListHatsJSON(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	var err error
+	ctx = ctxsetters.WithMethodName(ctx, "ListHats")
+	ctx, err = callRequestRouted(ctx, s.hooks)
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+
+	reqContent := new(ListHatsRequest)
+	unmarshaler := jsonpb.Unmarshaler{AllowUnknownFields: true}
+	if err = unmarshaler.Unmarshal(req.Body, reqContent); err != nil {
+		s.writeError(ctx, resp, malformedRequestError("the json request could not be decoded"))
+		return
+	}
+
+	// Call service method
+	var respContent *ListHatsResponse
+	func() {
+		defer ensurePanicResponses(ctx, resp, s.hooks)
+		respContent, err = s.Hats.ListHats(ctx, reqContent)
+	}()
+
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+	if respContent == nil {
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *ListHatsResponse and nil error while calling ListHats. nil responses are not supported"))
+		return
+	}
+
+	ctx = callResponsePrepared(ctx, s.hooks)
+
+	var buf bytes.Buffer
+	marshaler := &jsonpb.Marshaler{OrigName: true}
+	if err = marshaler.Marshal(&buf, respContent); err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to marshal json response"))
+		return
+	}
+
+	ctx = ctxsetters.WithStatusCode(ctx, http.StatusOK)
+	respBytes := buf.Bytes()
+	resp.Header().Set("Content-Type", "application/json")
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
+	resp.WriteHeader(http.StatusOK)
+
+	if n, err := resp.Write(respBytes); err != nil {
+		msg := fmt.Sprintf("failed to write response, %d of %d bytes written: %s", n, len(respBytes), err.Error())
+		twerr := twirp.NewError(twirp.Unknown, msg)
+		callError(ctx, s.hooks, twerr)
+	}
+	callResponseSent(ctx, s.hooks)
+}
+
+func (s *hatsServer) serveListHatsProtobuf(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	var err error
+	ctx = ctxsetters.WithMethodName(ctx, "ListHats")
+	ctx, err = callRequestRouted(ctx, s.hooks)
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+
+	buf, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to read request body"))
+		return
+	}
+	reqContent := new(ListHatsRequest)
+	if err = proto.Unmarshal(buf, reqContent); err != nil {
+		s.writeError(ctx, resp, malformedRequestError("the protobuf request could not be decoded"))
+		return
+	}
+
+	// Call service method
+	var respContent *ListHatsResponse
+	func() {
+		defer ensurePanicResponses(ctx, resp, s.hooks)
+		respContent, err = s.Hats.ListHats(ctx, reqContent)
+	}()
+
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+	if respContent == nil {
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *ListHatsResponse and nil error while calling ListHats. nil responses are not supported"))
 		return
 	}
 
@@ -1035,18 +1211,21 @@ func callClientError(ctx context.Context, h *twirp.ClientHooks, err twirp.Error)
 }
 
 var twirpFileDescriptor0 = []byte{
-	// 199 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0xca, 0x48, 0x2c, 0x29,
-	0xd6, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x01, 0xb1, 0x95, 0xe4, 0xb8, 0x58, 0x82, 0x33,
-	0xab, 0x52, 0x85, 0xc4, 0xb8, 0xd8, 0x32, 0xf3, 0x92, 0x33, 0x52, 0x8b, 0x25, 0x18, 0x15, 0x18,
-	0x35, 0x58, 0x83, 0xa0, 0x3c, 0x25, 0x77, 0x2e, 0x66, 0x8f, 0xc4, 0x12, 0x5c, 0xd2, 0x42, 0x22,
-	0x5c, 0xac, 0xc9, 0xf9, 0x39, 0xf9, 0x45, 0x12, 0x4c, 0x0a, 0x8c, 0x1a, 0x9c, 0x41, 0x10, 0x8e,
-	0x90, 0x10, 0x17, 0x4b, 0x5e, 0x62, 0x6e, 0xaa, 0x04, 0x33, 0x58, 0x10, 0xcc, 0x56, 0x12, 0xe4,
-	0xe2, 0x0f, 0xce, 0x28, 0x2d, 0x49, 0xc9, 0x2f, 0xcf, 0x0b, 0x4a, 0x2d, 0x2c, 0x4d, 0x2d, 0x2e,
-	0x51, 0x12, 0xe2, 0x12, 0x40, 0x08, 0x15, 0x17, 0xe4, 0xe7, 0x15, 0xa7, 0x1a, 0x25, 0x73, 0xb1,
-	0x78, 0x24, 0x96, 0x14, 0x0b, 0x29, 0x70, 0xb1, 0xfb, 0x26, 0x66, 0xa7, 0x82, 0xec, 0xe6, 0xd2,
-	0x03, 0xbb, 0x1a, 0xe4, 0x4c, 0x29, 0x4e, 0x08, 0x1b, 0x24, 0x6c, 0xc9, 0xc5, 0x01, 0xd3, 0x2d,
-	0x24, 0x0a, 0x55, 0x82, 0x6a, 0x81, 0x94, 0x18, 0xba, 0x30, 0xc4, 0x12, 0x27, 0x8e, 0x28, 0x36,
-	0x90, 0x44, 0x41, 0x52, 0x12, 0x1b, 0x38, 0x2c, 0x8c, 0x01, 0x01, 0x00, 0x00, 0xff, 0xff, 0x60,
-	0x2b, 0x7d, 0x38, 0x19, 0x01, 0x00, 0x00,
+	// 247 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x91, 0x41, 0x4b, 0xc3, 0x40,
+	0x10, 0x85, 0x59, 0x93, 0xc6, 0xf4, 0x79, 0xb0, 0x0e, 0x5a, 0x42, 0x41, 0x09, 0x39, 0xe5, 0x54,
+	0xb0, 0x9e, 0x7a, 0xf5, 0x62, 0x0e, 0x7a, 0x49, 0x6f, 0xde, 0xb6, 0x75, 0x21, 0x41, 0xcd, 0xc6,
+	0xee, 0x04, 0xc1, 0x1f, 0xe3, 0x6f, 0x95, 0xdd, 0x64, 0x09, 0x06, 0x7a, 0xdb, 0x79, 0xf3, 0x0d,
+	0x7c, 0x8f, 0x05, 0x2a, 0xc9, 0x66, 0xdd, 0x1e, 0x35, 0x6b, 0x0a, 0xed, 0x3b, 0xbb, 0x43, 0xb8,
+	0xab, 0x7f, 0x14, 0x2d, 0x11, 0xd5, 0xcd, 0xa1, 0x52, 0x26, 0x11, 0xa9, 0xc8, 0x67, 0xe5, 0x30,
+	0x65, 0x4f, 0x08, 0x0a, 0xc9, 0xa7, 0xd6, 0x74, 0x8d, 0xd9, 0x41, 0x7f, 0xe8, 0x63, 0x72, 0x96,
+	0x8a, 0x7c, 0x5e, 0xf6, 0x03, 0x11, 0xc2, 0x46, 0x7e, 0xaa, 0x24, 0x70, 0xa1, 0x7b, 0x67, 0x57,
+	0xb8, 0xdc, 0x55, 0x1d, 0xbf, 0xe9, 0xef, 0xa6, 0x54, 0x5f, 0x9d, 0x32, 0x9c, 0x11, 0x16, 0x63,
+	0x64, 0x5a, 0xdd, 0x18, 0x87, 0x3d, 0xd7, 0x86, 0x0b, 0xc9, 0xc6, 0x63, 0xf7, 0x58, 0x8c, 0x51,
+	0x8f, 0xd1, 0x2d, 0x9c, 0x7e, 0x22, 0xd2, 0x20, 0xbf, 0xd8, 0xcc, 0xd7, 0xae, 0x57, 0x21, 0xb9,
+	0x74, 0xf1, 0xe6, 0x57, 0x20, 0xb4, 0x3c, 0xa5, 0x38, 0x7f, 0x91, 0xef, 0xca, 0x56, 0x40, 0x0f,
+	0xd9, 0xb6, 0xab, 0xf1, 0x80, 0xb6, 0x88, 0xbd, 0x04, 0xdd, 0x0c, 0xc8, 0x7f, 0xcf, 0xd5, 0x72,
+	0x1a, 0x0f, 0x12, 0x5b, 0xc4, 0x5e, 0xcc, 0x9f, 0x4e, 0xdc, 0xfd, 0xe9, 0xd4, 0xff, 0x31, 0x7e,
+	0x8d, 0xec, 0xa2, 0xdd, 0xef, 0x23, 0xf7, 0x1b, 0x0f, 0x7f, 0x01, 0x00, 0x00, 0xff, 0xff, 0xce,
+	0x40, 0xce, 0x59, 0x9b, 0x01, 0x00, 0x00,
 }

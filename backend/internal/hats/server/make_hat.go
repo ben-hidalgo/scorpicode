@@ -6,7 +6,7 @@ import (
 	"math/rand"
 )
 
-// MakeHat implements MakeHat procedure
+// MakeHat makes a hat
 func (s *Server) MakeHat(ctx context.Context, size *hatspb.Size) (hat *hatspb.Hat, err error) {
 
 	return &hatspb.Hat{

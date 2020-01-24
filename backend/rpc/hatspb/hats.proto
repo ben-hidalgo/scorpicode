@@ -9,6 +9,7 @@ service Hats {
   // MakeHat produces a hat of mysterious, randomly-selected color!
   rpc MakeHat(Size) returns (Hat);
   rpc Shutdown(ShutdownRequest) returns (ShutdownResponse);
+  rpc ListHats(ListHatsRequest) returns (ListHatsResponse);
 }
 
 // Size of a Hat, in inches.
@@ -26,4 +27,10 @@ message Hat {
 message ShutdownRequest {
 }
 message ShutdownResponse {
+}
+
+message ListHatsRequest {
+}
+message ListHatsResponse {
+  repeated Hat hats = 1;
 }
