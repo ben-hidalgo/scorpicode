@@ -1,7 +1,5 @@
-
 # DO NOT FORGET
 # eval $(minikube docker-env)
-
 
 TAG=latest
 
@@ -35,11 +33,14 @@ go-happy:
 	go fmt ./...           && \
 	go mod tidy)
 
+start:
+	./devops/scripts/start.sh
+
 mksr:
 	minikube service roxie
 
 protobufs:
-	(cd backend             && \
+	(cd backend &&             \
 	protoc                     \
 	--proto_path=./rpc/hatspb  \
 	--twirp_out=./rpc/hatspb/  \
