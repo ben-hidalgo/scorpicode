@@ -26,10 +26,9 @@ spec:
         - containerPort: {{ .Values.hats.port }}
           name: http
         env:
-          - name: APP_NAME
-            value: {{ .Values.hats.name | quote }}
-          - name: LISTEN_ADDRESS
-            value: {{ .Values.hats.listendAddress | quote }}
-          - name: MIN_SIZE_INCHES
-            value: {{ .Values.hats.minSizeInches | quote }}
-  
+{{- with .Values.website }}
+{{ include "service.shared" . | indent 8 }}
+{{- end }}
+{{ include "common.shared" . | indent 8 }}
+        - name: MIN_SIZE_INCHES
+          value: {{ .Values.hats.minSizeInches | quote }}

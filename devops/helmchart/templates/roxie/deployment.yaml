@@ -26,13 +26,13 @@ spec:
         - containerPort: {{ .Values.roxie.port }}
           name: http
         env:
-          - name: APP_NAME
-            value: {{ .Values.roxie.name | quote }}
-          - name: LISTEN_ADDRESS
-            value: {{ .Values.roxie.listendAddress | quote }}
-          - name: SITE_PREFIX
-            value: {{ .Values.roxie.sitePrefix | quote }}
-          - name: FRONTEND_PREFIX
-            value: {{ .Values.roxie.frontendPrefix | quote }}
-          - name: HATS_PREFIX
-            value: {{ .Values.roxie.hatsPrefix | quote }}
+{{- with .Values.website }}
+{{ include "service.shared" . | indent 8 }}
+{{- end }} 
+{{ include "common.shared" . | indent 8 }}
+        - name: SITE_PREFIX
+          value: {{ .Values.roxie.sitePrefix | quote }}
+        - name: FRONTEND_PREFIX
+          value: {{ .Values.roxie.frontendPrefix | quote }}
+        - name: HATS_PREFIX
+          value: {{ .Values.roxie.hatsPrefix | quote }}

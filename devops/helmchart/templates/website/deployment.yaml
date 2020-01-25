@@ -26,9 +26,9 @@ spec:
         - containerPort: {{ .Values.website.port }}
           name: http
         env:
-        - name: APP_NAME
-          value: {{ .Values.website.name | quote }}
-        - name: LISTEN_ADDRESS
-          value: {{ .Values.website.listendAddress | quote }}
+{{- with .Values.website }}
+{{ include "service.shared" . | indent 8 }}
+{{- end }}
+{{ include "common.shared" . | indent 8 }}
         - name: STATIC_PATH
           value: {{ .Values.website.staticPath | quote }}

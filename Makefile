@@ -3,7 +3,7 @@
 # eval $(minikube docker-env)
 
 
-TAG=$(shell find . -type f -not -path "./frontend/node_modules/*" -exec md5 {} ';' | md5)
+TAG=latest
 
 images:
 	docker build . -f devops/dockerfiles/hats.Dockerfile     -t hats:$(TAG)
@@ -11,8 +11,17 @@ images:
 	docker build . -f devops/dockerfiles/frontend.Dockerfile -t frontend:$(TAG)
 	docker build . -f devops/dockerfiles/roxie.Dockerfile    -t roxie:$(TAG)
 
-upgrade: images
+upgrade: #images
 	helm upgrade --install scorpicode ./devops/helmchart \
+	-f devops/helmchart/local.yaml \
+	--set common.cacheBuster=`date +%s` \
+	--set hats.tag=$(TAG) \
+	--set website.tag=$(TAG) \
+	--set roxie.tag=$(TAG) \
+	--set frontend.tag=$(TAG)
+
+dry-run:
+	helm upgrade --install --debug --dry-run scorpicode ./devops/helmchart \
 	-f devops/helmchart/local.yaml \
 	--set hats.tag=$(TAG) \
 	--set website.tag=$(TAG) \
@@ -38,5 +47,6 @@ protobufs:
 	rpc/hatspb/hats.proto)
 
 minikube-start:
+	minikube delete
 	minikube start --cpus 4 --memory 4096
 	minikube addons enable ingress

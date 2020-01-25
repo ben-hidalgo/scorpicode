@@ -3,6 +3,8 @@
 common:
   repository:
   pullPolicy: Never
+  logLevel: debug
+  logFormat: text
 
 frontend:
   name: frontend
