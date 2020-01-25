@@ -46,7 +46,7 @@ roxie:
 
   listendAddress: :8080
   hatsPrefix: http://hats:8080
-  sitePrefix: http://website:8080
+  websitePrefix: http://website:8080
   frontendPrefix: http://frontend
 
 ingress:

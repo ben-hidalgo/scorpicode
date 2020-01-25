@@ -20,5 +20,5 @@
 - name: LISTEN_ADDRESS
   value: {{ .listendAddress | quote }}
 - name: CACHE_BUSTER
-  value: {{ .cacheBuster | quote }}
+  value: {{ .cacheBuster | default "1" | quote }}
 {{- end -}}

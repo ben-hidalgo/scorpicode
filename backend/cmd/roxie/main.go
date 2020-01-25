@@ -17,9 +17,9 @@ func main() {
 	logrus.Infof("main() %s", config.AppName)
 
 	proxies := []*server.Proxy{
-		// site
+		// website
 		&server.Proxy{
-			HostPrefix: config.SitePrefix,
+			HostPrefix: config.WebsitePrefix,
 			FromPath:   "/",
 			ToPath:     "/",
 		},

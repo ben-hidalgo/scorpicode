@@ -21,6 +21,7 @@ upgrade: #images
 dry-run:
 	helm upgrade --install --debug --dry-run scorpicode ./devops/helmchart \
 	-f devops/helmchart/local.yaml \
+	--set common.cacheBuster=`date +%s` \
 	--set hats.tag=$(TAG) \
 	--set website.tag=$(TAG) \
 	--set roxie.tag=$(TAG) \
