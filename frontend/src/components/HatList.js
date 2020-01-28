@@ -1,9 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import './HatList.css';
+import Hat from './Hat';
 
-const HatList = ({ onClick, completed, text }) => (
-  <p className="HatList-paragraph">HatList</p>
+const HatList = ({ hats }) => (
+  <ul>
+    {hats.map(hat =>
+      <Hat color= {hat.color} name= {hat.name} size= {hat.size} />
+    )}
+  </ul>  
 )
 
 HatList.propTypes = {

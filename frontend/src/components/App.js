@@ -17,8 +17,7 @@ function App() {
         >
           Sign Out
         </a>
-        <HatList />
-        <Hat />
+        <HatList hats= {[{color: "red", name: "bowler", size: 10}]} />
       </header>
     </div>
   );
