@@ -34,8 +34,13 @@ go-happy:
 	go fmt ./...           && \
 	go mod tidy)
 
-start:
+start-backend:
 	./devops/scripts/start.sh
+
+start-frontend:
+	(cd frontend  && \
+	npm install   && \
+	npm start)
 
 mksr:
 	minikube service roxie
