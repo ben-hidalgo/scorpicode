@@ -2,6 +2,7 @@ import React from 'react';
 import logo from '../logo.svg';
 import './App.css';
 import Hat from './Hat';
+import HatList from './HatList';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         >
           Sign Out
         </a>
+        <HatList />
         <Hat />
       </header>
     </div>
