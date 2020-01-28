@@ -4,9 +4,7 @@ import './Hat.css';
 
 const Hat = ({ color, name, size }) => (
   <div>
-    <p className="Hat-paragraph">Color: {color}</p>
-    <p className="Hat-paragraph">Name: {name}</p>
-    <p className="Hat-paragraph">Size: {size}</p>
+    <p className="Hat-paragraph">Color: {color} Name: {name} Size: {size}</p>
   </div>
 )
 
