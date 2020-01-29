@@ -8,6 +8,7 @@ import { Provider } from "mobx-react";
 import App from "./App";
 
 import articlesStore from "./stores/articlesStore";
+import hatStore from "./stores/hatStore";
 import commentsStore from "./stores/commentsStore";
 import authStore from "./stores/authStore";
 import commonStore from "./stores/commonStore";
@@ -17,6 +18,7 @@ import profileStore from "./stores/profileStore";
 
 const stores = {
   articlesStore,
+  hatStore,
   commentsStore,
   authStore,
   commonStore,
@@ -24,6 +26,10 @@ const stores = {
   userStore,
   profileStore
 };
+
+
+hatStore.createHat({id: `${Math.random()}`, name: "cap"});
+hatStore.createHat({id: `${Math.random()}`, name: "bowler"});
 
 // For easier debugging
 window._____APP_STATE_____ = stores;

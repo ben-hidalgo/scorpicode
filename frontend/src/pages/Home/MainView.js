@@ -1,4 +1,5 @@
 import ArticleList from "components/ArticleList";
+import HatList from "components/HatList";
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { withRouter, NavLink } from "react-router-dom";
@@ -59,7 +60,7 @@ const TagFilterTab = props => {
   );
 };
 
-@inject("articlesStore", "commonStore", "userStore")
+@inject("articlesStore", "commonStore", "userStore", "hatStore")
 @withRouter
 @observer
 export default class MainView extends React.Component {
@@ -119,6 +120,10 @@ export default class MainView extends React.Component {
       totalPagesCount
     } = this.props.articlesStore;
 
+    const {
+      hats,
+    } = this.props.hatStore;
+
     return (
       <div className="col-md-9">
         <div className="feed-toggle">
@@ -130,7 +135,7 @@ export default class MainView extends React.Component {
             <TagFilterTab tag={qsParse(this.props.location.search).tag} />
           </ul>
         </div>
-
+        <HatList hats={hats} />
         <ArticleList
           articles={articles}
           loading={isLoading}
