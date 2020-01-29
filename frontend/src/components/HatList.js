@@ -12,9 +12,11 @@ const HatList = ({ hats }) => (
 )
 
 HatList.propTypes = {
-  // onClick: PropTypes.func.isRequired,
-  // completed: PropTypes.bool.isRequired,
-  // text: PropTypes.string.isRequired
+  hats: PropTypes.arrayOf(PropTypes.shape({
+    size: PropTypes.number.isRequired,
+    color: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired
+  }).isRequired).isRequired,
 }
 
 export default HatList
