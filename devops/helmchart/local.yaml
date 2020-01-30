@@ -48,6 +48,7 @@ roxie:
   hatsPrefix: http://hats:8080
   websitePrefix: http://website:8080
   frontendPrefix: http://frontend
+  enableCors: false
 
 ingress:
   enabled: false

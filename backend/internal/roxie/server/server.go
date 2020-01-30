@@ -1,6 +1,7 @@
 package server
 
 import (
+	"backend/internal/roxie/config"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -37,13 +38,14 @@ func (p *Proxy) handle(w http.ResponseWriter, r *http.Request) {
 
 	logrus.Infof("handle() %s %s", r.Method, r.URL.Path)
 
-	// all in one place
-	if r.Method == "OPTIONS" {
+	// all in one place for all services
+	if config.EnableCors {
 		enableCors(&w)
-		return
 	}
 
-	enableCors(&w)
+	if r.Method == "OPTIONS" {
+		return
+	}
 
 	r.Header.Add("X-Forwarded-Host", r.Host)
 

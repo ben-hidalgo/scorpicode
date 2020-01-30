@@ -36,3 +36,5 @@ spec:
           value: {{ .Values.roxie.frontendPrefix | quote }}
         - name: HATS_PREFIX
           value: {{ .Values.roxie.hatsPrefix | quote }}
+        - name: ENABLE_CORS
+          value: {{ .Values.roxie.enableCors | quote }}

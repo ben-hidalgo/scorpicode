@@ -10,6 +10,7 @@ var AppName = "roxie"
 var WebsitePrefix = "http://localhost:8081"
 var FrontendPrefix = "http://localhost:8082"
 var HatsPrefix = "http://localhost:8083"
+var EnableCors = true
 
 func init() {
 	envconfig.SetString("LISTEN_ADDRESS", &ListenAddress)
@@ -17,4 +18,6 @@ func init() {
 	envconfig.SetString("WEBSITE_PREFIX", &WebsitePrefix)
 	envconfig.SetString("FRONTEND_PREFIX", &FrontendPrefix)
 	envconfig.SetString("HATS_PREFIX", &HatsPrefix)
+
+	envconfig.SetBool("ENABLE_CORS", &EnableCors)
 }
