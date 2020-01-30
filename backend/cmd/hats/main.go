@@ -3,6 +3,7 @@ package main
 import (
 	"backend/internal/hats/config"
 	"backend/internal/hats/server"
+	_ "backend/pkg/logging" // init logrus
 	"backend/rpc/hatspb"
 	"context"
 	"net/http"

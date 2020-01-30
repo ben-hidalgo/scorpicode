@@ -2,6 +2,7 @@ package main
 
 import (
 	"backend/internal/site/config"
+	_ "backend/pkg/logging" // init logrus
 	"net/http"
 
 	"github.com/sirupsen/logrus"

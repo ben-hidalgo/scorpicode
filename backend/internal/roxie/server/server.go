@@ -36,7 +36,7 @@ func (p *Proxy) GetHandle() func(w http.ResponseWriter, r *http.Request) {
 // Handle routes the request to the proxy and cracks JWT
 func (p *Proxy) handle(w http.ResponseWriter, r *http.Request) {
 
-	logrus.Infof("handle() %s %s", r.Method, r.URL.Path)
+	logrus.Debugf("handle() %s %s", r.Method, r.URL.Path)
 
 	// all in one place for all services
 	if config.EnableCors {

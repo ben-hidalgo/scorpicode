@@ -3,6 +3,7 @@ package main
 import (
 	"backend/internal/roxie/config"
 	"backend/internal/roxie/server"
+	_ "backend/pkg/logging" // init logrus
 	"context"
 	"net/http"
 	"time"
