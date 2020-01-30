@@ -31,10 +31,13 @@ const stores = {
 hatStore.createHat({id: `${Math.random()}`, name: "cap"});
 hatStore.createHat({id: `${Math.random()}`, name: "bowler"});
 
+hatStore.loadHats()
+
 // For easier debugging
 window._____APP_STATE_____ = stores;
 
 promiseFinally.shim();
+
 useStrict(true);
 
 ReactDOM.render(

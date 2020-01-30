@@ -6,7 +6,7 @@ import (
 	_ "github.com/sirupsen/logrus" // temp
 )
 
-var ListenAddress = ":8082"
+var ListenAddress = ":8083"
 var MinSizeInches = 0
 var AppName = "hats"
 

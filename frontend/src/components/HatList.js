@@ -17,10 +17,11 @@ const HatList = props => {
 
   return (
     <div>
+      <ul>Hats:</ul>
       {
         props.hats.map(hat => {
           return (
-            <Hat hat={hat} key={hat.id} />
+            <Hat hat={hat} key={hat.name} />
           );
         })
       }

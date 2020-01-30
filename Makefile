@@ -34,7 +34,7 @@ go-happy:
 	go fmt ./...           && \
 	go mod tidy)
 
-start-backend:
+start-backend: go-happy
 	./devops/scripts/start.sh
 
 start-frontend:

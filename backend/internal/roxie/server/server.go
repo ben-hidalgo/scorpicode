@@ -35,13 +35,15 @@ func (p *Proxy) GetHandle() func(w http.ResponseWriter, r *http.Request) {
 // Handle routes the request to the proxy and cracks JWT
 func (p *Proxy) handle(w http.ResponseWriter, r *http.Request) {
 
-	logrus.Debugf("handle() %s %s", r.Method, r.URL.Path)
+	logrus.Infof("handle() %s %s", r.Method, r.URL.Path)
 
 	// all in one place
 	if r.Method == "OPTIONS" {
 		enableCors(&w)
 		return
 	}
+
+	enableCors(&w)
 
 	r.Header.Add("X-Forwarded-Host", r.Host)
 
@@ -55,4 +57,7 @@ func (p *Proxy) handle(w http.ResponseWriter, r *http.Request) {
 
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "POST")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
 }

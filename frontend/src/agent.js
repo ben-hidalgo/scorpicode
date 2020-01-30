@@ -5,7 +5,9 @@ import authStore from './stores/authStore';
 
 const superagent = superagentPromise(_superagent, global.Promise);
 
-const API_ROOT = 'https://conduit.productionready.io/api';
+// const API_ROOT = 'https://conduit.productionready.io/api';
+const API_ROOT = 'http://localhost:8080';
+// const API_ROOT = '';
 
 const encode = encodeURIComponent;
 
@@ -62,8 +64,14 @@ const Auth = {
     requests.put('/user', { user })
 };
 
+
+
 const Tags = {
   getAll: () => requests.get('/tags')
+};
+
+const Hats = {
+  listHats: () => requests.post('/hats/ListHats', {}),
 };
 
 const limit = (count, p) => `limit=${count}&offset=${p ? p * count : 0}`;
@@ -118,4 +126,5 @@ export default {
   Comments,
   Profile,
   Tags,
+  Hats,
 };
