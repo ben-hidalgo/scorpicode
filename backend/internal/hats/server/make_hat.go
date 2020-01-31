@@ -10,9 +10,9 @@ import (
 )
 
 // MakeHat makes a hat
-func (s *Server) MakeHat(ctx context.Context, size *hatspb.Size) (*hatspb.Hat, error) {
+func (s *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hatspb.MakeHatResponse, error) {
 
-	logrus.Debugf("MakeHat() size=%v", size)
+	logrus.Debugf("MakeHat() req=%v", req)
 
 	hr := repo.GetRepo(ctx)
 
@@ -23,7 +23,7 @@ func (s *Server) MakeHat(ctx context.Context, size *hatspb.Size) (*hatspb.Hat, e
 	mod := &repo.HatMod{
 		Color:  color,
 		Name:   name,
-		Inches: size.GetInches(),
+		Inches: req.GetInches(),
 	}
 
 	err := hr.Save(mod)
@@ -32,9 +32,12 @@ func (s *Server) MakeHat(ctx context.Context, size *hatspb.Size) (*hatspb.Hat, e
 		return nil, err
 	}
 
-	return &hatspb.Hat{
-		Color:  mod.Color,
-		Name:   mod.Name,
-		Inches: mod.Inches,
+	return &hatspb.MakeHatResponse{
+
+		Hat: &hatspb.Hat{
+			Color:  mod.Color,
+			Name:   mod.Name,
+			Inches: mod.Inches,
+		},
 	}, nil
 }

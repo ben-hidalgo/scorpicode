@@ -7,14 +7,9 @@ option go_package = "hatspb";
 // Hats service makes hats for clients.
 service Hats {
   // MakeHat produces a hat of mysterious, randomly-selected color!
-  rpc MakeHat(Size) returns (Hat);
-  rpc Shutdown(ShutdownRequest) returns (ShutdownResponse);
+  rpc MakeHat(MakeHatRequest) returns (MakeHatResponse);
+  // ListHats returns hats for the given page
   rpc ListHats(ListHatsRequest) returns (ListHatsResponse);
-}
-
-// Size of a Hat, in inches.
-message Size {
-  int32 inches = 1; // must be > 0
 }
 
 // A Hat is a piece of headwear made by a Hats.
@@ -24,13 +19,21 @@ message Hat {
   string name = 3; // i.e. "bowler"
 }
 
-message ShutdownRequest {
+message MakeHatRequest {
+  int32 inches = 1; // must be > 0
+  string color = 2; // anything but "invisible"
+  string name = 3; // i.e. "bowler"
 }
-message ShutdownResponse {
+message MakeHatResponse {
+  Hat hat = 1;
 }
 
 message ListHatsRequest {
+  int32 limit = 1;
+  int32 offset = 2;
 }
 message ListHatsResponse {
   repeated Hat hats = 1;
+  int32 limit = 2;
+  int32 offset = 3;
 }

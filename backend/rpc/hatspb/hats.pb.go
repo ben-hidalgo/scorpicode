@@ -20,46 +20,6 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-// Size of a Hat, in inches.
-type Size struct {
-	Inches               int32    `protobuf:"varint,1,opt,name=inches,proto3" json:"inches,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *Size) Reset()         { *m = Size{} }
-func (m *Size) String() string { return proto.CompactTextString(m) }
-func (*Size) ProtoMessage()    {}
-func (*Size) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b65fa2650eb6b0bd, []int{0}
-}
-
-func (m *Size) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Size.Unmarshal(m, b)
-}
-func (m *Size) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Size.Marshal(b, m, deterministic)
-}
-func (m *Size) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Size.Merge(m, src)
-}
-func (m *Size) XXX_Size() int {
-	return xxx_messageInfo_Size.Size(m)
-}
-func (m *Size) XXX_DiscardUnknown() {
-	xxx_messageInfo_Size.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_Size proto.InternalMessageInfo
-
-func (m *Size) GetInches() int32 {
-	if m != nil {
-		return m.Inches
-	}
-	return 0
-}
-
 // A Hat is a piece of headwear made by a Hats.
 type Hat struct {
 	Inches               int32    `protobuf:"varint,1,opt,name=inches,proto3" json:"inches,omitempty"`
@@ -74,7 +34,7 @@ func (m *Hat) Reset()         { *m = Hat{} }
 func (m *Hat) String() string { return proto.CompactTextString(m) }
 func (*Hat) ProtoMessage()    {}
 func (*Hat) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b65fa2650eb6b0bd, []int{1}
+	return fileDescriptor_b65fa2650eb6b0bd, []int{0}
 }
 
 func (m *Hat) XXX_Unmarshal(b []byte) error {
@@ -116,69 +76,103 @@ func (m *Hat) GetName() string {
 	return ""
 }
 
-type ShutdownRequest struct {
+type MakeHatRequest struct {
+	Inches               int32    `protobuf:"varint,1,opt,name=inches,proto3" json:"inches,omitempty"`
+	Color                string   `protobuf:"bytes,2,opt,name=color,proto3" json:"color,omitempty"`
+	Name                 string   `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ShutdownRequest) Reset()         { *m = ShutdownRequest{} }
-func (m *ShutdownRequest) String() string { return proto.CompactTextString(m) }
-func (*ShutdownRequest) ProtoMessage()    {}
-func (*ShutdownRequest) Descriptor() ([]byte, []int) {
+func (m *MakeHatRequest) Reset()         { *m = MakeHatRequest{} }
+func (m *MakeHatRequest) String() string { return proto.CompactTextString(m) }
+func (*MakeHatRequest) ProtoMessage()    {}
+func (*MakeHatRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_b65fa2650eb6b0bd, []int{1}
+}
+
+func (m *MakeHatRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MakeHatRequest.Unmarshal(m, b)
+}
+func (m *MakeHatRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MakeHatRequest.Marshal(b, m, deterministic)
+}
+func (m *MakeHatRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MakeHatRequest.Merge(m, src)
+}
+func (m *MakeHatRequest) XXX_Size() int {
+	return xxx_messageInfo_MakeHatRequest.Size(m)
+}
+func (m *MakeHatRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_MakeHatRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MakeHatRequest proto.InternalMessageInfo
+
+func (m *MakeHatRequest) GetInches() int32 {
+	if m != nil {
+		return m.Inches
+	}
+	return 0
+}
+
+func (m *MakeHatRequest) GetColor() string {
+	if m != nil {
+		return m.Color
+	}
+	return ""
+}
+
+func (m *MakeHatRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+type MakeHatResponse struct {
+	Hat                  *Hat     `protobuf:"bytes,1,opt,name=hat,proto3" json:"hat,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *MakeHatResponse) Reset()         { *m = MakeHatResponse{} }
+func (m *MakeHatResponse) String() string { return proto.CompactTextString(m) }
+func (*MakeHatResponse) ProtoMessage()    {}
+func (*MakeHatResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_b65fa2650eb6b0bd, []int{2}
 }
 
-func (m *ShutdownRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ShutdownRequest.Unmarshal(m, b)
+func (m *MakeHatResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MakeHatResponse.Unmarshal(m, b)
 }
-func (m *ShutdownRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ShutdownRequest.Marshal(b, m, deterministic)
+func (m *MakeHatResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MakeHatResponse.Marshal(b, m, deterministic)
 }
-func (m *ShutdownRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ShutdownRequest.Merge(m, src)
+func (m *MakeHatResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MakeHatResponse.Merge(m, src)
 }
-func (m *ShutdownRequest) XXX_Size() int {
-	return xxx_messageInfo_ShutdownRequest.Size(m)
+func (m *MakeHatResponse) XXX_Size() int {
+	return xxx_messageInfo_MakeHatResponse.Size(m)
 }
-func (m *ShutdownRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_ShutdownRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ShutdownRequest proto.InternalMessageInfo
-
-type ShutdownResponse struct {
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+func (m *MakeHatResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MakeHatResponse.DiscardUnknown(m)
 }
 
-func (m *ShutdownResponse) Reset()         { *m = ShutdownResponse{} }
-func (m *ShutdownResponse) String() string { return proto.CompactTextString(m) }
-func (*ShutdownResponse) ProtoMessage()    {}
-func (*ShutdownResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b65fa2650eb6b0bd, []int{3}
-}
+var xxx_messageInfo_MakeHatResponse proto.InternalMessageInfo
 
-func (m *ShutdownResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ShutdownResponse.Unmarshal(m, b)
+func (m *MakeHatResponse) GetHat() *Hat {
+	if m != nil {
+		return m.Hat
+	}
+	return nil
 }
-func (m *ShutdownResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ShutdownResponse.Marshal(b, m, deterministic)
-}
-func (m *ShutdownResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ShutdownResponse.Merge(m, src)
-}
-func (m *ShutdownResponse) XXX_Size() int {
-	return xxx_messageInfo_ShutdownResponse.Size(m)
-}
-func (m *ShutdownResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_ShutdownResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ShutdownResponse proto.InternalMessageInfo
 
 type ListHatsRequest struct {
+	Limit                int32    `protobuf:"varint,1,opt,name=limit,proto3" json:"limit,omitempty"`
+	Offset               int32    `protobuf:"varint,2,opt,name=offset,proto3" json:"offset,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -188,7 +182,7 @@ func (m *ListHatsRequest) Reset()         { *m = ListHatsRequest{} }
 func (m *ListHatsRequest) String() string { return proto.CompactTextString(m) }
 func (*ListHatsRequest) ProtoMessage()    {}
 func (*ListHatsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b65fa2650eb6b0bd, []int{4}
+	return fileDescriptor_b65fa2650eb6b0bd, []int{3}
 }
 
 func (m *ListHatsRequest) XXX_Unmarshal(b []byte) error {
@@ -209,8 +203,24 @@ func (m *ListHatsRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_ListHatsRequest proto.InternalMessageInfo
 
+func (m *ListHatsRequest) GetLimit() int32 {
+	if m != nil {
+		return m.Limit
+	}
+	return 0
+}
+
+func (m *ListHatsRequest) GetOffset() int32 {
+	if m != nil {
+		return m.Offset
+	}
+	return 0
+}
+
 type ListHatsResponse struct {
 	Hats                 []*Hat   `protobuf:"bytes,1,rep,name=hats,proto3" json:"hats,omitempty"`
+	Limit                int32    `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
+	Offset               int32    `protobuf:"varint,3,opt,name=offset,proto3" json:"offset,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -220,7 +230,7 @@ func (m *ListHatsResponse) Reset()         { *m = ListHatsResponse{} }
 func (m *ListHatsResponse) String() string { return proto.CompactTextString(m) }
 func (*ListHatsResponse) ProtoMessage()    {}
 func (*ListHatsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b65fa2650eb6b0bd, []int{5}
+	return fileDescriptor_b65fa2650eb6b0bd, []int{4}
 }
 
 func (m *ListHatsResponse) XXX_Unmarshal(b []byte) error {
@@ -248,11 +258,24 @@ func (m *ListHatsResponse) GetHats() []*Hat {
 	return nil
 }
 
+func (m *ListHatsResponse) GetLimit() int32 {
+	if m != nil {
+		return m.Limit
+	}
+	return 0
+}
+
+func (m *ListHatsResponse) GetOffset() int32 {
+	if m != nil {
+		return m.Offset
+	}
+	return 0
+}
+
 func init() {
-	proto.RegisterType((*Size)(nil), "hats.Size")
 	proto.RegisterType((*Hat)(nil), "hats.Hat")
-	proto.RegisterType((*ShutdownRequest)(nil), "hats.ShutdownRequest")
-	proto.RegisterType((*ShutdownResponse)(nil), "hats.ShutdownResponse")
+	proto.RegisterType((*MakeHatRequest)(nil), "hats.MakeHatRequest")
+	proto.RegisterType((*MakeHatResponse)(nil), "hats.MakeHatResponse")
 	proto.RegisterType((*ListHatsRequest)(nil), "hats.ListHatsRequest")
 	proto.RegisterType((*ListHatsResponse)(nil), "hats.ListHatsResponse")
 }
@@ -260,21 +283,22 @@ func init() {
 func init() { proto.RegisterFile("hats.proto", fileDescriptor_b65fa2650eb6b0bd) }
 
 var fileDescriptor_b65fa2650eb6b0bd = []byte{
-	// 247 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x91, 0x41, 0x4b, 0xc3, 0x40,
-	0x10, 0x85, 0x59, 0x93, 0xc6, 0xf4, 0x79, 0xb0, 0x0e, 0x5a, 0x42, 0x41, 0x09, 0x39, 0xe5, 0x54,
-	0xb0, 0x9e, 0x7a, 0xf5, 0x62, 0x0e, 0x7a, 0x49, 0x6f, 0xde, 0xb6, 0x75, 0x21, 0x41, 0xcd, 0xc6,
-	0xee, 0x04, 0xc1, 0x1f, 0xe3, 0x6f, 0x95, 0xdd, 0x64, 0x09, 0x06, 0x7a, 0xdb, 0x79, 0xf3, 0x0d,
-	0x7c, 0x8f, 0x05, 0x2a, 0xc9, 0x66, 0xdd, 0x1e, 0x35, 0x6b, 0x0a, 0xed, 0x3b, 0xbb, 0x43, 0xb8,
-	0xab, 0x7f, 0x14, 0x2d, 0x11, 0xd5, 0xcd, 0xa1, 0x52, 0x26, 0x11, 0xa9, 0xc8, 0x67, 0xe5, 0x30,
-	0x65, 0x4f, 0x08, 0x0a, 0xc9, 0xa7, 0xd6, 0x74, 0x8d, 0xd9, 0x41, 0x7f, 0xe8, 0x63, 0x72, 0x96,
-	0x8a, 0x7c, 0x5e, 0xf6, 0x03, 0x11, 0xc2, 0x46, 0x7e, 0xaa, 0x24, 0x70, 0xa1, 0x7b, 0x67, 0x57,
-	0xb8, 0xdc, 0x55, 0x1d, 0xbf, 0xe9, 0xef, 0xa6, 0x54, 0x5f, 0x9d, 0x32, 0x9c, 0x11, 0x16, 0x63,
-	0x64, 0x5a, 0xdd, 0x18, 0x87, 0x3d, 0xd7, 0x86, 0x0b, 0xc9, 0xc6, 0x63, 0xf7, 0x58, 0x8c, 0x51,
-	0x8f, 0xd1, 0x2d, 0x9c, 0x7e, 0x22, 0xd2, 0x20, 0xbf, 0xd8, 0xcc, 0xd7, 0xae, 0x57, 0x21, 0xb9,
-	0x74, 0xf1, 0xe6, 0x57, 0x20, 0xb4, 0x3c, 0xa5, 0x38, 0x7f, 0x91, 0xef, 0xca, 0x56, 0x40, 0x0f,
-	0xd9, 0xb6, 0xab, 0xf1, 0x80, 0xb6, 0x88, 0xbd, 0x04, 0xdd, 0x0c, 0xc8, 0x7f, 0xcf, 0xd5, 0x72,
-	0x1a, 0x0f, 0x12, 0x5b, 0xc4, 0x5e, 0xcc, 0x9f, 0x4e, 0xdc, 0xfd, 0xe9, 0xd4, 0xff, 0x31, 0x7e,
-	0x8d, 0xec, 0xa2, 0xdd, 0xef, 0x23, 0xf7, 0x1b, 0x0f, 0x7f, 0x01, 0x00, 0x00, 0xff, 0xff, 0xce,
-	0x40, 0xce, 0x59, 0x9b, 0x01, 0x00, 0x00,
+	// 267 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x52, 0xbf, 0x4b, 0xc3, 0x40,
+	0x14, 0x26, 0xbd, 0x24, 0xb6, 0x4f, 0xb0, 0xf2, 0x88, 0x25, 0x54, 0x84, 0x90, 0xa9, 0x53, 0x86,
+	0x0a, 0x82, 0x93, 0xe0, 0x62, 0x06, 0x5d, 0x6e, 0x74, 0x91, 0x6b, 0xb9, 0x92, 0x60, 0x9b, 0x8b,
+	0xbd, 0xe7, 0xe0, 0x7f, 0x2f, 0xf7, 0xee, 0x6a, 0x6d, 0x70, 0x74, 0x7b, 0xdf, 0xf7, 0x92, 0xef,
+	0xc7, 0xe3, 0x00, 0x1a, 0x45, 0xb6, 0xea, 0xf7, 0x86, 0x0c, 0xc6, 0x6e, 0x2e, 0x9f, 0x40, 0xd4,
+	0x8a, 0x70, 0x06, 0x69, 0xdb, 0xad, 0x1b, 0x6d, 0xf3, 0xa8, 0x88, 0x16, 0x89, 0x0c, 0x08, 0x33,
+	0x48, 0xd6, 0x66, 0x6b, 0xf6, 0xf9, 0xa8, 0x88, 0x16, 0x13, 0xe9, 0x01, 0x22, 0xc4, 0x9d, 0xda,
+	0xe9, 0x5c, 0x30, 0xc9, 0x73, 0x29, 0xe1, 0xe2, 0x45, 0xbd, 0xeb, 0x5a, 0x91, 0xd4, 0x1f, 0x9f,
+	0xda, 0xfe, 0x87, 0x66, 0x05, 0xd3, 0x1f, 0x4d, 0xdb, 0x9b, 0xce, 0x6a, 0xbc, 0x06, 0xd1, 0x28,
+	0x62, 0xc5, 0xf3, 0xe5, 0xa4, 0xe2, 0x3e, 0x6e, 0xef, 0xd8, 0xf2, 0x01, 0xa6, 0xcf, 0xad, 0xa5,
+	0x5a, 0x91, 0x3d, 0x84, 0xc8, 0x20, 0xd9, 0xb6, 0xbb, 0x96, 0x42, 0x06, 0x0f, 0x5c, 0x34, 0xb3,
+	0xd9, 0x58, 0x4d, 0x9c, 0x21, 0x91, 0x01, 0x95, 0x6f, 0x70, 0x79, 0x14, 0x08, 0x8e, 0x37, 0xc0,
+	0x97, 0xca, 0xa3, 0x42, 0x9c, 0x5a, 0x32, 0x7d, 0x34, 0x18, 0xfd, 0x6d, 0x20, 0x7e, 0x1b, 0x2c,
+	0xbf, 0x20, 0x76, 0xe2, 0x78, 0x07, 0x67, 0xa1, 0x19, 0x66, 0x5e, 0xf1, 0xf4, 0x78, 0xf3, 0xab,
+	0x01, 0x1b, 0xc2, 0xdc, 0xc3, 0xf8, 0x10, 0x10, 0xc3, 0x27, 0x83, 0xc6, 0xf3, 0xd9, 0x90, 0xf6,
+	0xbf, 0x3e, 0x8e, 0x5f, 0x53, 0xb7, 0xe8, 0x57, 0xab, 0x94, 0x1f, 0xc0, 0xed, 0x77, 0x00, 0x00,
+	0x00, 0xff, 0xff, 0xa2, 0x01, 0x68, 0xd2, 0x0e, 0x02, 0x00, 0x00,
 }
