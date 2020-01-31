@@ -7,6 +7,12 @@ import (
 	"github.com/twitchtv/twirp"
 )
 
+// Offset is the page number
+type Offset int
+
+// Limit is the page size
+type Limit int
+
 // represents a Hat stored in the repo
 type HatMod struct {
 	ID     string
@@ -15,11 +21,17 @@ type HatMod struct {
 	Name   string
 }
 
+//TODO: implement create and list in memory and update list_hats and make_hat
 // the repository type
 type HatRepo interface {
 	BeginTxn(ctx context.Context) error
 	Rollback() error
 	Commit() error
+
+	//FindAll queries all records
+	FindAll(limit Limit, offset Offset) ([]*HatMod, error)
+	//Save performs an upsert
+	Save(hm *HatMod) error
 }
 
 // used to store the Repo in Context

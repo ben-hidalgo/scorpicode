@@ -4,6 +4,7 @@ import (
 	"backend/internal/hats/repo"
 	"context"
 
+	"github.com/rs/xid"
 	"github.com/sirupsen/logrus"
 )
 
@@ -18,6 +19,22 @@ var storage = make(map[string]*repo.HatMod)
 // NewRepo returns a pointer to a new instance of Repo
 func NewRepo() *Repo {
 	return &Repo{}
+}
+
+//FindAll queries all records
+func (r *Repo) FindAll(limit repo.Limit, offset repo.Offset) (hats []*repo.HatMod, err error) {
+	// TODO: respect limit and offset
+	for _, s := range storage {
+		hats = append(hats, s)
+	}
+	return hats, nil
+}
+
+//Save performs an upsert
+func (r *Repo) Save(hm *repo.HatMod) error {
+	hm.ID = xid.New().String()
+	storage[hm.ID] = hm
+	return nil
 }
 
 //BeginTx implements HatRepo.BeginTxn()

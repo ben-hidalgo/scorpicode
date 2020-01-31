@@ -11,31 +11,23 @@ import (
 // ListHats returns a list of hats
 func (s *Server) ListHats(ctx context.Context, req *hatspb.ListHatsRequest) (*hatspb.ListHatsResponse, error) {
 
+	logrus.Debugf("ListHats() req=%v", req)
+
 	hr := repo.GetRepo(ctx)
-	logrus.Debugf("ListHats() hr=%v", hr)
 
-	fedora := &hatspb.Hat{
-		Color:  "red",
-		Name:   "fedora",
-		Inches: 10,
+	mods, err := hr.FindAll(repo.Limit(10), repo.Offset(0))
+	if err != nil {
+		return nil, err
 	}
 
-	bowler := &hatspb.Hat{
-		Color:  "blue",
-		Name:   "bowler",
-		Inches: 12,
-	}
+	hats := make([]*hatspb.Hat, len(mods))
 
-	derby := &hatspb.Hat{
-		Color:  "brown",
-		Name:   "derby",
-		Inches: 11,
-	}
-
-	hats := []*hatspb.Hat{
-		fedora,
-		bowler,
-		derby,
+	for i, m := range mods {
+		hats[i] = &hatspb.Hat{
+			Color:  m.Color,
+			Name:   m.Name,
+			Inches: m.Inches,
+		}
 	}
 
 	return &hatspb.ListHatsResponse{
