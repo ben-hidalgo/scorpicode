@@ -5,10 +5,6 @@ import authStore from './stores/authStore';
 
 const superagent = superagentPromise(_superagent, global.Promise);
 
-// const API_ROOT = 'https://conduit.productionready.io/api';
-const API_ROOT = 'http://localhost:8080';
-// const API_ROOT = '';
-
 const encode = encodeURIComponent;
 
 const handleErrors = err => {
@@ -29,25 +25,25 @@ const tokenPlugin = req => {
 const requests = {
   del: url =>
     superagent
-      .del(`${API_ROOT}${url}`)
+      .del(`${url}`)
       .use(tokenPlugin)
       .end(handleErrors)
       .then(responseBody),
   get: url =>
     superagent
-      .get(`${API_ROOT}${url}`)
+      .get(`${url}`)
       .use(tokenPlugin)
       .end(handleErrors)
       .then(responseBody),
   put: (url, body) =>
     superagent
-      .put(`${API_ROOT}${url}`, body)
+      .put(`${url}`, body)
       .use(tokenPlugin)
       .end(handleErrors)
       .then(responseBody),
   post: (url, body) =>
     superagent
-      .post(`${API_ROOT}${url}`, body)
+      .post(`${url}`, body)
       .use(tokenPlugin)
       .end(handleErrors)
       .then(responseBody),
