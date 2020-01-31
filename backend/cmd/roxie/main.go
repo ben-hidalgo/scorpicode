@@ -8,11 +8,10 @@ import (
 	"net/http"
 	"time"
 
-	// "scorpicode/internal/roxie/server"
-
 	"github.com/sirupsen/logrus"
 )
 
+// roxie
 func main() {
 
 	logrus.Infof("main() %s", config.AppName)

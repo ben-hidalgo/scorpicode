@@ -2,6 +2,8 @@ package main
 
 import (
 	"backend/internal/hats/config"
+	"backend/internal/hats/repo"
+	"backend/internal/hats/repo/inmem"
 	"backend/internal/hats/server"
 	_ "backend/pkg/logging" // init logrus
 	"backend/rpc/hatspb"
@@ -10,13 +12,20 @@ import (
 	"os"
 	"os/signal"
 
+	"github.com/twitchtv/twirp"
+
 	"github.com/sirupsen/logrus"
 )
 
-// Run the implementation in a local server
+// hats
 func main() {
 
-	twirpHandler := hatspb.NewHatsServer(&server.Server{}, nil)
+	var hatRepo repo.HatRepo = inmem.NewRepo()
+
+	// middleware filter chain
+	hooks := twirp.ChainHooks(repo.Hook(hatRepo))
+
+	twirpHandler := hatspb.NewHatsServer(&server.Server{}, hooks)
 
 	srv := &http.Server{
 		Addr:    config.ListenAddress,

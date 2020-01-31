@@ -8,6 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// website
 func main() {
 
 	http.Handle("/", http.FileServer(http.Dir(config.StaticPath)))
