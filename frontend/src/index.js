@@ -28,8 +28,8 @@ const stores = {
 };
 
 
-hatStore.createHat({id: `${Math.random()}`, name: "cap"});
-hatStore.createHat({id: `${Math.random()}`, name: "bowler"});
+hatStore.makeHat(10);
+hatStore.makeHat(12);
 
 hatStore.loadHats()
 

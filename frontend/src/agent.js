@@ -68,6 +68,7 @@ const Tags = {
 
 const Hats = {
   listHats: () => requests.post('/hats/ListHats', {}),
+  makeHat: (inches) => requests.post('/hats/MakeHat', {inches: inches}),
 };
 
 const limit = (count, p) => `limit=${count}&offset=${p ? p * count : 0}`;

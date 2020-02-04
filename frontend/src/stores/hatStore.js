@@ -10,9 +10,17 @@ export class HatStore {
     return this.hatRegistry.values();
   };
 
-  @action createHat(hat) {
-    this.hatRegistry.set(hat.id, hat);
+  getHat(name) {
+    return this.hatRegistry.get(name);
   }
+
+  @action makeHat(inches) {
+    return agent.Hats.makeHat(inches)
+      .catch(action(err => {
+        throw err;
+      }));
+  }
+
 
   $req() {
     return agent.Hats.listHats();

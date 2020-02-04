@@ -27,7 +27,11 @@ func (s *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hats
 	}
 
 	err := hr.Save(mod)
+	if err != nil {
+		return nil, err
+	}
 
+	err = hr.Commit()
 	if err != nil {
 		return nil, err
 	}
