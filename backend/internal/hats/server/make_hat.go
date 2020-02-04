@@ -16,9 +16,19 @@ func (s *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hats
 
 	hr := repo.GetRepo(ctx)
 
-	color := []string{"white", "black", "brown", "red", "blue"}[rand.Intn(4)]
+	var color string
+	if req.GetColor() == "" {
+		color = []string{"white", "black", "brown", "red", "blue"}[rand.Intn(4)]
+	} else {
+		color = req.GetColor()
+	}
 
-	name := []string{"bowler", "baseball cap", "top hat", "derby"}[rand.Intn(3)]
+	var name string
+	if req.GetName() == "" {
+		name = []string{"bowler", "baseball cap", "top hat", "derby"}[rand.Intn(3)]
+	} else {
+		name = req.GetName()
+	}
 
 	mod := &repo.HatMod{
 		Color:  color,
