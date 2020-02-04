@@ -1,4 +1,4 @@
-package server
+package hatserver
 
 import (
 	"backend/internal/hats/repo"
@@ -10,7 +10,7 @@ import (
 )
 
 // MakeHat makes a hat
-func (s *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hatspb.MakeHatResponse, error) {
+func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hatspb.MakeHatResponse, error) {
 
 	logrus.Debugf("MakeHat() req=%v", req)
 

@@ -1,4 +1,4 @@
-package server
+package hatserver
 
 import "backend/rpc/hatspb"
 

@@ -2,9 +2,9 @@ package main
 
 import (
 	"backend/internal/hats/config"
+	"backend/internal/hats/hatserver"
 	"backend/internal/hats/repo"
 	"backend/internal/hats/repo/inmem"
-	"backend/internal/hats/server"
 	_ "backend/pkg/logging" // init logrus
 	"backend/rpc/hatspb"
 	"context"
@@ -25,7 +25,7 @@ func main() {
 	// middleware filter chain
 	hooks := twirp.ChainHooks(repo.Hook(hatRepo))
 
-	twirpHandler := hatspb.NewHatsServer(&server.Server{}, hooks)
+	twirpHandler := hatspb.NewHatsServer(&hatserver.Server{}, hooks)
 
 	srv := &http.Server{
 		Addr:    config.ListenAddress,

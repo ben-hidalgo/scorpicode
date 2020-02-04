@@ -1,4 +1,4 @@
-package server
+package hatserver
 
 import (
 	"backend/internal/hats/repo"
@@ -9,7 +9,7 @@ import (
 )
 
 // ListHats returns a list of hats
-func (s *Server) ListHats(ctx context.Context, req *hatspb.ListHatsRequest) (*hatspb.ListHatsResponse, error) {
+func (hs *Server) ListHats(ctx context.Context, req *hatspb.ListHatsRequest) (*hatspb.ListHatsResponse, error) {
 
 	logrus.Debugf("ListHats() req=%v", req)
 

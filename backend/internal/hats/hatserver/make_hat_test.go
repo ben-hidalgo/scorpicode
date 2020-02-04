@@ -1,9 +1,9 @@
-package server_test
+package hatserver_test
 
 import (
+	"backend/internal/hats/hatserver"
 	"backend/internal/hats/repo"
 	"backend/internal/hats/repo/inmem"
-	"backend/internal/hats/server"
 	"backend/rpc/hatspb"
 	"context"
 	"testing"
@@ -20,9 +20,9 @@ func TestRandomNameColor(t *testing.T) {
 		Inches: inches,
 	}
 
-	srvr := &server.Server{}
+	hs := &hatserver.Server{}
 
-	res, err := srvr.MakeHat(ctx, req)
+	res, err := hs.MakeHat(ctx, req)
 
 	if err != nil {
 		t.Fatalf("err=%s", err)
@@ -60,9 +60,9 @@ func TestSpecificNameColor(t *testing.T) {
 		Color:  color,
 	}
 
-	srvr := &server.Server{}
+	hs := &hatserver.Server{}
 
-	res, err := srvr.MakeHat(ctx, req)
+	res, err := hs.MakeHat(ctx, req)
 
 	if err != nil {
 		t.Fatalf("err=%s", err)
