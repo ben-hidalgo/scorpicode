@@ -7,7 +7,7 @@ common:
   logFormat: text
 
 frontend:
-  enabled: true
+  enabled: false
   name: frontend
   replicaCount: 1
   limitsMemory: 1028Mi
@@ -16,7 +16,7 @@ frontend:
   serviceType: ClusterIP
 
 hats:
-  enabled: true
+  enabled: false
   name: hats
   replicaCount: 1
   limitsMemory: 128Mi
@@ -28,7 +28,7 @@ hats:
   minSizeInches: 6
 
 website:
-  enabled: true
+  enabled: false
   name: website
   replicaCount: 1
   limitsMemory: 128Mi
@@ -40,7 +40,7 @@ website:
   staticPath: ./cmd/website/static
 
 roxie:
-  enabled: true
+  enabled: false
   name: roxie
   replicaCount: 1
   limitsMemory: 128Mi
@@ -58,4 +58,4 @@ ingress:
   enabled: false
 
 nginx:
-  enabled: false
+  enabled: true

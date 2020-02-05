@@ -1,3 +1,4 @@
+{{- if .Values.roxie.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -38,3 +39,4 @@ spec:
           value: {{ .Values.roxie.hatsPrefix | quote }}
         - name: ENABLE_CORS
           value: {{ .Values.roxie.enableCors | quote }}
+{{- end }}

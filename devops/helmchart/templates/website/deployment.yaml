@@ -1,3 +1,4 @@
+{{- if .Values.website.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -32,3 +33,4 @@ spec:
 {{ include "common.shared" . | indent 8 }}
         - name: STATIC_PATH
           value: {{ .Values.website.staticPath | quote }}
+{{- end }}

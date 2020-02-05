@@ -27,6 +27,17 @@ dry-run:
 	--set roxie.tag=$(TAG) \
 	--set frontend.tag=$(TAG)
 
+dev:
+	kubectl create namespace dev || true
+	helm upgrade --install scorpicode ./devops/helmchart \
+	-f devops/helmchart/dev.yaml \
+	-n dev \
+	--set common.cacheBuster=`date +%s` \
+	--set hats.tag=$(TAG) \
+	--set website.tag=$(TAG) \
+	--set roxie.tag=$(TAG) \
+	--set frontend.tag=$(TAG)
+
 go-happy:
 	(cd backend             && \
 	go test ./... -short -v && \
