@@ -2,5 +2,8 @@ dependencies:
 - name: nginx
   repository: https://charts.bitnami.com/bitnami
   version: 5.1.3
-digest: sha256:15f690274eef38ec5cd8dd9b328c5416eb613caea44ce8d56c906e3e46ea9e91
-generated: "2020-01-15T11:32:26.066203-08:00"
+- name: mongodb
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  version: 7.8.2
+digest: sha256:283268fb8cadff9b03b5fef5c33fce06da4e4514eb3eda61010d91e9a385384d
+generated: "2020-02-05T15:31:13.044356-08:00"

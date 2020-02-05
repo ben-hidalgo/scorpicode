@@ -37,6 +37,7 @@ dev:
 	--set website.tag=$(TAG) \
 	--set roxie.tag=$(TAG) \
 	--set frontend.tag=$(TAG)
+	kubectl wait pods -l app=mongodb --for=condition=Ready -n dev
 
 go-happy:
 	(cd backend             && \
@@ -53,9 +54,6 @@ start-frontend:
 	npm install   && \
 	npm start)
 
-mksr:
-	minikube service roxie
-
 protobufs:
 	(cd backend &&             \
 	protoc                     \
@@ -68,3 +66,11 @@ minikube-start:
 	minikube delete
 	minikube start --cpus 4 --memory 4096
 	minikube addons enable ingress
+
+# minikube service roxie
+mksr:
+	minikube service roxie
+
+# the .tgz files are committed
+hdu:
+	(cd devops/helmchart && helm dependency update)
