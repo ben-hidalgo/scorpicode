@@ -28,10 +28,10 @@ dry-run:
 	--set frontend.tag=$(TAG)
 
 go-happy:
-	(cd backend            && \
-	go test ./... -short   && \
-	go vet ./...           && \
-	go fmt ./...           && \
+	(cd backend             && \
+	go test ./... -short -v && \
+	go vet ./...            && \
+	go fmt ./...            && \
 	go mod tidy)
 
 start-backend: go-happy

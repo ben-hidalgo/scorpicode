@@ -6,6 +6,8 @@ import (
 	"context"
 	"math/rand"
 
+	"github.com/twitchtv/twirp"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -13,6 +15,10 @@ import (
 func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hatspb.MakeHatResponse, error) {
 
 	logrus.Debugf("MakeHat() req=%v", req)
+
+	if req.GetInches() <= 0 {
+		return nil, twirp.InvalidArgumentError(Inches, MustBeGTZero)
+	}
 
 	hr := repo.GetRepo(ctx)
 

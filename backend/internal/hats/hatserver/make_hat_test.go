@@ -7,6 +7,8 @@ import (
 	"backend/rpc/hatspb"
 	"context"
 	"testing"
+
+	"github.com/twitchtv/twirp"
 )
 
 func TestRandomNameColor(t *testing.T) {
@@ -81,6 +83,40 @@ func TestSpecificNameColor(t *testing.T) {
 	}
 	if res.GetHat().GetColor() != color {
 		t.Fatalf("color must match")
+	}
+
+}
+
+func TestInchesLessThanZero(t *testing.T) {
+
+	ctx := context.Background()
+
+	inches := int32(-1)
+
+	req := &hatspb.MakeHatRequest{
+		Inches: inches,
+	}
+
+	hs := &hatserver.Server{}
+
+	res, err := hs.MakeHat(ctx, req)
+
+	if err == nil {
+		t.Fatalf("an error should be returned")
+	}
+	if res != nil {
+		t.Fatalf("the response should be nil")
+	}
+
+	e := err.(twirp.Error)
+	if e.Code() != twirp.InvalidArgument {
+		t.Fatalf("the error code should be %s", twirp.InvalidArgument)
+	}
+	if e.Meta(hatserver.Argument) != hatserver.Inches {
+		t.Fatalf("the argument should be '%s' but was '%s'", hatserver.Inches, e.Meta("argument"))
+	}
+	if e.Msg() != hatserver.InchesGTZero {
+		t.Fatalf("the msg should be '%s' but was '%s'", hatserver.InchesGTZero, e.Msg())
 	}
 
 }
