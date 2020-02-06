@@ -38,6 +38,7 @@ dev:
 	--set roxie.tag=$(TAG) \
 	--set frontend.tag=$(TAG)
 	kubectl wait pods -l app=mongodb --for=condition=Ready -n dev
+	kubectl wait pods -l app=redis --for=condition=Ready -n dev
 
 go-happy:
 	(cd backend             && \

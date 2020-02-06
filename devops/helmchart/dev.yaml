@@ -62,3 +62,6 @@ nginx:
 
 mongo:
   enabled: true
+
+redis:
+  enabled: true

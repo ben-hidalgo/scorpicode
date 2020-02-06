@@ -5,5 +5,8 @@ dependencies:
 - name: mongodb
   repository: https://kubernetes-charts.storage.googleapis.com/
   version: 7.8.2
-digest: sha256:283268fb8cadff9b03b5fef5c33fce06da4e4514eb3eda61010d91e9a385384d
-generated: "2020-02-05T15:31:13.044356-08:00"
+- name: redis
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  version: 10.4.1
+digest: sha256:984589a39300a656550d595a1e2b24f022b2efde510ebafcf3ccf4d9ddff65f4
+generated: "2020-02-06T13:14:17.72966-08:00"
