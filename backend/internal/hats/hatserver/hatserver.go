@@ -13,6 +13,6 @@ var _ hatspb.Hats = (*Server)(nil)
 // field names
 const Inches = "inches"
 
-// these will be decoded into multi-lingual using facing error / warning messages in the UI
+// these will be decoded into multi-lingual, user facing error / warning messages in the UI
 const HatTooSmall = util.ErrMsg("hat.inches.toosmall")
 const HatTooBig = util.ErrMsg("hat.inches.toobig")

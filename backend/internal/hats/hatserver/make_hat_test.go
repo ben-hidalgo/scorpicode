@@ -4,7 +4,6 @@ import (
 	"backend/internal/hats/hatserver"
 	"backend/internal/hats/repo"
 	"backend/internal/hats/repo/inmem"
-	"backend/pkg/util"
 	"backend/rpc/hatspb"
 	"context"
 	"testing"
@@ -113,9 +112,6 @@ func TestInchesTooSmall(t *testing.T) {
 	if e.Code() != twirp.InvalidArgument {
 		t.Fatalf("the error code should be %s", twirp.InvalidArgument)
 	}
-	if e.Meta(util.Argument) != hatserver.Inches {
-		t.Fatalf("the argument should be '%s' but was '%s'", hatserver.Inches, e.Meta(util.Argument))
-	}
 	if e.Msg() != string(hatserver.HatTooSmall) {
 		t.Fatalf("the msg should be '%s' but was '%s'", hatserver.HatTooSmall, e.Msg())
 	}
@@ -146,9 +142,6 @@ func TestInchesTooBig(t *testing.T) {
 	e := err.(twirp.Error)
 	if e.Code() != twirp.InvalidArgument {
 		t.Fatalf("the error code should be %s", twirp.InvalidArgument)
-	}
-	if e.Meta(util.Argument) != hatserver.Inches {
-		t.Fatalf("the argument should be '%s' but was '%s'", hatserver.Inches, e.Meta(util.Argument))
 	}
 	if e.Msg() != string(hatserver.HatTooBig) {
 		t.Fatalf("the msg should be '%s' but was '%s'", hatserver.HatTooBig, e.Msg())
