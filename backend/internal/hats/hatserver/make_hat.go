@@ -1,6 +1,7 @@
 package hatserver
 
 import (
+	"backend/internal/hats/config"
 	"backend/internal/hats/repo"
 	"backend/pkg/util"
 	"backend/rpc/hatspb"
@@ -15,8 +16,12 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 
 	logrus.Debugf("MakeHat() req=%v", req)
 
-	if req.GetInches() <= 0 {
+	if req.GetInches() < config.MinSizeInches {
 		return nil, util.InvalidArgumentError(Inches, HatTooSmall)
+	}
+
+	if req.GetInches() > config.MaxSizeInches {
+		return nil, util.InvalidArgumentError(Inches, HatTooBig)
 	}
 
 	hr := repo.GetRepo(ctx)

@@ -88,11 +88,11 @@ func TestSpecificNameColor(t *testing.T) {
 
 }
 
-func TestInchesLessThanZero(t *testing.T) {
+func TestInchesTooSmall(t *testing.T) {
 
 	ctx := context.Background()
 
-	inches := int32(-1)
+	inches := int32(4)
 
 	req := &hatspb.MakeHatRequest{
 		Inches: inches,
@@ -114,10 +114,43 @@ func TestInchesLessThanZero(t *testing.T) {
 		t.Fatalf("the error code should be %s", twirp.InvalidArgument)
 	}
 	if e.Meta(util.Argument) != hatserver.Inches {
-		t.Fatalf("the argument should be '%s' but was '%s'", hatserver.Inches, e.Meta("argument"))
+		t.Fatalf("the argument should be '%s' but was '%s'", hatserver.Inches, e.Meta(util.Argument))
 	}
 	if e.Msg() != string(hatserver.HatTooSmall) {
 		t.Fatalf("the msg should be '%s' but was '%s'", hatserver.HatTooSmall, e.Msg())
 	}
 
+}
+
+func TestInchesTooBig(t *testing.T) {
+
+	ctx := context.Background()
+
+	inches := int32(16)
+
+	req := &hatspb.MakeHatRequest{
+		Inches: inches,
+	}
+
+	hs := &hatserver.Server{}
+
+	res, err := hs.MakeHat(ctx, req)
+
+	if err == nil {
+		t.Fatalf("an error should be returned")
+	}
+	if res != nil {
+		t.Fatalf("the response should be nil")
+	}
+
+	e := err.(twirp.Error)
+	if e.Code() != twirp.InvalidArgument {
+		t.Fatalf("the error code should be %s", twirp.InvalidArgument)
+	}
+	if e.Meta(util.Argument) != hatserver.Inches {
+		t.Fatalf("the argument should be '%s' but was '%s'", hatserver.Inches, e.Meta(util.Argument))
+	}
+	if e.Msg() != string(hatserver.HatTooBig) {
+		t.Fatalf("the msg should be '%s' but was '%s'", hatserver.HatTooBig, e.Msg())
+	}
 }

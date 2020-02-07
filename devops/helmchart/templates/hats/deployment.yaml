@@ -33,4 +33,6 @@ spec:
 {{ include "common.shared" . | indent 8 }}
         - name: MIN_SIZE_INCHES
           value: {{ .Values.hats.minSizeInches | quote }}
+        - name: MAX_SIZE_INCHES
+          value: {{ .Values.hats.maxSizeInches | quote }}
 {{- end }}

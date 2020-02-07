@@ -24,6 +24,17 @@ func SetInt(name string, value *int) {
 	}
 }
 
+func SetInt32(name string, value *int32) {
+	v, ok := os.LookupEnv(name)
+	if ok {
+		i, err := strconv.Atoi(v)
+		if err != nil {
+			panic(fmt.Sprintf("failed to convert %s from %s to int32", name, v))
+		}
+		*value = int32(i)
+	}
+}
+
 func SetBool(name string, value *bool) {
 	v, ok := os.LookupEnv(name)
 	if ok {

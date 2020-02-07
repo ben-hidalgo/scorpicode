@@ -26,6 +26,7 @@ hats:
 
   listendAddress: :8080
   minSizeInches: 6
+  maxSizeInches: 16
 
 website:
   enabled: true
