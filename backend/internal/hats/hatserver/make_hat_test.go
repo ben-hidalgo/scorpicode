@@ -4,6 +4,7 @@ import (
 	"backend/internal/hats/hatserver"
 	"backend/internal/hats/repo"
 	"backend/internal/hats/repo/inmem"
+	"backend/pkg/util"
 	"backend/rpc/hatspb"
 	"context"
 	"testing"
@@ -112,11 +113,11 @@ func TestInchesLessThanZero(t *testing.T) {
 	if e.Code() != twirp.InvalidArgument {
 		t.Fatalf("the error code should be %s", twirp.InvalidArgument)
 	}
-	if e.Meta(hatserver.Argument) != hatserver.Inches {
+	if e.Meta(util.Argument) != hatserver.Inches {
 		t.Fatalf("the argument should be '%s' but was '%s'", hatserver.Inches, e.Meta("argument"))
 	}
-	if e.Msg() != hatserver.InchesGTZero {
-		t.Fatalf("the msg should be '%s' but was '%s'", hatserver.InchesGTZero, e.Msg())
+	if e.Msg() != string(hatserver.HatTooSmall) {
+		t.Fatalf("the msg should be '%s' but was '%s'", hatserver.HatTooSmall, e.Msg())
 	}
 
 }

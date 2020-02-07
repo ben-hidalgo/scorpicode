@@ -2,11 +2,10 @@ package hatserver
 
 import (
 	"backend/internal/hats/repo"
+	"backend/pkg/util"
 	"backend/rpc/hatspb"
 	"context"
 	"math/rand"
-
-	"github.com/twitchtv/twirp"
 
 	"github.com/sirupsen/logrus"
 )
@@ -17,7 +16,7 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 	logrus.Debugf("MakeHat() req=%v", req)
 
 	if req.GetInches() <= 0 {
-		return nil, twirp.InvalidArgumentError(Inches, MustBeGTZero)
+		return nil, util.InvalidArgumentError(Inches, HatTooSmall)
 	}
 
 	hr := repo.GetRepo(ctx)
