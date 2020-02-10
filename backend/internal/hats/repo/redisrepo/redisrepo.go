@@ -1,10 +1,10 @@
-package redis
+package redisrepo
 
 import (
 	"backend/internal/hats/repo"
 	"context"
 
-	_ "github.com/gomodule/redigo/redis"
+	"github.com/gomodule/redigo/redis"
 	"github.com/sirupsen/logrus"
 )
 
@@ -15,7 +15,7 @@ type Repo struct{}
 var _ repo.HatRepo = (*Repo)(nil)
 
 // NewRepo returns a pointer to a new instance of Repo
-func NewRepo() *Repo {
+func NewRepo(conn redis.Conn) *Repo {
 	return &Repo{}
 }
 

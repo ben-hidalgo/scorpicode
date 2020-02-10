@@ -64,5 +64,10 @@ nginx:
 mongo:
   enabled: false
 
+#TODO: make password in SOPS yaml
 redis:
   enabled: true
+  password: redispasswordlocal
+  master:
+    service:
+      type: LoadBalancer

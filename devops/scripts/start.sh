@@ -11,8 +11,14 @@ killall() {
     echo "done"
 }
 
-(cd backend/cmd/roxie/     && go run main.go) &
-(cd backend/cmd/website/   && go run main.go) &
-(cd backend/cmd/hats/      && go run main.go) &
+(cd backend/cmd/roxie/ && \
+go run main.go) &
+
+(cd backend/cmd/website/ && \
+go run main.go) &
+
+(cd backend/cmd/hats/ && \
+REDIS_ADDRESS=`minikube ip`:`kubectl get svc scorpicode-redis-master -o json | jq '.spec.ports[0].nodePort'`     \
+go run main.go) &
 
 cat

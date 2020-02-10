@@ -5,12 +5,16 @@ import (
 	"backend/internal/hats/hatserver"
 	"backend/internal/hats/repo"
 	"backend/internal/hats/repo/inmem"
+	"backend/internal/hats/repo/redisrepo"
 	_ "backend/pkg/logging" // init logrus
 	"backend/rpc/hatspb"
 	"context"
+	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
+
+	"github.com/gomodule/redigo/redis"
 
 	"github.com/twitchtv/twirp"
 
@@ -20,7 +24,18 @@ import (
 // hats
 func main() {
 
-	var hatRepo repo.HatRepo = inmem.NewRepo()
+	var hatRepo repo.HatRepo
+
+	if config.RedisAddress != "" {
+		conn, err := redis.Dial("tcp", config.RedisAddress)
+		if err != nil {
+			panic(fmt.Sprintf("failed to dial redis connection at %s err=%#v", config.RedisAddress, err))
+		}
+		defer conn.Close()
+		redisrepo.NewRepo(conn)
+	} else {
+		hatRepo = inmem.NewRepo()
+	}
 
 	// middleware filter chain
 	hooks := twirp.ChainHooks(repo.Hook(hatRepo))
