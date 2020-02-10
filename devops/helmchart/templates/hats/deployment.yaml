@@ -27,7 +27,7 @@ spec:
         - containerPort: {{ .Values.hats.port }}
           name: http
         env:
-{{- with .Values.website }}
+{{- with .Values.hats }}
 {{ include "service.shared" . | indent 8 }}
 {{- end }}
 {{ include "common.shared" . | indent 8 }}
@@ -35,4 +35,8 @@ spec:
           value: {{ .Values.hats.minSizeInches | quote }}
         - name: MAX_SIZE_INCHES
           value: {{ .Values.hats.maxSizeInches | quote }}
+        - name: DATASTORE_CONFIG
+          value: {{ .Values.hats.datastoreConfig | quote }}
+        - name: REDIS_ADDRESS
+          value: {{ .Values.hats.redisAddress | quote }}
 {{- end }}

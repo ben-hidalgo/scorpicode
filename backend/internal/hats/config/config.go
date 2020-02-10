@@ -8,7 +8,8 @@ var ListenAddress = ":8083"
 var MinSizeInches = int32(5)
 var MaxSizeInches = int32(15)
 var AppName = "hats"
-var RedisAddress = ":6379"
+var RedisAddress = "localhost:6379"
+var DatastoreConfig = "inmem"
 
 func init() {
 	envconfig.SetString("LISTEN_ADDRESS", &ListenAddress)
@@ -16,4 +17,5 @@ func init() {
 	envconfig.SetInt32("MIN_SIZE_INCHES", &MinSizeInches)
 	envconfig.SetInt32("MAX_SIZE_INCHES", &MaxSizeInches)
 	envconfig.SetString("REDIS_ADDRESS", &RedisAddress)
+	envconfig.SetString("DATASTORE_CONFIG", &DatastoreConfig)
 }

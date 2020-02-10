@@ -26,15 +26,18 @@ func main() {
 
 	var hatRepo repo.HatRepo
 
-	if config.RedisAddress != "" {
+	switch config.DatastoreConfig {
+	case "inmem":
+		hatRepo = inmem.NewRepo()
+	case "redis":
 		conn, err := redis.Dial("tcp", config.RedisAddress)
 		if err != nil {
 			panic(fmt.Sprintf("failed to dial redis connection at %s err=%#v", config.RedisAddress, err))
 		}
 		defer conn.Close()
 		redisrepo.NewRepo(conn)
-	} else {
-		hatRepo = inmem.NewRepo()
+	default:
+		panic("DATASTORE_CONFIG not set")
 	}
 
 	// middleware filter chain

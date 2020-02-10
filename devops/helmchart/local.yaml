@@ -27,6 +27,8 @@ hats:
   listendAddress: :8080
   minSizeInches: 6
   maxSizeInches: 16
+  datastoreConfig: redis
+  redisAddress: scorpicode-redis-master:6379
 
 website:
   enabled: true
