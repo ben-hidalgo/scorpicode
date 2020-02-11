@@ -69,7 +69,7 @@ mongo:
 #TODO: make password in SOPS yaml
 redis:
   enabled: true
-  password: redispasswordlocal
+  password: redispassword
   master:
     service:
       type: LoadBalancer

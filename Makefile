@@ -48,6 +48,13 @@ go-happy:
 	go fmt ./...            && \
 	go mod tidy)
 
+TEST_ARGS=\
+REDIS_ADDRESS=`minikube ip`:`kubectl get svc scorpicode-redis-master -o json | jq '.spec.ports[0].nodePort'` \
+REDIS_PASSWORD=redispassword
+
+test:
+	(cd backend && ${TEST_ARGS} go test ./... -v)
+
 start-backend: go-happy
 	./devops/scripts/start.sh
 

@@ -39,4 +39,6 @@ spec:
           value: {{ .Values.hats.datastoreConfig | quote }}
         - name: REDIS_ADDRESS
           value: {{ .Values.hats.redisAddress | quote }}
+        - name: REDIS_PASSWORD
+          value: {{ .Values.hats.redisPassword | quote }}
 {{- end }}

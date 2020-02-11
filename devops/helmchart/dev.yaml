@@ -69,4 +69,4 @@ mongo:
 
 redis:
   enabled: true
-  password: redispassworddev
+  password: redispassword
