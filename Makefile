@@ -53,7 +53,7 @@ REDIS_ADDRESS=`minikube ip`:`kubectl get svc scorpicode-redis-master -o json | j
 REDIS_PASSWORD=redispassword
 
 test:
-	(cd backend && ${TEST_ARGS} go test ./... -v)
+	(cd backend && ${TEST_ARGS} go test ./... -v -count=1)
 
 start-backend: go-happy
 	./devops/scripts/start.sh

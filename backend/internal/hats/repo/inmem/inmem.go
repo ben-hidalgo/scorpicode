@@ -54,3 +54,9 @@ func (r *Repo) Commit() error {
 	logrus.Debug("inmem.Commit()")
 	return nil
 }
+
+// Close implements HatRepo.Close()
+func (r *Repo) Close() error {
+	logrus.Debug("inmem.Close()")
+	return nil
+}

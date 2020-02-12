@@ -27,6 +27,7 @@ type HatRepo interface {
 	BeginTxn(ctx context.Context) error
 	Rollback() error
 	Commit() error
+	Close() error
 
 	//FindAll queries all records
 	FindAll(limit Limit, offset Offset) ([]*HatMod, error)

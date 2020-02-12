@@ -14,8 +14,6 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/gomodule/redigo/redis"
-
 	"github.com/twitchtv/twirp"
 
 	"github.com/sirupsen/logrus"
@@ -24,21 +22,8 @@ import (
 // hats
 func main() {
 
-	var hatRepo repo.HatRepo
-
-	switch config.DatastoreConfig {
-	case "inmem":
-		hatRepo = inmem.NewRepo()
-	case "redis":
-		conn, err := redis.Dial("tcp", config.RedisAddress)
-		if err != nil {
-			panic(fmt.Sprintf("failed to dial redis connection at %s err=%#v", config.RedisAddress, err))
-		}
-		defer conn.Close()
-		redisrepo.NewRepo(conn)
-	default:
-		panic("DATASTORE_CONFIG not set")
-	}
+	hatRepo := initRepo()
+	defer hatRepo.Close()
 
 	// middleware filter chain
 	hooks := twirp.ChainHooks(repo.Hook(hatRepo))
@@ -75,5 +60,22 @@ func main() {
 	}
 
 	<-idleConnsClosed
+
+}
+
+func initRepo() repo.HatRepo {
+
+	switch config.DatastoreConfig {
+	case "inmem":
+		return inmem.NewRepo()
+	case "redis":
+		conn, err := redisrepo.NewConn()
+		if err != nil {
+			panic(fmt.Sprintf("failed to dial redis connection at %s err=%#v", redisrepo.RedisAddress, err))
+		}
+		return redisrepo.NewRepo(conn)
+	default:
+		panic("DATASTORE_CONFIG not set")
+	}
 
 }
