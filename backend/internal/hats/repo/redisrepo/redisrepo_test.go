@@ -2,6 +2,7 @@ package redisrepo_test
 
 import (
 	"backend/internal/hats/config"
+	"backend/internal/hats/repo"
 	"backend/internal/hats/repo/redisrepo"
 	"context"
 	"log"
@@ -42,5 +43,22 @@ func TestCountMallocs(t *testing.T) {
 	ctx := context.Background()
 
 	hr.BeginTxn(ctx)
+
+	id := "123"
+	inches := int32(10)
+	name := "cap"
+	color := "blue"
+
+	mod := &repo.HatMod{
+		ID:     id,
+		Color:  color,
+		Name:   name,
+		Inches: inches,
+	}
+
+	err = hr.Save(mod)
+	if err != nil {
+		t.Fatalf("save failed err=%#v", err)
+	}
 
 }

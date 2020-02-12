@@ -16,9 +16,9 @@ type Limit int
 // represents a Hat stored in the repo
 type HatMod struct {
 	ID     string
-	Inches int32
-	Color  string
-	Name   string
+	Inches int32  `redis:"inches"`
+	Color  string `redis:"color"`
+	Name   string `redis:"name"`
 }
 
 //TODO: implement create and list in memory and update list_hats and make_hat

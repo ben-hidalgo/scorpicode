@@ -3,20 +3,25 @@ package redisrepo
 import (
 	"backend/internal/hats/repo"
 	"context"
+	"fmt"
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/sirupsen/logrus"
 )
 
 //Repo implements repo.HatRepo
-type Repo struct{}
+type Repo struct {
+	conn redis.Conn
+}
 
 // enforces the interface is implemented
 var _ repo.HatRepo = (*Repo)(nil)
 
 // NewRepo returns a pointer to a new instance of Repo
 func NewRepo(conn redis.Conn) *Repo {
-	return &Repo{}
+	return &Repo{
+		conn: conn,
+	}
 }
 
 //FindAll queries all records
@@ -26,6 +31,12 @@ func (r *Repo) FindAll(limit repo.Limit, offset repo.Offset) (hats []*repo.HatMo
 
 //Save performs an upsert
 func (r *Repo) Save(hm *repo.HatMod) error {
+
+	id := fmt.Sprintf("hat:%s", hm.ID)
+
+	if _, err := r.conn.Do("HMSET", redis.Args{}.Add(id).AddFlat(*hm)...); err != nil {
+		return err
+	}
 	return nil
 }
 
