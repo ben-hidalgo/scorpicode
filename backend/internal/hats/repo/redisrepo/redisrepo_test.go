@@ -5,8 +5,6 @@ import (
 	"backend/internal/hats/repo/redisrepo"
 	"context"
 	"testing"
-
-	"github.com/gomodule/redigo/redis"
 )
 
 func TestCountMallocs(t *testing.T) {
@@ -14,23 +12,7 @@ func TestCountMallocs(t *testing.T) {
 		t.Skip()
 	}
 
-	conn, err := redisrepo.NewConn()
-	if err != nil {
-		t.Fatalf("failed to dial redis connection at %s err=%#v", redisrepo.RedisAddress, err)
-	}
-	defer conn.Close()
-
-	if _, err := conn.Do(redisrepo.AUTH, redisrepo.RedisPassword); err != nil {
-		t.Fatalf("auth failed password=%s err=%#v", redisrepo.RedisPassword, err)
-	}
-
-	reply, err := conn.Do(redisrepo.PING)
-	pingReply, err := redis.String(reply, err)
-	if pingReply != redisrepo.PONG {
-		t.Fatalf("ping failed err=%#v", err)
-	}
-
-	hr := redisrepo.NewRepo(conn)
+	hr := redisrepo.NewRepo()
 
 	ctx := context.Background()
 
@@ -48,7 +30,7 @@ func TestCountMallocs(t *testing.T) {
 		Inches: inches,
 	}
 
-	err = hr.Save(mod)
+	err := hr.Save(mod)
 	if err != nil {
 		t.Fatalf("save failed err=%#v", err)
 	}

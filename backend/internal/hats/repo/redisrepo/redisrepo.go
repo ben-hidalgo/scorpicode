@@ -4,6 +4,8 @@ import (
 	"backend/internal/hats/repo"
 	"backend/pkg/envconfig"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/gomodule/redigo/redis"
 )
 
@@ -26,17 +28,23 @@ func init() {
 	envconfig.SetString("REDIS_PASSWORD", &RedisPassword)
 }
 
-// NewConn initializes the redis connection
-func NewConn() (redis.Conn, error) {
+// NewRepo returns a pointer to a new instance of Repo
+// will panic on connection errors
+func NewRepo() *Repo {
 	conn, err := redis.Dial("tcp", RedisAddress)
 	if err != nil {
-		return nil, err
+		logrus.Panicf("failed to dial redis connection at %s err=%#v", RedisAddress, err)
 	}
-	return conn, nil
-}
 
-// NewRepo returns a pointer to a new instance of Repo
-func NewRepo(conn redis.Conn) *Repo {
+	if _, err := conn.Do(AUTH, RedisPassword); err != nil {
+		logrus.Panicf("auth failed err=%#v", err)
+	}
+
+	reply, err := redis.String(conn.Do(PING))
+	if reply != PONG {
+		logrus.Panicf("unexpected reply to PING err=%#v", err)
+	}
+
 	return &Repo{
 		conn: conn,
 	}

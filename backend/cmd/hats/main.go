@@ -9,7 +9,6 @@ import (
 	_ "backend/pkg/logging" // init logrus
 	"backend/rpc/hatspb"
 	"context"
-	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -69,13 +68,9 @@ func initRepo() repo.HatRepo {
 	case "inmem":
 		return inmem.NewRepo()
 	case "redis":
-		conn, err := redisrepo.NewConn()
-		if err != nil {
-			panic(fmt.Sprintf("failed to dial redis connection at %s err=%#v", redisrepo.RedisAddress, err))
-		}
-		return redisrepo.NewRepo(conn)
+		return redisrepo.NewRepo()
 	default:
-		panic("DATASTORE_CONFIG not set")
+		logrus.Panicf("unexpected config.DatastoreConfig=%s", config.DatastoreConfig)
+		return nil
 	}
-
 }
