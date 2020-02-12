@@ -20,20 +20,14 @@ func TestCountMallocs(t *testing.T) {
 	}
 	defer conn.Close()
 
-	if _, err := conn.Do("AUTH", redisrepo.RedisPassword); err != nil {
+	if _, err := conn.Do(redisrepo.AUTH, redisrepo.RedisPassword); err != nil {
 		t.Fatalf("auth failed password=%s err=%#v", redisrepo.RedisPassword, err)
 	}
 
-	reply, err := conn.Do("PING")
-	if err != nil {
-		t.Fatalf("ping failed err=%#v", err)
-	}
+	reply, err := conn.Do(redisrepo.PING)
 	pingReply, err := redis.String(reply, err)
-	if err != nil {
-		t.Fatalf("ping reply string failed err=%#v", err)
-	}
-	if pingReply != "PONG" {
-		t.Fatalf("expected %s but was %s", "PONG", pingReply)
+	if pingReply != redisrepo.PONG {
+		t.Fatalf("ping failed err=%#v", err)
 	}
 
 	hr := redisrepo.NewRepo(conn)
@@ -58,5 +52,7 @@ func TestCountMallocs(t *testing.T) {
 	if err != nil {
 		t.Fatalf("save failed err=%#v", err)
 	}
+
+	// hats, err := hr.FindAll(repo.Limit(10), repo.Offset(0))
 
 }
