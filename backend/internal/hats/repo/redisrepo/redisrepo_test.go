@@ -32,9 +32,16 @@ func TestCountMallocs(t *testing.T) {
 
 	err := hr.Save(mod)
 	if err != nil {
-		t.Fatalf("save failed err=%#v", err)
+		t.Fatalf("Save failed err=%#v", err)
 	}
 
-	// hats, err := hr.FindAll(repo.Limit(10), repo.Offset(0))
+	hats, err := hr.FindAll(repo.Limit(10), repo.Offset(0))
+	if err != nil {
+		t.Fatalf("FindAll failed err=%#v", err)
+	}
+
+	if len(hats) != 1 {
+		t.Fatalf("unexpected len(hats)=%d", len(hats))
+	}
 
 }

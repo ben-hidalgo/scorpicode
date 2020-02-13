@@ -53,10 +53,16 @@ func NewRepo() *Repo {
 const (
 	// AUTH .
 	AUTH = "AUTH"
-	// HMSET .
-	HMSET = "HMSET"
 	// PING .
 	PING = "PING"
 	// PONG .
 	PONG = "PONG"
+	// HMSET .
+	HMSET = "HMSET"
+	// LPUSH .
+	LPUSH = "LPUSH"
+	// SORT .
+	SORT = "SORT"
+	// HGETALL .
+	HGETALL = "HGETALL"
 )
