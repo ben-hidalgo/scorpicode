@@ -2,6 +2,7 @@ package repo
 
 import (
 	"context"
+	"errors"
 
 	"github.com/sirupsen/logrus"
 	"github.com/twitchtv/twirp"
@@ -13,14 +14,16 @@ type Offset int
 // Limit is the page size
 type Limit int
 
-// NotFound .
-type NotFound error
+var (
+	// ErrNotFound .
+	ErrNotFound = errors.New("notfound")
 
-// FieldMissing .
-type FieldMissing error
+	// ErrFieldMissing .
+	ErrFieldMissing = errors.New("fieldmissing")
 
-// VersionMismatch .
-type VersionMismatch error
+	// ErrVersionMismatch .
+	ErrVersionMismatch = errors.New("versionmismatch")
+)
 
 // HatMod represents a Hat stored in the repo
 type HatMod struct {
@@ -38,14 +41,18 @@ type HatRepo interface {
 	Commit() error
 	Close() error
 
-	// Find one; returns NotFound
+	// Find returns nil, nil if not found
 	Find(id string) (*HatMod, error)
 
 	// FindAll queries all records
 	FindAll(limit Limit, offset Offset) ([]*HatMod, error)
 
-	// Save performs an upsert, assigns an ID and version if a new record.
-	// Returns NotFound, VersionMismatch
+	// Save performs an upsert
+	//
+	// Assigns an ID if not provided
+	// Increments Version
+	// Returns NotFound if missing by ID
+	// Returns VersionMismatch if version isn't equal
 	Save(hm *HatMod) error
 
 	// Exists returns true if the record exists

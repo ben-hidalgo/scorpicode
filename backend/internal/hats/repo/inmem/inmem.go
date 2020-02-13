@@ -16,12 +16,12 @@ var _ repo.HatRepo = (*Repo)(nil)
 
 var storage = make(map[string]*repo.HatMod)
 
-// NewRepo returns a pointer to a new instance of Repo
+// NewRepo .
 func NewRepo() *Repo {
 	return &Repo{}
 }
 
-// FindAll queries all records
+// FindAll .
 func (r *Repo) FindAll(limit repo.Limit, offset repo.Offset) (hats []*repo.HatMod, err error) {
 	// TODO: respect limit and offset
 	for _, s := range storage {
@@ -30,7 +30,7 @@ func (r *Repo) FindAll(limit repo.Limit, offset repo.Offset) (hats []*repo.HatMo
 	return hats, nil
 }
 
-// Save performs an upsert, assigns an ID
+// Save .
 func (r *Repo) Save(hm *repo.HatMod) error {
 	if hm.ID == "" {
 		hm.ID = xid.New().String()
@@ -39,20 +39,34 @@ func (r *Repo) Save(hm *repo.HatMod) error {
 	return nil
 }
 
-// Exists returns true if the record exists
+// Exists .
 func (r *Repo) Exists(id string) (bool, error) {
 	_, ok := storage[id]
 	return ok, nil
 }
 
-// Delete deletes the record if version matches; throws NotFound, VersionMismatch
+// Delete .
 func (r *Repo) Delete(id string, version int) error {
+	v, ok := storage[id]
 
+	if !ok {
+		return repo.ErrNotFound
+	}
+
+	if v.Version != version {
+		return repo.ErrVersionMismatch
+	}
+
+	delete(storage, id)
 	return nil
 }
 
-// Find one; returns NotFound
+// Find .
 func (r *Repo) Find(id string) (*repo.HatMod, error) {
+	v, ok := storage[id]
+	if ok {
+		return v, nil
+	}
 	return nil, nil
 }
 
