@@ -52,18 +52,28 @@ func (r *Repo) FindAll(limit repo.Limit, offset repo.Offset) (hats []*repo.HatMo
 }
 
 // Save performs an upsert
-func (r *Repo) Save(hm *repo.HatMod) error {
+func (r *Repo) Save(hm *repo.HatMod) error { //TODO: should we return a UUID and populate the ID here (rather than in the service)???
 
 	uid := uid(hm)
+
+	//TODO: if id is not populated, insert; populated created_at, updated_at and add a version for optimistic locking
 
 	if _, err := r.conn.Do(HMSET, redis.Args{}.Add(uid).AddFlat(*hm)...); err != nil {
 		return err
 	}
+	// TODO: wrap with if not EXISTS hat:123
 	if _, err := r.conn.Do(LPUSH, HATS, hm.ID); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+// Exists returns true if the record exists
+func (r *Repo) Exists(id string) (bool, error) {
+	// TODO: implement
+	ok := false
+	return ok, nil
 }
 
 // BeginTxn implements HatRepo.BeginTxn()

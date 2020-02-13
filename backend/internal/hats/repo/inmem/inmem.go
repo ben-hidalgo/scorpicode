@@ -30,11 +30,19 @@ func (r *Repo) FindAll(limit repo.Limit, offset repo.Offset) (hats []*repo.HatMo
 	return hats, nil
 }
 
-// Save performs an upsert
+// Save performs an upsert, assigns an ID
 func (r *Repo) Save(hm *repo.HatMod) error {
-	hm.ID = xid.New().String()
+	if hm.ID == "" {
+		hm.ID = xid.New().String()
+	}
 	storage[hm.ID] = hm
 	return nil
+}
+
+// Exists returns true if the record exists
+func (r *Repo) Exists(id string) (bool, error) {
+	_, ok := storage[id]
+	return ok, nil
 }
 
 // BeginTxn implements HatRepo.BeginTxn()

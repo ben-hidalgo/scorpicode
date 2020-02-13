@@ -29,10 +29,12 @@ type HatRepo interface {
 	Commit() error
 	Close() error
 
-	//FindAll queries all records
+	// FindAll queries all records
 	FindAll(limit Limit, offset Offset) ([]*HatMod, error)
-	//Save performs an upsert
+	// Save performs an upsert, assigns an ID
 	Save(hm *HatMod) error
+	// Exists returns true if the record exists
+	Exists(id string) (bool, error)
 }
 
 // used to store the Repo in Context

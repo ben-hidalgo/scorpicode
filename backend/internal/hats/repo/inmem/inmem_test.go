@@ -10,7 +10,25 @@ func TestRepo(t *testing.T) {
 
 	hr := inmem.NewRepo()
 
-	_ = hr
+	id := "123"
+	color := "red"
+	name := "cap"
+	inches := int32(10)
+
+	mod := &repo.HatMod{
+		ID:     id,
+		Color:  color,
+		Name:   name,
+		Inches: inches,
+	}
+
+	found, err := hr.Exists(id)
+	if err != nil {
+		t.Fatalf("err should be nil %#v", err)
+	}
+	if found {
+		t.Fatalf("should not be found")
+	}
 
 	// find when empty returns length zero
 	hats, err := hr.FindAll(10, 0)
@@ -21,20 +39,18 @@ func TestRepo(t *testing.T) {
 		t.Fatalf("length should be zero but was %d", len(hats))
 	}
 
-	color := "red"
-	name := "cap"
-	inches := int32(10)
-
-	mod := &repo.HatMod{
-		Color:  color,
-		Name:   name,
-		Inches: inches,
-	}
-
 	// save the first one
 	err = hr.Save(mod)
 	if err != nil {
 		t.Fatalf("err should be nil %#v", err)
+	}
+
+	found, err = hr.Exists(id)
+	if err != nil {
+		t.Fatalf("err should be nil %#v", err)
+	}
+	if !found {
+		t.Fatalf("should be found")
 	}
 
 	// find the one we just saved
