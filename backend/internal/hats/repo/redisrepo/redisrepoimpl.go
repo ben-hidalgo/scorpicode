@@ -69,12 +69,26 @@ func (r *Repo) Save(hm *repo.HatMod) error { //TODO: should we return a UUID and
 	return nil
 }
 
+// Delete deletes the record if version matches; throws NotFound, VersionMismatch
+func (r *Repo) Delete(id string, version int) error {
+	// TODO: implement
+	return nil
+}
+
 // Exists returns true if the record exists
 func (r *Repo) Exists(id string) (bool, error) {
 	// TODO: implement
 	ok := false
 	return ok, nil
 }
+
+// Find one; returns NotFound
+func (r *Repo) Find(id string) (*repo.HatMod, error) {
+	return nil, nil
+}
+
+///////////
+///////////
 
 // BeginTxn implements HatRepo.BeginTxn()
 func (r *Repo) BeginTxn(ctx context.Context) error {

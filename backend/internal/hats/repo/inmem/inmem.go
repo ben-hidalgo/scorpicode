@@ -45,6 +45,19 @@ func (r *Repo) Exists(id string) (bool, error) {
 	return ok, nil
 }
 
+// Delete deletes the record if version matches; throws NotFound, VersionMismatch
+func (r *Repo) Delete(id string, version int) error {
+
+	return nil
+}
+
+// Find one; returns NotFound
+func (r *Repo) Find(id string) (*repo.HatMod, error) {
+	return nil, nil
+}
+
+////////// connection related
+
 // BeginTxn implements HatRepo.BeginTxn()
 func (r *Repo) BeginTxn(ctx context.Context) error {
 	logrus.Debug("inmem.BeginTxn()")

@@ -13,28 +13,47 @@ type Offset int
 // Limit is the page size
 type Limit int
 
+// NotFound .
+type NotFound error
+
+// FieldMissing .
+type FieldMissing error
+
+// VersionMismatch .
+type VersionMismatch error
+
 // HatMod represents a Hat stored in the repo
 type HatMod struct {
-	ID     string
-	Inches int32  `redis:"inches"`
-	Color  string `redis:"color"`
-	Name   string `redis:"name"`
+	ID      string
+	Inches  int32  `redis:"inches"`
+	Color   string `redis:"color"`
+	Name    string `redis:"name"`
+	Version int    `redis:"version"`
 }
 
 // HatRepo interface for data storage
-//TODO: implement create and list in memory and update list_hats and make_hat
 type HatRepo interface {
 	BeginTxn(ctx context.Context) error
 	Rollback() error
 	Commit() error
 	Close() error
 
+	// Find one; returns NotFound
+	Find(id string) (*HatMod, error)
+
 	// FindAll queries all records
 	FindAll(limit Limit, offset Offset) ([]*HatMod, error)
-	// Save performs an upsert, assigns an ID
+
+	// Save performs an upsert, assigns an ID and version if a new record.
+	// Returns NotFound, VersionMismatch
 	Save(hm *HatMod) error
+
 	// Exists returns true if the record exists
 	Exists(id string) (bool, error)
+
+	// Delete deletes the record if version matches;
+	// throws NotFound, VersionMismatch
+	Delete(id string, version int) error
 }
 
 // used to store the Repo in Context
