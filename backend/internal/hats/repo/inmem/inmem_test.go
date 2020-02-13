@@ -3,79 +3,152 @@ package inmem_test
 import (
 	"backend/internal/hats/repo"
 	"backend/internal/hats/repo/inmem"
+	"errors"
 	"testing"
 )
 
-func TestRepo(t *testing.T) {
+const (
+	expColor  = "red"
+	expName   = "cap"
+	expInches = int32(10)
+	EXPECTED  = "expected %v was %v"
+)
 
-	hr := inmem.NewRepo()
-
-	id := "123"
-	color := "red"
-	name := "cap"
-	inches := int32(10)
-
-	mod := &repo.HatMod{
-		ID:     id,
-		Color:  color,
-		Name:   name,
-		Inches: inches,
+func start() (*inmem.Repo, *repo.HatMod) {
+	hm := &repo.HatMod{
+		Color:   expColor,
+		Name:    expName,
+		Inches:  expInches,
+		Version: 0,
 	}
+	return inmem.NewRepo(), hm
+}
 
-	found, err := hr.Exists(id)
+func TestNotExists(t *testing.T) {
+
+	hr, _ := start()
+
+	exists, err := hr.Exists("123")
 	if err != nil {
-		t.Fatalf("err should be nil %#v", err)
+		t.Fatalf(EXPECTED, nil, err)
 	}
-	if found {
-		t.Fatalf("should not be found")
+	if exists {
+		t.Fatalf(EXPECTED, false, true)
 	}
 
-	// find when empty returns length zero
+}
+
+func TestExists(t *testing.T) {
+
+	hr, hm := start()
+
+	hm.ID = "123"
+
+	err := hr.Save(hm)
+	if err != nil {
+		t.Fatalf(EXPECTED, nil, err)
+	}
+
+	exists, err := hr.Exists("123")
+	if err != nil {
+		t.Fatalf(EXPECTED, nil, err)
+	}
+	if !exists {
+		t.Fatalf(EXPECTED, true, false)
+	}
+
+}
+
+func TestFindAllEmpty(t *testing.T) {
+
+	hr, _ := start()
+
 	hats, err := hr.FindAll(10, 0)
 	if err != nil {
-		t.Fatalf("save failed err=%s", err)
+		t.Fatalf(EXPECTED, nil, err)
 	}
 	if len(hats) != 0 {
-		t.Fatalf("length should be zero but was %d", len(hats))
+		t.Fatalf(EXPECTED, 0, len(hats))
+	}
+}
+
+func TestFindAllOne(t *testing.T) {
+
+	hr, hm := start()
+
+	hm.ID = "123"
+
+	err := hr.Save(hm)
+	if err != nil {
+		t.Fatalf(EXPECTED, nil, err)
 	}
 
-	// save the first one
-	err = hr.Save(mod)
+	hats, err := hr.FindAll(10, 0)
 	if err != nil {
-		t.Fatalf("err should be nil %#v", err)
-	}
-
-	found, err = hr.Exists(id)
-	if err != nil {
-		t.Fatalf("err should be nil %#v", err)
-	}
-	if !found {
-		t.Fatalf("should be found")
-	}
-
-	// find the one we just saved
-	hats, err = hr.FindAll(10, 0)
-	if err != nil {
-		t.Fatalf("save failed err=%s", err)
+		t.Fatalf(EXPECTED, nil, err)
 	}
 	if len(hats) != 1 {
-		t.Fatalf("length should be zero but was %d", len(hats))
+		t.Fatalf(EXPECTED, 1, len(hats))
 	}
 
-	// validate the hat is returned correctly
+	// validate the correct hat is returned
 	hat := hats[0]
 
 	if hat == nil {
-		t.Fatalf("hat should not be nil")
+		t.Fatalf(EXPECTED, "!nil", nil)
 	}
-	if hat.Inches != inches {
-		t.Fatalf("inches must match %d != %d", hat.Inches, inches)
+	if hat.ID != "123" {
+		t.Fatalf(EXPECTED, "123", hat.ID)
 	}
-	if hat.Name != name {
-		t.Fatalf("name must match %s != %s", hat.Name, name)
+	if hat.Inches != expInches {
+		t.Fatalf(EXPECTED, hat.Inches, expInches)
 	}
-	if hat.Color != color {
-		t.Fatalf("color must match %s != %s", hat.Color, color)
+	if hat.Name != expName {
+		t.Fatalf(EXPECTED, hat.Name, expName)
+	}
+	if hat.Color != expColor {
+		t.Fatalf(EXPECTED, hat.Color, expColor)
+	}
+}
+
+func TestDeleteNotFound(t *testing.T) {
+
+	hr, _ := start()
+
+	err := hr.Delete("123", 0)
+	if err == nil {
+		t.Fatalf(EXPECTED, "!nil", nil)
+	}
+	if !errors.Is(err, repo.ErrNotFound) {
+		t.Fatalf(EXPECTED, repo.ErrNotFound, err)
+	}
+
+}
+
+func TestDeleteFound(t *testing.T) {
+
+	hr, hm := start()
+
+	id := "123"
+
+	hm.ID = id
+
+	err := hr.Save(hm)
+	if err != nil {
+		t.Fatalf(EXPECTED, nil, err)
+	}
+
+	err = hr.Delete(id, 0)
+	if err != nil {
+		t.Fatalf(EXPECTED, nil, err)
+	}
+
+	exists, err := hr.Exists(id)
+	if err != nil {
+		t.Fatalf(EXPECTED, nil, err)
+	}
+	if exists {
+		t.Fatalf(EXPECTED, false, true)
 	}
 
 }

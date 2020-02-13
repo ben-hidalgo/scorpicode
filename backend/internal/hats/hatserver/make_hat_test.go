@@ -14,7 +14,7 @@ import (
 func TestRandomNameColor(t *testing.T) {
 
 	ctx := context.Background()
-	ctx = context.WithValue(ctx, repo.RepoKey, &inmem.Repo{})
+	ctx = context.WithValue(ctx, repo.RepoKey, inmem.NewRepo())
 
 	inches := int32(10)
 
@@ -50,7 +50,7 @@ func TestRandomNameColor(t *testing.T) {
 func TestSpecificNameColor(t *testing.T) {
 
 	ctx := context.Background()
-	ctx = context.WithValue(ctx, repo.RepoKey, &inmem.Repo{})
+	ctx = context.WithValue(ctx, repo.RepoKey, inmem.NewRepo())
 
 	inches := int32(10)
 	name := "cap"
