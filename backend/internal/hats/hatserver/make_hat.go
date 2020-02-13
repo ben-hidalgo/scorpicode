@@ -46,7 +46,7 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 		Inches: req.GetInches(),
 	}
 
-	err := hr.Save(mod)
+	id, err := hr.Save(*mod)
 	if err != nil {
 		return nil, err
 	}
@@ -59,6 +59,7 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 	return &hatspb.MakeHatResponse{
 
 		Hat: &hatspb.Hat{
+			Id:     id,
 			Color:  mod.Color,
 			Name:   mod.Name,
 			Inches: mod.Inches,

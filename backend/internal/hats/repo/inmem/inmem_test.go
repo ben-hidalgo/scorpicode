@@ -42,14 +42,12 @@ func TestExists(t *testing.T) {
 
 	hr, hm := start()
 
-	hm.ID = "123"
-
-	err := hr.Save(hm)
+	id, err := hr.Save(*hm)
 	if err != nil {
 		t.Fatalf(EXPECTED, nil, err)
 	}
 
-	exists, err := hr.Exists("123")
+	exists, err := hr.Exists(id)
 	if err != nil {
 		t.Fatalf(EXPECTED, nil, err)
 	}
@@ -76,9 +74,7 @@ func TestFindAllOne(t *testing.T) {
 
 	hr, hm := start()
 
-	hm.ID = "123"
-
-	err := hr.Save(hm)
+	id, err := hr.Save(*hm)
 	if err != nil {
 		t.Fatalf(EXPECTED, nil, err)
 	}
@@ -97,7 +93,7 @@ func TestFindAllOne(t *testing.T) {
 	if hat == nil {
 		t.Fatalf(EXPECTED, "!nil", nil)
 	}
-	if hat.ID != "123" {
+	if hat.ID != id {
 		t.Fatalf(EXPECTED, "123", hat.ID)
 	}
 	if hat.Inches != expInches {
@@ -129,11 +125,7 @@ func TestDeleteFound(t *testing.T) {
 
 	hr, hm := start()
 
-	id := "123"
-
-	hm.ID = id
-
-	err := hr.Save(hm)
+	id, err := hr.Save(*hm)
 	if err != nil {
 		t.Fatalf(EXPECTED, nil, err)
 	}

@@ -47,13 +47,13 @@ type HatRepo interface {
 	// FindAll queries all records
 	FindAll(limit Limit, offset Offset) ([]*HatMod, error)
 
-	// Save performs an upsert
-	//
+	// Save performs an upsert, returns the ID
+	// Input parameter is not mutated
 	// Assigns an ID if not provided
 	// Increments Version
 	// Returns NotFound if missing by ID
 	// Returns VersionMismatch if version isn't equal
-	Save(hm *HatMod) error
+	Save(hm HatMod) (string, error)
 
 	// Exists returns true if the record exists
 	Exists(id string) (bool, error)

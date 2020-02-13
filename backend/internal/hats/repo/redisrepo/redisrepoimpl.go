@@ -5,6 +5,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/rs/xid"
+
 	"github.com/gomodule/redigo/redis"
 	"github.com/sirupsen/logrus"
 )
@@ -15,11 +17,15 @@ const HAT = "hat"
 // HATS is the sortable range of hat UIDs
 const HATS = "hats"
 
-func uid(hm *repo.HatMod) string {
-	return suid(hm.ID)
-}
-func suid(id string) string {
-	return fmt.Sprintf("%s:%s", HAT, id)
+// returns the id and the key, creating a new one if empty
+// e.g. id -> "123" and key -> "hat:123"
+func idkey(inputID string) (id string, key string) {
+	if inputID == "" {
+		id = xid.New().String()
+	} else {
+		id = inputID
+	}
+	return id, fmt.Sprintf("%s:%s", HAT, id)
 }
 
 // FindAll queries all records
@@ -31,10 +37,12 @@ func (r *Repo) FindAll(limit repo.Limit, offset repo.Offset) (hats []*repo.HatMo
 		return
 	}
 
+	// TODO: v is a string, better naming and/or conversion
 	for _, v := range values {
-		logrus.Printf("v=%s", v)
+		// logrus.Printf("v=%s", v)
 
-		all, err := redis.Values(r.conn.Do(HGETALL, suid(fmt.Sprintf("%s", v))))
+		_, key := idkey(fmt.Sprintf("%s", v))
+		all, err := redis.Values(r.conn.Do(HGETALL, key))
 		if err != nil {
 			return nil, err
 		}
@@ -52,21 +60,29 @@ func (r *Repo) FindAll(limit repo.Limit, offset repo.Offset) (hats []*repo.HatMo
 }
 
 // Save performs an upsert
-func (r *Repo) Save(hm *repo.HatMod) error { //TODO: should we return a UUID and populate the ID here (rather than in the service)???
+func (r *Repo) Save(hm repo.HatMod) (string, error) { //TODO: should we return a UUID and populate the ID here (rather than in the service)???
 
-	uid := uid(hm)
+	id, key := idkey(hm.ID)
+
+	mod := &repo.HatMod{
+		ID:      id,
+		Color:   hm.Color,
+		Name:    hm.Name,
+		Inches:  hm.Inches,
+		Version: hm.Version + 1,
+	}
 
 	//TODO: if id is not populated, insert; populated created_at, updated_at and add a version for optimistic locking
 
-	if _, err := r.conn.Do(HMSET, redis.Args{}.Add(uid).AddFlat(*hm)...); err != nil {
-		return err
+	if _, err := r.conn.Do(HMSET, redis.Args{}.Add(key).AddFlat(mod)...); err != nil {
+		return "", err
 	}
 	// TODO: wrap with if not EXISTS hat:123
 	if _, err := r.conn.Do(LPUSH, HATS, hm.ID); err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
+	return id, nil
 }
 
 // Delete deletes the record if version matches; throws NotFound, VersionMismatch

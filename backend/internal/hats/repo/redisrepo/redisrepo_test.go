@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestCountMallocs(t *testing.T) {
+func TestSaveFind(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
@@ -18,21 +18,22 @@ func TestCountMallocs(t *testing.T) {
 
 	hr.BeginTxn(ctx)
 
-	id := "123"
 	inches := int32(10)
 	name := "cap"
 	color := "blue"
 
 	mod := &repo.HatMod{
-		ID:     id,
 		Color:  color,
 		Name:   name,
 		Inches: inches,
 	}
 
-	err := hr.Save(mod)
+	id, err := hr.Save(*mod)
 	if err != nil {
 		t.Fatalf("Save failed err=%#v", err)
+	}
+	if id == "" {
+		t.Fatalf("id empty")
 	}
 
 	hats, err := hr.FindAll(repo.Limit(10), repo.Offset(0))

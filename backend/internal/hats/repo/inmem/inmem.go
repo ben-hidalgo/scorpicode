@@ -33,12 +33,25 @@ func (r *Repo) FindAll(limit repo.Limit, offset repo.Offset) (hats []*repo.HatMo
 }
 
 // Save .
-func (r *Repo) Save(hm *repo.HatMod) error {
+func (r *Repo) Save(hm repo.HatMod) (string, error) {
+
+	var id string
 	if hm.ID == "" {
-		hm.ID = xid.New().String()
+		id = xid.New().String()
+	} else {
+		id = hm.ID
 	}
-	r.storage[hm.ID] = hm
-	return nil
+
+	mod := &repo.HatMod{
+		ID:      id,
+		Color:   hm.Color,
+		Name:    hm.Name,
+		Inches:  hm.Inches,
+		Version: hm.Version + 1,
+	}
+
+	r.storage[id] = mod
+	return id, nil
 }
 
 // Exists .
@@ -55,9 +68,11 @@ func (r *Repo) Delete(id string, version int) error {
 		return repo.ErrNotFound
 	}
 
-	if v.Version != version {
-		return repo.ErrVersionMismatch
-	}
+	_ = v
+	//TODO: re-add
+	// if v.Version != version {
+	// 	return repo.ErrVersionMismatch
+	// }
 
 	delete(r.storage, id)
 	return nil
