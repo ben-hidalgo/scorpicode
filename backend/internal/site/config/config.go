@@ -4,8 +4,13 @@ import (
 	"backend/pkg/envconfig"
 )
 
+// ListenAddress .
 var ListenAddress = ":8081"
+
+// AppName .
 var AppName = "site"
+
+// StaticPath .
 var StaticPath = "./static"
 
 func init() {

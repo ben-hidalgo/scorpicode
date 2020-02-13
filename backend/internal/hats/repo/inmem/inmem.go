@@ -8,7 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-//Repo implements repo.HatRepo
+// Repo implements repo.HatRepo
 type Repo struct{}
 
 // enforces the interface is implemented
@@ -21,7 +21,7 @@ func NewRepo() *Repo {
 	return &Repo{}
 }
 
-//FindAll queries all records
+// FindAll queries all records
 func (r *Repo) FindAll(limit repo.Limit, offset repo.Offset) (hats []*repo.HatMod, err error) {
 	// TODO: respect limit and offset
 	for _, s := range storage {
@@ -30,26 +30,26 @@ func (r *Repo) FindAll(limit repo.Limit, offset repo.Offset) (hats []*repo.HatMo
 	return hats, nil
 }
 
-//Save performs an upsert
+// Save performs an upsert
 func (r *Repo) Save(hm *repo.HatMod) error {
 	hm.ID = xid.New().String()
 	storage[hm.ID] = hm
 	return nil
 }
 
-//BeginTx implements HatRepo.BeginTxn()
+// BeginTxn implements HatRepo.BeginTxn()
 func (r *Repo) BeginTxn(ctx context.Context) error {
 	logrus.Debug("inmem.BeginTxn()")
 	return nil
 }
 
-//Rollback implements HatRepo.Rollback()
+// Rollback implements HatRepo.Rollback()
 func (r *Repo) Rollback() error {
 	logrus.Debug("inmem.Rollback()")
 	return nil
 }
 
-//Commit implements HatRepo.Commit()
+// Commit implements HatRepo.Commit()
 func (r *Repo) Commit() error {
 	logrus.Debug("inmem.Commit()")
 	return nil

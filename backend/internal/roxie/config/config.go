@@ -4,12 +4,22 @@ import (
 	"backend/pkg/envconfig"
 )
 
+// ListenAddress .
 var ListenAddress = ":8080"
+
+// AppName .
 var AppName = "roxie"
 
+// WebsitePrefix .
 var WebsitePrefix = "http://localhost:8081"
+
+// FrontendPrefix .
 var FrontendPrefix = "http://localhost:8082"
+
+// HatsPrefix .
 var HatsPrefix = "http://localhost:8083"
+
+// EnableCors .
 var EnableCors = true
 
 func init() {

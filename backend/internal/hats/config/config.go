@@ -4,10 +4,19 @@ import (
 	"backend/pkg/envconfig"
 )
 
+// ListenAddress .
 var ListenAddress = ":8083"
+
+// MinSizeInches .
 var MinSizeInches = int32(5)
+
+// MaxSizeInches .
 var MaxSizeInches = int32(15)
+
+// AppName .
 var AppName = "hats"
+
+// DatastoreConfig .
 var DatastoreConfig = "inmem"
 
 func init() {

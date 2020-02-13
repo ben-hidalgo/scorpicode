@@ -6,6 +6,7 @@ import (
 	"strconv"
 )
 
+// SetString populates value if name exists
 func SetString(name string, value *string) {
 	v, ok := os.LookupEnv(name)
 	if ok {
@@ -13,6 +14,7 @@ func SetString(name string, value *string) {
 	}
 }
 
+// SetInt populates value if name exists
 func SetInt(name string, value *int) {
 	v, ok := os.LookupEnv(name)
 	if ok {
@@ -24,6 +26,7 @@ func SetInt(name string, value *int) {
 	}
 }
 
+// SetInt32 populates value if name exists
 func SetInt32(name string, value *int32) {
 	v, ok := os.LookupEnv(name)
 	if ok {
@@ -35,6 +38,7 @@ func SetInt32(name string, value *int32) {
 	}
 }
 
+// SetBool populates value if name exists
 func SetBool(name string, value *bool) {
 	v, ok := os.LookupEnv(name)
 	if ok {

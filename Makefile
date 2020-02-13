@@ -44,6 +44,7 @@ dev:
 go-happy:
 	(cd backend             && \
 	go test ./... -short -v && \
+	golint ./...            && \
 	go vet ./...            && \
 	go fmt ./...            && \
 	go mod tidy)

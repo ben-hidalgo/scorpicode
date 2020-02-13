@@ -7,7 +7,10 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// LogLevel default value
 var LogLevel = "debug"
+
+// LogFormat default value
 var LogFormat = "text"
 
 func init() {

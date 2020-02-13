@@ -13,7 +13,7 @@ type Offset int
 // Limit is the page size
 type Limit int
 
-// represents a Hat stored in the repo
+// HatMod represents a Hat stored in the repo
 type HatMod struct {
 	ID     string
 	Inches int32  `redis:"inches"`
@@ -21,8 +21,8 @@ type HatMod struct {
 	Name   string `redis:"name"`
 }
 
+// HatRepo interface for data storage
 //TODO: implement create and list in memory and update list_hats and make_hat
-// the repository type
 type HatRepo interface {
 	BeginTxn(ctx context.Context) error
 	Rollback() error
