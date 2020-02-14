@@ -42,12 +42,12 @@ func TestExists(t *testing.T) {
 
 	hr, hm := start()
 
-	id, err := hr.Save(*hm)
+	mod, err := hr.Save(*hm)
 	if err != nil {
 		t.Fatalf(EXPECTED, nil, err)
 	}
 
-	exists, err := hr.Exists(id)
+	exists, err := hr.Exists(mod.ID)
 	if err != nil {
 		t.Fatalf(EXPECTED, nil, err)
 	}
@@ -74,7 +74,7 @@ func TestFindAllOne(t *testing.T) {
 
 	hr, hm := start()
 
-	id, err := hr.Save(*hm)
+	mod, err := hr.Save(*hm)
 	if err != nil {
 		t.Fatalf(EXPECTED, nil, err)
 	}
@@ -93,8 +93,8 @@ func TestFindAllOne(t *testing.T) {
 	if hat == nil {
 		t.Fatalf(EXPECTED, "!nil", nil)
 	}
-	if hat.ID != id {
-		t.Fatalf(EXPECTED, "123", hat.ID)
+	if hat.ID != mod.ID {
+		t.Fatalf(EXPECTED, mod.ID, hat.ID)
 	}
 	if hat.Inches != expInches {
 		t.Fatalf(EXPECTED, hat.Inches, expInches)
@@ -125,22 +125,61 @@ func TestDeleteFound(t *testing.T) {
 
 	hr, hm := start()
 
-	id, err := hr.Save(*hm)
+	mod, err := hr.Save(*hm)
 	if err != nil {
 		t.Fatalf(EXPECTED, nil, err)
 	}
 
-	err = hr.Delete(id, 0)
+	err = hr.Delete(mod.ID, 0)
 	if err != nil {
 		t.Fatalf(EXPECTED, nil, err)
 	}
 
-	exists, err := hr.Exists(id)
+	exists, err := hr.Exists(mod.ID)
 	if err != nil {
 		t.Fatalf(EXPECTED, nil, err)
 	}
 	if exists {
 		t.Fatalf(EXPECTED, false, true)
 	}
+
+}
+
+func TestSaveInsert(t *testing.T) {
+
+	// hr, hm := start()
+
+	/*
+		id, err := hr.Save(*hm)
+		if err != nil {
+			t.Fatalf(EXPECTED, nil, err)
+		}
+
+		exists, err := hr.Exists(id)
+		if err != nil {
+			t.Fatalf(EXPECTED, nil, err)
+		}
+		if exists {
+			t.Fatalf(EXPECTED, false, true)
+		}
+
+
+
+		if hat == nil {
+			t.Fatalf(EXPECTED, "!nil", nil)
+		}
+		if hat.ID != id {
+			t.Fatalf(EXPECTED, "123", hat.ID)
+		}
+		if hat.Inches != expInches {
+			t.Fatalf(EXPECTED, hat.Inches, expInches)
+		}
+		if hat.Name != expName {
+			t.Fatalf(EXPECTED, hat.Name, expName)
+		}
+		if hat.Color != expColor {
+			t.Fatalf(EXPECTED, hat.Color, expColor)
+		}
+	*/
 
 }

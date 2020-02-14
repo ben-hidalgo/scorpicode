@@ -60,7 +60,7 @@ func (r *Repo) FindAll(limit repo.Limit, offset repo.Offset) (hats []*repo.HatMo
 }
 
 // Save performs an upsert
-func (r *Repo) Save(hm repo.HatMod) (string, error) { //TODO: should we return a UUID and populate the ID here (rather than in the service)???
+func (r *Repo) Save(hm repo.HatMod) (*repo.HatMod, error) { //TODO: should we return a UUID and populate the ID here (rather than in the service)???
 
 	id, key := idkey(hm.ID)
 
@@ -75,14 +75,14 @@ func (r *Repo) Save(hm repo.HatMod) (string, error) { //TODO: should we return a
 	//TODO: if id is not populated, insert; populated created_at, updated_at and add a version for optimistic locking
 
 	if _, err := r.conn.Do(HMSET, redis.Args{}.Add(key).AddFlat(mod)...); err != nil {
-		return "", err
+		return nil, err
 	}
 	// TODO: wrap with if not EXISTS hat:123
 	if _, err := r.conn.Do(LPUSH, HATS, hm.ID); err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return id, nil
+	return mod, nil
 }
 
 // Delete deletes the record if version matches; throws NotFound, VersionMismatch

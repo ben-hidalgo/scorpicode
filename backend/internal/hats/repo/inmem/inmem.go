@@ -33,7 +33,7 @@ func (r *Repo) FindAll(limit repo.Limit, offset repo.Offset) (hats []*repo.HatMo
 }
 
 // Save .
-func (r *Repo) Save(hm repo.HatMod) (string, error) {
+func (r *Repo) Save(hm repo.HatMod) (*repo.HatMod, error) {
 
 	var id string
 	if hm.ID == "" {
@@ -51,7 +51,7 @@ func (r *Repo) Save(hm repo.HatMod) (string, error) {
 	}
 
 	r.storage[id] = mod
-	return id, nil
+	return mod, nil
 }
 
 // Exists .

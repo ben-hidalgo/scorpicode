@@ -22,17 +22,15 @@ func TestSaveFind(t *testing.T) {
 	name := "cap"
 	color := "blue"
 
-	mod := &repo.HatMod{
+	mod, err := hr.Save(repo.HatMod{
 		Color:  color,
 		Name:   name,
 		Inches: inches,
-	}
-
-	id, err := hr.Save(*mod)
+	})
 	if err != nil {
 		t.Fatalf("Save failed err=%#v", err)
 	}
-	if id == "" {
+	if mod.ID == "" {
 		t.Fatalf("id empty")
 	}
 

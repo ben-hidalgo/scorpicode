@@ -40,13 +40,12 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 		name = req.GetName()
 	}
 
-	mod := &repo.HatMod{
+	// a different instance is returned
+	mod, err := hr.Save(repo.HatMod{
 		Color:  color,
 		Name:   name,
 		Inches: req.GetInches(),
-	}
-
-	id, err := hr.Save(*mod)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +58,7 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 	return &hatspb.MakeHatResponse{
 
 		Hat: &hatspb.Hat{
-			Id:     id,
+			Id:     mod.ID,
 			Color:  mod.Color,
 			Name:   mod.Name,
 			Inches: mod.Inches,

@@ -53,7 +53,7 @@ type HatRepo interface {
 	// Increments Version
 	// Returns NotFound if missing by ID
 	// Returns VersionMismatch if version isn't equal
-	Save(hm HatMod) (string, error)
+	Save(hm HatMod) (*HatMod, error)
 
 	// Exists returns true if the record exists
 	Exists(id string) (bool, error)
