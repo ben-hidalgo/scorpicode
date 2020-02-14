@@ -11,7 +11,9 @@ const (
 	expColor  = "red"
 	expName   = "cap"
 	expInches = int32(10)
-	EXPECTED  = "expected %v was %v"
+	EXPECTED  = "expected %v %s %v"
+	BUT_WAS   = "but was"
+	NOT_NIL   = "!nil"
 )
 
 func start() (*inmem.Repo, *repo.HatMod) {
@@ -30,10 +32,10 @@ func TestNotExists(t *testing.T) {
 
 	exists, err := hr.Exists("123")
 	if err != nil {
-		t.Fatalf(EXPECTED, nil, err)
+		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
 	}
 	if exists {
-		t.Fatalf(EXPECTED, false, true)
+		t.Fatalf(EXPECTED, false, BUT_WAS, true)
 	}
 
 }
@@ -44,15 +46,15 @@ func TestExists(t *testing.T) {
 
 	mod, err := hr.Save(*hm)
 	if err != nil {
-		t.Fatalf(EXPECTED, nil, err)
+		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
 	}
 
 	exists, err := hr.Exists(mod.ID)
 	if err != nil {
-		t.Fatalf(EXPECTED, nil, err)
+		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
 	}
 	if !exists {
-		t.Fatalf(EXPECTED, true, false)
+		t.Fatalf(EXPECTED, true, BUT_WAS, false)
 	}
 
 }
@@ -63,10 +65,10 @@ func TestFindAllEmpty(t *testing.T) {
 
 	hats, err := hr.FindAll(10, 0)
 	if err != nil {
-		t.Fatalf(EXPECTED, nil, err)
+		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
 	}
 	if len(hats) != 0 {
-		t.Fatalf(EXPECTED, 0, len(hats))
+		t.Fatalf(EXPECTED, 0, BUT_WAS, len(hats))
 	}
 }
 
@@ -76,34 +78,34 @@ func TestFindAllOne(t *testing.T) {
 
 	mod, err := hr.Save(*hm)
 	if err != nil {
-		t.Fatalf(EXPECTED, nil, err)
+		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
 	}
 
 	hats, err := hr.FindAll(10, 0)
 	if err != nil {
-		t.Fatalf(EXPECTED, nil, err)
+		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
 	}
 	if len(hats) != 1 {
-		t.Fatalf(EXPECTED, 1, len(hats))
+		t.Fatalf(EXPECTED, 1, BUT_WAS, len(hats))
 	}
 
 	// validate the correct hat is returned
 	hat := hats[0]
 
 	if hat == nil {
-		t.Fatalf(EXPECTED, "!nil", nil)
+		t.Fatalf(EXPECTED, NOT_NIL, BUT_WAS, nil)
 	}
 	if hat.ID != mod.ID {
-		t.Fatalf(EXPECTED, mod.ID, hat.ID)
+		t.Fatalf(EXPECTED, mod.ID, BUT_WAS, hat.ID)
 	}
 	if hat.Inches != expInches {
-		t.Fatalf(EXPECTED, hat.Inches, expInches)
+		t.Fatalf(EXPECTED, hat.Inches, BUT_WAS, expInches)
 	}
 	if hat.Name != expName {
-		t.Fatalf(EXPECTED, hat.Name, expName)
+		t.Fatalf(EXPECTED, hat.Name, BUT_WAS, expName)
 	}
 	if hat.Color != expColor {
-		t.Fatalf(EXPECTED, hat.Color, expColor)
+		t.Fatalf(EXPECTED, hat.Color, BUT_WAS, expColor)
 	}
 }
 
@@ -113,10 +115,10 @@ func TestDeleteNotFound(t *testing.T) {
 
 	err := hr.Delete("123", 0)
 	if err == nil {
-		t.Fatalf(EXPECTED, "!nil", nil)
+		t.Fatalf(EXPECTED, NOT_NIL, BUT_WAS, nil)
 	}
 	if !errors.Is(err, repo.ErrNotFound) {
-		t.Fatalf(EXPECTED, repo.ErrNotFound, err)
+		t.Fatalf(EXPECTED, repo.ErrNotFound, BUT_WAS, err)
 	}
 
 }
@@ -127,59 +129,57 @@ func TestDeleteFound(t *testing.T) {
 
 	mod, err := hr.Save(*hm)
 	if err != nil {
-		t.Fatalf(EXPECTED, nil, err)
+		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
 	}
 
 	err = hr.Delete(mod.ID, 0)
 	if err != nil {
-		t.Fatalf(EXPECTED, nil, err)
+		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
 	}
 
 	exists, err := hr.Exists(mod.ID)
 	if err != nil {
-		t.Fatalf(EXPECTED, nil, err)
+		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
 	}
 	if exists {
-		t.Fatalf(EXPECTED, false, true)
+		t.Fatalf(EXPECTED, false, BUT_WAS, true)
 	}
 
 }
 
 func TestSaveInsert(t *testing.T) {
 
-	// hr, hm := start()
+	hr, hm := start()
 
-	/*
-		id, err := hr.Save(*hm)
-		if err != nil {
-			t.Fatalf(EXPECTED, nil, err)
-		}
+	mod, err := hr.Save(*hm)
+	if err != nil {
+		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
+	}
 
-		exists, err := hr.Exists(id)
-		if err != nil {
-			t.Fatalf(EXPECTED, nil, err)
-		}
-		if exists {
-			t.Fatalf(EXPECTED, false, true)
-		}
+	exists, err := hr.Exists(mod.ID)
+	if err != nil {
+		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
+	}
+	if !exists {
+		t.Fatalf(EXPECTED, true, BUT_WAS, false)
+	}
 
+	hat, err := hr.Find(mod.ID)
 
-
-		if hat == nil {
-			t.Fatalf(EXPECTED, "!nil", nil)
-		}
-		if hat.ID != id {
-			t.Fatalf(EXPECTED, "123", hat.ID)
-		}
-		if hat.Inches != expInches {
-			t.Fatalf(EXPECTED, hat.Inches, expInches)
-		}
-		if hat.Name != expName {
-			t.Fatalf(EXPECTED, hat.Name, expName)
-		}
-		if hat.Color != expColor {
-			t.Fatalf(EXPECTED, hat.Color, expColor)
-		}
-	*/
+	if hat == nil {
+		t.Fatalf(EXPECTED, NOT_NIL, BUT_WAS, nil)
+	}
+	if hat.ID != mod.ID {
+		t.Fatalf(EXPECTED, mod.ID, BUT_WAS, hat.ID)
+	}
+	if hat.Inches != expInches {
+		t.Fatalf(EXPECTED, hat.Inches, BUT_WAS, expInches)
+	}
+	if hat.Name != expName {
+		t.Fatalf(EXPECTED, hat.Name, BUT_WAS, expName)
+	}
+	if hat.Color != expColor {
+		t.Fatalf(EXPECTED, hat.Color, BUT_WAS, expColor)
+	}
 
 }

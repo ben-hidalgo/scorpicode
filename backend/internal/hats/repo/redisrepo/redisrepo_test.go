@@ -7,7 +7,17 @@ import (
 	"testing"
 )
 
-func TestSaveFind(t *testing.T) {
+const (
+	expColor  = "red"
+	expName   = "cap"
+	expInches = int32(10)
+	EXPECTED  = "expected %v %s %v"
+	BUT_WAS   = "but was"
+	NOT_NIL   = "!nil"
+	NOT_EMPTY = "not empty"
+)
+
+func TestSaveInsert(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
@@ -28,19 +38,27 @@ func TestSaveFind(t *testing.T) {
 		Inches: inches,
 	})
 	if err != nil {
-		t.Fatalf("Save failed err=%#v", err)
+		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
 	}
 	if mod.ID == "" {
-		t.Fatalf("id empty")
+		t.Fatalf(EXPECTED, "", BUT_WAS, mod.ID)
 	}
 
-	hats, err := hr.FindAll(repo.Limit(10), repo.Offset(0))
-	if err != nil {
-		t.Fatalf("FindAll failed err=%#v", err)
-	}
+	hat, err := hr.Find(mod.ID)
 
-	if len(hats) != 1 {
-		t.Fatalf("unexpected len(hats)=%d", len(hats))
+	if hat == nil {
+		t.Fatalf(EXPECTED, NOT_NIL, BUT_WAS, nil)
 	}
-
+	if hat.ID != mod.ID {
+		t.Fatalf(EXPECTED, mod.ID, BUT_WAS, hat.ID)
+	}
+	if hat.Inches != expInches {
+		t.Fatalf(EXPECTED, hat.Inches, BUT_WAS, expInches)
+	}
+	if hat.Name != expName {
+		t.Fatalf(EXPECTED, hat.Name, BUT_WAS, expName)
+	}
+	if hat.Color != expColor {
+		t.Fatalf(EXPECTED, hat.Color, BUT_WAS, expColor)
+	}
 }
