@@ -58,10 +58,11 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 	return &hatspb.MakeHatResponse{
 
 		Hat: &hatspb.Hat{
-			Id:     mod.ID,
-			Color:  mod.Color,
-			Name:   mod.Name,
-			Inches: mod.Inches,
+			Id:      mod.ID,
+			Color:   mod.Color,
+			Name:    mod.Name,
+			Inches:  mod.Inches,
+			Version: int32(mod.Version),
 		},
 	}, nil
 }
