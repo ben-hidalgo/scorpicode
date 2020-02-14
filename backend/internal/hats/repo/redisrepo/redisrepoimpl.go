@@ -77,8 +77,9 @@ func (r *Repo) Save(hm repo.HatMod) (*repo.HatMod, error) { //TODO: should we re
 	if _, err := r.conn.Do(HMSET, redis.Args{}.Add(key).AddFlat(mod)...); err != nil {
 		return nil, err
 	}
-	// TODO: wrap with if not EXISTS hat:123
-	if _, err := r.conn.Do(LPUSH, HATS, hm.ID); err != nil {
+
+	// set add hats <id>
+	if _, err := r.conn.Do(SADD, HATS, mod.ID); err != nil {
 		return nil, err
 	}
 
@@ -93,9 +94,15 @@ func (r *Repo) Delete(id string, version int) error {
 
 // Exists returns true if the record exists
 func (r *Repo) Exists(id string) (bool, error) {
-	// TODO: implement
-	ok := false
-	return ok, nil
+
+	// set is member
+	// value is an integer: 1 or 0
+	v, err := redis.Int(r.conn.Do(SISMEMBER, HATS, id))
+	if err != nil {
+		return false, err
+	}
+
+	return v == 1, nil
 }
 
 // Find one; returns NotFound
