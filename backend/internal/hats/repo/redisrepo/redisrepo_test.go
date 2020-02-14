@@ -5,6 +5,8 @@ import (
 	"backend/internal/hats/repo/redisrepo"
 	"errors"
 	"testing"
+
+	"github.com/gomodule/redigo/redis"
 )
 
 const (
@@ -24,7 +26,9 @@ func start() (*redisrepo.Repo, *repo.HatMod) {
 		Inches:  expInches,
 		Version: 0,
 	}
-	return redisrepo.NewRepo(), hm
+	hr := redisrepo.NewRepo()
+	redis.String(hr.Conn.Do("FLUSHDB"))
+	return hr, hm
 }
 
 func TestNotExists(t *testing.T) {

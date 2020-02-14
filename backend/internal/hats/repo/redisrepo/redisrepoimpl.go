@@ -33,7 +33,7 @@ func idkey(inputID string) (id string, key string) {
 func (r *Repo) FindAll(limit repo.Limit, offset repo.Offset) (hats []*repo.HatMod, err error) {
 
 	// values will be an array of strings
-	values, err := redis.Values(r.conn.Do(SORT, SetName))
+	values, err := redis.Values(r.Conn.Do(SORT, SetName))
 	if err != nil {
 		return
 	}
@@ -43,7 +43,7 @@ func (r *Repo) FindAll(limit repo.Limit, offset repo.Offset) (hats []*repo.HatMo
 		// logrus.Printf("v=%s", v)
 
 		_, key := idkey(fmt.Sprintf("%s", v))
-		all, err := redis.Values(r.conn.Do(HGETALL, key))
+		all, err := redis.Values(r.Conn.Do(HGETALL, key))
 		if err != nil {
 			return nil, err
 		}
@@ -79,12 +79,12 @@ func (r *Repo) Save(hm repo.HatMod) (*repo.HatMod, error) { //TODO: should we re
 
 	//TODO: if id is not populated, insert; populated created_at, updated_at and add a version for optimistic locking
 
-	if _, err := r.conn.Do(HMSET, redis.Args{}.Add(key).AddFlat(mod)...); err != nil {
+	if _, err := r.Conn.Do(HMSET, redis.Args{}.Add(key).AddFlat(mod)...); err != nil {
 		return nil, err
 	}
 
 	// set add hats <id>
-	if _, err := r.conn.Do(SADD, SetName, mod.ID); err != nil {
+	if _, err := r.Conn.Do(SADD, SetName, mod.ID); err != nil {
 		return nil, err
 	}
 
@@ -109,7 +109,7 @@ func (r *Repo) Delete(id string, version int) error {
 	// delete the id from the set (hats)
 
 	// value is an integer: 1 or 0; the number of values deleted
-	vs, err := redis.Int(r.conn.Do(SREM, SetName, id))
+	vs, err := redis.Int(r.Conn.Do(SREM, SetName, id))
 	if err != nil {
 		return err
 	}
@@ -119,7 +119,7 @@ func (r *Repo) Delete(id string, version int) error {
 
 	// delete the key hat:<id>
 	_, key := idkey(id)
-	vk, err := redis.Int(r.conn.Do(DEL, key))
+	vk, err := redis.Int(r.Conn.Do(DEL, key))
 	if err != nil {
 		return err
 	}
@@ -135,7 +135,7 @@ func (r *Repo) Exists(id string) (bool, error) {
 
 	// set is member
 	// value is an integer: 1 or 0
-	v, err := redis.Int(r.conn.Do(SISMEMBER, SetName, id))
+	v, err := redis.Int(r.Conn.Do(SISMEMBER, SetName, id))
 	if err != nil {
 		return false, err
 	}
@@ -150,7 +150,7 @@ func (r *Repo) Find(id string) (*repo.HatMod, error) {
 
 	_, key := idkey(id)
 
-	v, err := redis.Values(r.conn.Do(HGETALL, key))
+	v, err := redis.Values(r.Conn.Do(HGETALL, key))
 	if err != nil {
 		return nil, err
 	}
@@ -186,6 +186,6 @@ func (r *Repo) Commit() error {
 // Close implements HatRepo.Close()
 func (r *Repo) Close() error {
 	logrus.Debug("Close()")
-	r.conn.Close()
+	r.Conn.Close()
 	return nil
 }

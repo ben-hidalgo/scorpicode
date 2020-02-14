@@ -38,6 +38,7 @@ dev:
 	--set website.tag=$(TAG) \
 	--set roxie.tag=$(TAG) \
 	--set frontend.tag=$(TAG)
+	# this isn't waiting for slave 1 and passes immediately on redeploy
 	kubectl wait pods -l app=mongodb --for=condition=Ready -n dev
 	kubectl wait pods -l app=redis --for=condition=Ready -n dev
 
@@ -50,7 +51,7 @@ go-happy:
 	go mod tidy)
 
 TEST_ARGS=\
-REDIS_ADDRESS=`minikube ip`:`kubectl get svc scorpicode-redis-master -o json | jq '.spec.ports[0].nodePort'` \
+REDIS_ADDRESS=`minikube ip`:`kubectl get svc scorpicode-redis-master -n dev -o json | jq '.spec.ports[0].nodePort'` \
 REDIS_PASSWORD=redispassword
 
 test:

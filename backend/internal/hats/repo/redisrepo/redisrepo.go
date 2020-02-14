@@ -11,7 +11,7 @@ import (
 
 //Repo implements repo.HatRepo
 type Repo struct {
-	conn redis.Conn
+	Conn redis.Conn
 }
 
 // enforces the interface is implemented
@@ -46,7 +46,7 @@ func NewRepo() *Repo {
 	}
 
 	return &Repo{
-		conn: conn,
+		Conn: conn,
 	}
 }
 

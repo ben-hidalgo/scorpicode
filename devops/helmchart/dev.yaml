@@ -70,3 +70,7 @@ mongo:
 redis:
   enabled: true
   password: redispassword
+  master:
+    disableCommands:
+    service:
+      type: LoadBalancer
