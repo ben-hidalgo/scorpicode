@@ -14,6 +14,7 @@ const (
 	EXPECTED  = "expected %v %s %v"
 	BUT_WAS   = "but was"
 	NOT_NIL   = "!nil"
+	NOT_EMPTY = "not empty"
 )
 
 func start() (*inmem.Repo, *repo.HatMod) {
@@ -155,6 +156,12 @@ func TestSaveInsert(t *testing.T) {
 	if err != nil {
 		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
 	}
+	if mod.ID == "" {
+		t.Fatalf(EXPECTED, NOT_EMPTY, BUT_WAS, "")
+	}
+	if mod.Version != 1 {
+		t.Fatalf(EXPECTED, 1, BUT_WAS, mod.Version)
+	}
 
 	exists, err := hr.Exists(mod.ID)
 	if err != nil {
@@ -180,6 +187,49 @@ func TestSaveInsert(t *testing.T) {
 	}
 	if hat.Color != expColor {
 		t.Fatalf(EXPECTED, hat.Color, BUT_WAS, expColor)
+	}
+
+}
+
+func TestSaveUpdate(t *testing.T) {
+
+	hr, hm := start()
+
+	mod, err := hr.Save(*hm)
+	if err != nil {
+		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
+	}
+
+	newColor := "blue"
+	newName := "bowler"
+	newInches := int32(12)
+
+	mod.Color = newColor
+	mod.Name = newName
+	mod.Inches = newInches
+
+	hat, err := hr.Save(*mod)
+	if err != nil {
+		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
+	}
+
+	if hat == nil {
+		t.Fatalf(EXPECTED, NOT_NIL, BUT_WAS, nil)
+	}
+	if hat.ID != mod.ID {
+		t.Fatalf(EXPECTED, mod.ID, BUT_WAS, hat.ID)
+	}
+	if hat.Inches != newInches {
+		t.Fatalf(EXPECTED, hat.Inches, BUT_WAS, newInches)
+	}
+	if hat.Name != newName {
+		t.Fatalf(EXPECTED, hat.Name, BUT_WAS, newName)
+	}
+	if hat.Color != newColor {
+		t.Fatalf(EXPECTED, hat.Color, BUT_WAS, newColor)
+	}
+	if hat.Version != 2 {
+		t.Fatalf(EXPECTED, 2, BUT_WAS, hat.Version)
 	}
 
 }
