@@ -41,7 +41,7 @@ type HatRepo interface {
 	Commit() error
 	Close() error
 
-	// Find returns nil, nil if not found
+	// Find by id returns nil, nil if not found
 	Find(id string) (*HatMod, error)
 
 	// FindAll queries all records
@@ -49,7 +49,7 @@ type HatRepo interface {
 
 	// Save performs an upsert, returns the ID
 	// Input parameter is not mutated
-	// Assigns an ID if not provided
+	// Assigns an ID if not provided (insert)
 	// Increments Version
 	// Returns NotFound if missing by ID
 	// Returns VersionMismatch if version isn't equal

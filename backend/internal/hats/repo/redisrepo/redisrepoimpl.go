@@ -63,6 +63,10 @@ func (r *Repo) FindAll(limit repo.Limit, offset repo.Offset) (hats []*repo.HatMo
 // Save performs an upsert
 func (r *Repo) Save(hm repo.HatMod) (*repo.HatMod, error) { //TODO: should we return a UUID and populate the ID here (rather than in the service)???
 
+	if hm.ID == "" && hm.Version != 0 {
+		return nil, repo.ErrVersionMismatch
+	}
+
 	id, key := idkey(hm.ID)
 
 	mod := &repo.HatMod{

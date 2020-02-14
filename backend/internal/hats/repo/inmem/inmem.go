@@ -36,7 +36,9 @@ func (r *Repo) FindAll(limit repo.Limit, offset repo.Offset) (hats []*repo.HatMo
 func (r *Repo) Save(hm repo.HatMod) (*repo.HatMod, error) {
 
 	var id string
-	if hm.ID == "" {
+	if hm.ID == "" && hm.Version != 0 {
+		return nil, repo.ErrVersionMismatch
+	} else if hm.ID == "" {
 		id = xid.New().String()
 	} else {
 		id = hm.ID

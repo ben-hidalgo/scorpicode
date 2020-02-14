@@ -38,7 +38,6 @@ func TestNotExists(t *testing.T) {
 	if exists {
 		t.Fatalf(EXPECTED, false, BUT_WAS, true)
 	}
-
 }
 
 func TestExists(t *testing.T) {
@@ -57,7 +56,6 @@ func TestExists(t *testing.T) {
 	if !exists {
 		t.Fatalf(EXPECTED, true, BUT_WAS, false)
 	}
-
 }
 
 func TestFindAllEmpty(t *testing.T) {
@@ -121,7 +119,6 @@ func TestDeleteNotFound(t *testing.T) {
 	if !errors.Is(err, repo.ErrNotFound) {
 		t.Fatalf(EXPECTED, repo.ErrNotFound, BUT_WAS, err)
 	}
-
 }
 
 func TestDeleteFound(t *testing.T) {
@@ -145,7 +142,6 @@ func TestDeleteFound(t *testing.T) {
 	if exists {
 		t.Fatalf(EXPECTED, false, BUT_WAS, true)
 	}
-
 }
 
 func TestDeleteVersionMismatch(t *testing.T) {
@@ -162,9 +158,8 @@ func TestDeleteVersionMismatch(t *testing.T) {
 		t.Fatalf(EXPECTED, NOT_NIL, BUT_WAS, nil)
 	}
 	if !errors.Is(err, repo.ErrVersionMismatch) {
-		t.Fatalf(EXPECTED, repo.ErrNotFound, BUT_WAS, err)
+		t.Fatalf(EXPECTED, repo.ErrVersionMismatch, BUT_WAS, err)
 	}
-
 }
 
 func TestSaveInsert(t *testing.T) {
@@ -207,7 +202,6 @@ func TestSaveInsert(t *testing.T) {
 	if hat.Color != expColor {
 		t.Fatalf(EXPECTED, hat.Color, BUT_WAS, expColor)
 	}
-
 }
 
 func TestSaveUpdate(t *testing.T) {
@@ -250,5 +244,20 @@ func TestSaveUpdate(t *testing.T) {
 	if hat.Version != 2 {
 		t.Fatalf(EXPECTED, 2, BUT_WAS, hat.Version)
 	}
+}
 
+func TestSaveVersionMismatch(t *testing.T) {
+
+	hr, hm := start()
+
+	// Version is non-zero while ID is empty string
+	hm.Version = 1
+
+	_, err := hr.Save(*hm)
+	if err == nil {
+		t.Fatalf(EXPECTED, NOT_NIL, BUT_WAS, nil)
+	}
+	if !errors.Is(err, repo.ErrVersionMismatch) {
+		t.Fatalf(EXPECTED, repo.ErrVersionMismatch, BUT_WAS, err)
+	}
 }
