@@ -17,15 +17,16 @@ const Prefix = "hat"
 // SetName is the key for the set of hats
 const SetName = "hats"
 
-// returns the id and the key, creating a new one if empty
-// e.g. id -> "123" and key -> "hat:123"
+// idkey returns the id and the key, creating a new one if inputID is empty
+// e.g. idkey("123") returns id -> "123" and key -> "hat:123"
 func idkey(inputID string) (id string, key string) {
 	if inputID == "" {
 		id = xid.New().String()
 	} else {
 		id = inputID
 	}
-	return id, fmt.Sprintf("%s:%s", Prefix, id)
+	key = fmt.Sprintf("%s:%s", Prefix, id)
+	return
 }
 
 // FindAll queries all records
@@ -88,7 +89,40 @@ func (r *Repo) Save(hm repo.HatMod) (*repo.HatMod, error) { //TODO: should we re
 
 // Delete deletes the record if version matches; throws NotFound, VersionMismatch
 func (r *Repo) Delete(id string, version int) error {
-	// TODO: implement
+
+	// check for existence and version match
+	mod, err := r.Find(id)
+	if err != nil {
+		return err
+	}
+	if mod == nil {
+		return repo.ErrNotFound
+	}
+	if mod.Version != version {
+		return repo.ErrVersionMismatch
+	}
+
+	// delete the id from the set (hats)
+
+	// value is an integer: 1 or 0; the number of values deleted
+	vs, err := redis.Int(r.conn.Do(SREM, SetName, id))
+	if err != nil {
+		return err
+	}
+	if vs == 0 {
+		return repo.ErrNotFound
+	}
+
+	// delete the key hat:<id>
+	_, key := idkey(id)
+	vk, err := redis.Int(r.conn.Do(DEL, key))
+	if err != nil {
+		return err
+	}
+	if vk == 0 {
+		return repo.ErrNotFound
+	}
+
 	return nil
 }
 

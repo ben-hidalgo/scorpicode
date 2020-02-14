@@ -53,20 +53,34 @@ func NewRepo() *Repo {
 const (
 	// AUTH authorize
 	AUTH = "AUTH"
+
 	// PING ping
 	PING = "PING"
+
 	// PONG ping response
 	PONG = "PONG"
+
 	// HMSET hashmap set
 	HMSET = "HMSET"
+
 	// LPUSH list push
 	LPUSH = "LPUSH"
+
+	// DEL delete key
+	DEL = "DEL"
+
 	// SORT sort
 	SORT = "SORT"
+
 	// HGETALL hash get all
 	HGETALL = "HGETALL"
+
 	// SADD set add
 	SADD = "SADD"
+
+	// SREM set remove
+	SREM = "SREM"
+
 	// SISMEMBER set is member
 	SISMEMBER = "SISMEMBER"
 )

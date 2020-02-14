@@ -3,6 +3,7 @@ package redisrepo_test
 import (
 	"backend/internal/hats/repo"
 	"backend/internal/hats/repo/redisrepo"
+	"errors"
 	"testing"
 )
 
@@ -26,7 +27,6 @@ func start() (*redisrepo.Repo, *repo.HatMod) {
 	return redisrepo.NewRepo(), hm
 }
 
-/*
 func TestNotExists(t *testing.T) {
 
 	hr, _ := start()
@@ -60,6 +60,7 @@ func TestExists(t *testing.T) {
 
 }
 
+/*
 func TestFindAllEmpty(t *testing.T) {
 
 	hr, _ := start()
@@ -109,6 +110,7 @@ func TestFindAllOne(t *testing.T) {
 		t.Fatalf(EXPECTED, hat.Color, BUT_WAS, expColor)
 	}
 }
+*/
 
 func TestDeleteNotFound(t *testing.T) {
 
@@ -147,7 +149,6 @@ func TestDeleteFound(t *testing.T) {
 	}
 
 }
-*/
 
 func TestSaveInsert(t *testing.T) {
 
