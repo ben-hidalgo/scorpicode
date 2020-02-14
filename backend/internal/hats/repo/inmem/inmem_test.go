@@ -133,7 +133,7 @@ func TestDeleteFound(t *testing.T) {
 		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
 	}
 
-	err = hr.Delete(mod.ID, 0)
+	err = hr.Delete(mod.ID, mod.Version)
 	if err != nil {
 		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
 	}

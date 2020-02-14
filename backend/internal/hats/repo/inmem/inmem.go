@@ -68,11 +68,9 @@ func (r *Repo) Delete(id string, version int) error {
 		return repo.ErrNotFound
 	}
 
-	_ = v
-	//TODO: re-add
-	// if v.Version != version {
-	// 	return repo.ErrVersionMismatch
-	// }
+	if v.Version != version {
+		return repo.ErrVersionMismatch
+	}
 
 	delete(r.storage, id)
 	return nil
