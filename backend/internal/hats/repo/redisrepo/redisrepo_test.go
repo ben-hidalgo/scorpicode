@@ -150,6 +150,25 @@ func TestDeleteFound(t *testing.T) {
 
 }
 
+func TestDeleteVersionMismatch(t *testing.T) {
+
+	hr, hm := start()
+
+	mod, err := hr.Save(*hm)
+	if err != nil {
+		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
+	}
+
+	err = hr.Delete(mod.ID, -1)
+	if err == nil {
+		t.Fatalf(EXPECTED, NOT_NIL, BUT_WAS, nil)
+	}
+	if !errors.Is(err, repo.ErrVersionMismatch) {
+		t.Fatalf(EXPECTED, repo.ErrNotFound, BUT_WAS, err)
+	}
+
+}
+
 func TestSaveInsert(t *testing.T) {
 
 	hr, hm := start()
