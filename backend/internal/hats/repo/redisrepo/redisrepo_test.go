@@ -172,25 +172,23 @@ func TestSaveInsert(t *testing.T) {
 		t.Fatalf(EXPECTED, true, BUT_WAS, false)
 	}
 
-	/*
-		hat, err := hr.Find(mod.ID)
+	hat, err := hr.Find(mod.ID)
 
-		if hat == nil {
-			t.Fatalf(EXPECTED, NOT_NIL, BUT_WAS, nil)
-		}
-		if hat.ID != mod.ID {
-			t.Fatalf(EXPECTED, mod.ID, BUT_WAS, hat.ID)
-		}
-		if hat.Inches != expInches {
-			t.Fatalf(EXPECTED, hat.Inches, BUT_WAS, expInches)
-		}
-		if hat.Name != expName {
-			t.Fatalf(EXPECTED, hat.Name, BUT_WAS, expName)
-		}
-		if hat.Color != expColor {
-			t.Fatalf(EXPECTED, hat.Color, BUT_WAS, expColor)
-		}
-	*/
+	if hat == nil {
+		t.Fatalf(EXPECTED, NOT_NIL, BUT_WAS, nil)
+	}
+	if hat.ID != mod.ID {
+		t.Fatalf(EXPECTED, mod.ID, BUT_WAS, hat.ID)
+	}
+	if hat.Inches != expInches {
+		t.Fatalf(EXPECTED, hat.Inches, BUT_WAS, expInches)
+	}
+	if hat.Name != expName {
+		t.Fatalf(EXPECTED, hat.Name, BUT_WAS, expName)
+	}
+	if hat.Color != expColor {
+		t.Fatalf(EXPECTED, hat.Color, BUT_WAS, expColor)
+	}
 
 }
 

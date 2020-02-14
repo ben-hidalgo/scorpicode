@@ -27,7 +27,7 @@ var (
 
 // HatMod represents a Hat stored in the repo
 type HatMod struct {
-	ID      string
+	ID      string `redis:"id"`
 	Inches  int32  `redis:"inches"`
 	Color   string `redis:"color"`
 	Name    string `redis:"name"`

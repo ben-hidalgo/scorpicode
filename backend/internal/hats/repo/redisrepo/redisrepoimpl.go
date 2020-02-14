@@ -11,11 +11,11 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// HAT is the prefix of the hashmap UIDs
-const HAT = "hat"
+// Prefix is part of the hat:<id> key
+const Prefix = "hat"
 
-// HATS is the sortable range of hat UIDs
-const HATS = "hats"
+// SetName is the key for the set of hats
+const SetName = "hats"
 
 // returns the id and the key, creating a new one if empty
 // e.g. id -> "123" and key -> "hat:123"
@@ -25,14 +25,14 @@ func idkey(inputID string) (id string, key string) {
 	} else {
 		id = inputID
 	}
-	return id, fmt.Sprintf("%s:%s", HAT, id)
+	return id, fmt.Sprintf("%s:%s", Prefix, id)
 }
 
 // FindAll queries all records
 func (r *Repo) FindAll(limit repo.Limit, offset repo.Offset) (hats []*repo.HatMod, err error) {
 
 	// values will be an array of strings
-	values, err := redis.Values(r.conn.Do(SORT, HATS))
+	values, err := redis.Values(r.conn.Do(SORT, SetName))
 	if err != nil {
 		return
 	}
@@ -79,7 +79,7 @@ func (r *Repo) Save(hm repo.HatMod) (*repo.HatMod, error) { //TODO: should we re
 	}
 
 	// set add hats <id>
-	if _, err := r.conn.Do(SADD, HATS, mod.ID); err != nil {
+	if _, err := r.conn.Do(SADD, SetName, mod.ID); err != nil {
 		return nil, err
 	}
 
@@ -97,7 +97,7 @@ func (r *Repo) Exists(id string) (bool, error) {
 
 	// set is member
 	// value is an integer: 1 or 0
-	v, err := redis.Int(r.conn.Do(SISMEMBER, HATS, id))
+	v, err := redis.Int(r.conn.Do(SISMEMBER, SetName, id))
 	if err != nil {
 		return false, err
 	}
@@ -107,7 +107,21 @@ func (r *Repo) Exists(id string) (bool, error) {
 
 // Find one; returns NotFound
 func (r *Repo) Find(id string) (*repo.HatMod, error) {
-	return nil, nil
+
+	var mod repo.HatMod
+
+	_, key := idkey(id)
+
+	v, err := redis.Values(r.conn.Do(HGETALL, key))
+	if err != nil {
+		return nil, err
+	}
+
+	if err := redis.ScanStruct(v, &mod); err != nil {
+		return nil, err
+	}
+
+	return &mod, nil
 }
 
 ///////////
