@@ -32,8 +32,9 @@ func idkey(inputID string) (id string, key string) {
 // FindAll queries all records
 func (r *Repo) FindAll(limit repo.Limit, offset repo.Offset) (hats []*repo.HatMod, err error) {
 
+	// TODO: SMEMBERS has no pagination
 	// values will be an array of strings
-	values, err := redis.Values(r.Conn.Do(SORT, SetName))
+	values, err := redis.Values(r.Conn.Do(SMEMBERS, SetName))
 	if err != nil {
 		return
 	}

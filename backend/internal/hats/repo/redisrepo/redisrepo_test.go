@@ -87,7 +87,6 @@ func TestFindAllEmpty(t *testing.T) {
 	}
 }
 
-/*
 func TestFindAllOne(t *testing.T) {
 
 	if testing.Short() {
@@ -128,7 +127,6 @@ func TestFindAllOne(t *testing.T) {
 		t.Fatalf(EXPECTED, hat.Color, BUT_WAS, expColor)
 	}
 }
-*/
 
 func TestDeleteNotFound(t *testing.T) {
 

@@ -83,4 +83,7 @@ const (
 
 	// SISMEMBER set is member
 	SISMEMBER = "SISMEMBER"
+
+	// SMEMBERS set members
+	SMEMBERS = "SMEMBERS"
 )
