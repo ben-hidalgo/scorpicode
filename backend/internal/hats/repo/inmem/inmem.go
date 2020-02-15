@@ -10,7 +10,7 @@ import (
 
 // Repo implements repo.HatRepo
 type Repo struct {
-	storage map[string]*repo.HatMod
+	Storage map[string]*repo.HatMod
 }
 
 // enforces the interface is implemented
@@ -19,14 +19,14 @@ var _ repo.HatRepo = (*Repo)(nil)
 // NewRepo .
 func NewRepo() *Repo {
 	return &Repo{
-		storage: make(map[string]*repo.HatMod),
+		Storage: make(map[string]*repo.HatMod),
 	}
 }
 
 // FindAll .
 func (r *Repo) FindAll(limit repo.Limit, offset repo.Offset) (hats []*repo.HatMod, err error) {
 	// TODO: respect limit and offset
-	for _, s := range r.storage {
+	for _, s := range r.Storage {
 		hats = append(hats, s)
 	}
 	return hats, nil
@@ -52,19 +52,19 @@ func (r *Repo) Save(hm repo.HatMod) (*repo.HatMod, error) {
 		Version: hm.Version + 1,
 	}
 
-	r.storage[id] = mod
+	r.Storage[id] = mod
 	return mod, nil
 }
 
 // Exists .
 func (r *Repo) Exists(id string) (bool, error) {
-	_, ok := r.storage[id]
+	_, ok := r.Storage[id]
 	return ok, nil
 }
 
 // Delete .
 func (r *Repo) Delete(id string, version int) error {
-	v, ok := r.storage[id]
+	v, ok := r.Storage[id]
 
 	if !ok {
 		return repo.ErrNotFound
@@ -74,13 +74,13 @@ func (r *Repo) Delete(id string, version int) error {
 		return repo.ErrVersionMismatch
 	}
 
-	delete(r.storage, id)
+	delete(r.Storage, id)
 	return nil
 }
 
 // Find .
 func (r *Repo) Find(id string) (*repo.HatMod, error) {
-	v, ok := r.storage[id]
+	v, ok := r.Storage[id]
 	if ok {
 		return v, nil
 	}
@@ -110,6 +110,6 @@ func (r *Repo) Commit() error {
 // Close implements HatRepo.Close()
 func (r *Repo) Close() error {
 	logrus.Debug("inmem.Close()")
-	r.storage = nil
+	r.Storage = nil
 	return nil
 }

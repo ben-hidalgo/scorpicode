@@ -24,7 +24,11 @@ func start() (*inmem.Repo, *repo.HatMod) {
 		Inches:  expInches,
 		Version: 0,
 	}
-	return inmem.NewRepo(), hm
+	hr := inmem.NewRepo()
+	for k := range hr.Storage {
+		delete(hr.Storage, k)
+	}
+	return hr, hm
 }
 
 func TestNotExists(t *testing.T) {

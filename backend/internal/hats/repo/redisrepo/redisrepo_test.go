@@ -33,6 +33,10 @@ func start() (*redisrepo.Repo, *repo.HatMod) {
 
 func TestNotExists(t *testing.T) {
 
+	if testing.Short() {
+		t.Skip()
+	}
+
 	hr, _ := start()
 
 	exists, err := hr.Exists("123")
@@ -45,6 +49,10 @@ func TestNotExists(t *testing.T) {
 }
 
 func TestExists(t *testing.T) {
+
+	if testing.Short() {
+		t.Skip()
+	}
 
 	hr, hm := start()
 
@@ -62,8 +70,11 @@ func TestExists(t *testing.T) {
 	}
 }
 
-/*
 func TestFindAllEmpty(t *testing.T) {
+
+	if testing.Short() {
+		t.Skip()
+	}
 
 	hr, _ := start()
 
@@ -76,7 +87,12 @@ func TestFindAllEmpty(t *testing.T) {
 	}
 }
 
+/*
 func TestFindAllOne(t *testing.T) {
+
+	if testing.Short() {
+		t.Skip()
+	}
 
 	hr, hm := start()
 
@@ -116,6 +132,10 @@ func TestFindAllOne(t *testing.T) {
 
 func TestDeleteNotFound(t *testing.T) {
 
+	if testing.Short() {
+		t.Skip()
+	}
+
 	hr, _ := start()
 
 	err := hr.Delete("123", 0)
@@ -128,6 +148,10 @@ func TestDeleteNotFound(t *testing.T) {
 }
 
 func TestDeleteFound(t *testing.T) {
+
+	if testing.Short() {
+		t.Skip()
+	}
 
 	hr, hm := start()
 
@@ -152,6 +176,10 @@ func TestDeleteFound(t *testing.T) {
 
 func TestDeleteVersionMismatch(t *testing.T) {
 
+	if testing.Short() {
+		t.Skip()
+	}
+
 	hr, hm := start()
 
 	mod, err := hr.Save(*hm)
@@ -169,6 +197,10 @@ func TestDeleteVersionMismatch(t *testing.T) {
 }
 
 func TestSaveInsert(t *testing.T) {
+
+	if testing.Short() {
+		t.Skip()
+	}
 
 	hr, hm := start()
 
@@ -211,6 +243,10 @@ func TestSaveInsert(t *testing.T) {
 }
 
 func TestSaveVersionMismatch(t *testing.T) {
+
+	if testing.Short() {
+		t.Skip()
+	}
 
 	hr, hm := start()
 
