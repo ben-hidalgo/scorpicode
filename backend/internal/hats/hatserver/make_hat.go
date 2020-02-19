@@ -8,6 +8,8 @@ import (
 	"context"
 	"math/rand"
 
+	"github.com/twitchtv/twirp"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -24,8 +26,6 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 		return nil, util.InvalidArgumentError(Inches, HatTooBig)
 	}
 
-	hr := repo.GetRepo(ctx)
-
 	var color string
 	if req.GetColor() == "" {
 		color = []string{"white", "black", "brown", "red", "blue"}[rand.Intn(4)]
@@ -40,6 +40,12 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 		name = req.GetName()
 	}
 
+	hr := repo.GetRepo(ctx)
+	if err := hr.Multi(); err != nil {
+		return nil, twirp.InternalErrorWith(err)
+	}
+	defer hr.Discard()
+
 	// a different instance is returned
 	mod, err := hr.Save(repo.HatMod{
 		Color:  color,
@@ -50,7 +56,9 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 		return nil, err
 	}
 
-	// TODO: use hr.Exec()
+	if err := hr.Exec(); err != nil {
+		return nil, twirp.InternalErrorWith(err)
+	}
 
 	return &hatspb.MakeHatResponse{
 

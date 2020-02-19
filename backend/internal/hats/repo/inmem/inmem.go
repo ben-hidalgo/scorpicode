@@ -86,6 +86,24 @@ func (r *Repo) Find(id string) (*repo.HatMod, error) {
 	return nil, nil
 }
 
+// Multi .
+func (r *Repo) Multi() error {
+	logrus.Debug("inmem.Multi()")
+	return nil
+}
+
+// Exec .
+func (r *Repo) Exec() error {
+	logrus.Debug("inmem.Exec()")
+	return nil
+}
+
+// Discard .
+func (r *Repo) Discard() error {
+	logrus.Debug("inmem.Discard()")
+	return nil
+}
+
 ////////// connection related
 
 // OpenConn .

@@ -36,9 +36,15 @@ type HatMod struct {
 
 // HatRepo interface for data storage
 type HatRepo interface {
+	// connection related
 	OpenConn() error
 	CloseConn() error
 	Close() error
+
+	// transaction related
+	Multi() error
+	Exec() error
+	Discard() error
 
 	// Find by id returns nil, nil if not found
 	Find(id string) (*HatMod, error)
