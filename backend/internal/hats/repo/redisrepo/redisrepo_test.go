@@ -3,7 +3,6 @@ package redisrepo_test
 import (
 	"backend/internal/hats/repo"
 	"backend/internal/hats/repo/redisrepo"
-	"context"
 	"errors"
 	"testing"
 
@@ -20,7 +19,7 @@ const (
 	NOT_EMPTY = "not empty"
 )
 
-func start() (*redisrepo.Repo, *repo.HatMod) {
+func start(t *testing.T) (*redisrepo.Repo, *repo.HatMod) {
 	hm := &repo.HatMod{
 		Color:   expColor,
 		Name:    expName,
@@ -28,18 +27,14 @@ func start() (*redisrepo.Repo, *repo.HatMod) {
 		Version: 0,
 	}
 	hr := redisrepo.NewRepo()
-	ok, err := redis.String(hr.Conn.Do("FLUSHDB"))
+	v, err := redis.String(hr.Conn.Do(redisrepo.FLUSHDB))
 	if err != nil {
-		panic(err)
+		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
 	}
-	if ok != "OK" {
-		panic(err)
+	if v != "OK" {
+		t.Fatalf(EXPECTED, "OK", BUT_WAS, v)
 	}
 
-	err = hr.BeginTxn(context.Background())
-	if err != nil {
-		panic(err)
-	}
 	return hr, hm
 }
 
@@ -49,7 +44,7 @@ func TestNotExists(t *testing.T) {
 		t.Skip()
 	}
 
-	hr, _ := start()
+	hr, _ := start(t)
 
 	exists, err := hr.Exists("123")
 	if err != nil {
@@ -71,7 +66,7 @@ func TestExists(t *testing.T) {
 		t.Skip()
 	}
 
-	hr, hm := start()
+	hr, hm := start(t)
 
 	mod, err := hr.Save(*hm)
 	if err != nil {
@@ -98,7 +93,7 @@ func TestFindAllEmpty(t *testing.T) {
 		t.Skip()
 	}
 
-	hr, _ := start()
+	hr, _ := start(t)
 
 	hats, err := hr.FindAll(10, 0)
 	if err != nil {
@@ -120,7 +115,7 @@ func TestFindAllOne(t *testing.T) {
 		t.Skip()
 	}
 
-	hr, hm := start()
+	hr, hm := start(t)
 
 	mod, err := hr.Save(*hm)
 	if err != nil {
@@ -166,7 +161,7 @@ func TestDeleteNotFound(t *testing.T) {
 		t.Skip()
 	}
 
-	hr, _ := start()
+	hr, _ := start(t)
 
 	err := hr.Delete("123", 0)
 	if err == nil {
@@ -188,7 +183,7 @@ func TestDeleteFound(t *testing.T) {
 		t.Skip()
 	}
 
-	hr, hm := start()
+	hr, hm := start(t)
 
 	mod, err := hr.Save(*hm)
 	if err != nil {
@@ -220,7 +215,7 @@ func TestDeleteVersionMismatch(t *testing.T) {
 		t.Skip()
 	}
 
-	hr, hm := start()
+	hr, hm := start(t)
 
 	mod, err := hr.Save(*hm)
 	if err != nil {
@@ -247,7 +242,7 @@ func TestSaveInsert(t *testing.T) {
 		t.Skip()
 	}
 
-	hr, hm := start()
+	hr, hm := start(t)
 
 	mod, err := hr.Save(*hm)
 	if err != nil {
@@ -298,7 +293,7 @@ func TestSaveVersionMismatch(t *testing.T) {
 		t.Skip()
 	}
 
-	hr, hm := start()
+	hr, hm := start(t)
 
 	// Version is non-zero while ID is empty string
 	hm.Version = 1

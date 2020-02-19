@@ -3,6 +3,7 @@ package redisrepo
 import (
 	"backend/internal/hats/repo"
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/rs/xid"
@@ -163,6 +164,44 @@ func (r *Repo) Find(id string) (*repo.HatMod, error) {
 	return &mod, nil
 }
 
+// multi is used internally to begin an atomic sequence
+func (r *Repo) multi() error {
+
+	v, err := redis.String(r.Conn.Do(MULTI))
+	if err != nil {
+		return err
+	}
+	if v != "OK" {
+		return errors.New("multi failed")
+	}
+
+	return nil
+}
+
+func (r *Repo) exec() error {
+
+	v, err := redis.String(r.Conn.Do(EXEC))
+	if err != nil {
+		return err
+	}
+	if v != "OK" {
+		return errors.New("exec failed")
+	}
+	return nil
+}
+
+func (r *Repo) discard() error {
+	v, err := redis.String(r.Conn.Do(DISCARD))
+	if err != nil {
+		return err
+	}
+	if v != "OK" {
+		return errors.New("Discard failed")
+	}
+
+	return nil
+}
+
 ///////////
 ///////////
 
@@ -175,6 +214,7 @@ func (r *Repo) BeginTxn(ctx context.Context) error {
 // Rollback implements HatRepo.Rollback()
 func (r *Repo) Rollback() error {
 	logrus.Debug("Rollback()")
+
 	return nil
 }
 

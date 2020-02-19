@@ -60,6 +60,18 @@ const (
 	// PONG ping response
 	PONG = "PONG"
 
+	// MULTI begin txn
+	MULTI = "MULTI"
+
+	// DISCARD rollback
+	DISCARD = "DISCARD"
+
+	// EXEC commit
+	EXEC = "EXEC"
+
+	// FLUSHDB delete all keys in db
+	FLUSHDB = "FLUSHDB"
+
 	// HMSET hashmap set
 	HMSET = "HMSET"
 
