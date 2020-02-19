@@ -2,7 +2,6 @@ package redisrepo
 
 import (
 	"backend/internal/hats/repo"
-	"errors"
 	"fmt"
 
 	"github.com/rs/xid"
@@ -81,12 +80,6 @@ func (r *Repo) Save(hm repo.HatMod) (*repo.HatMod, error) {
 	//TODO: if id is not populated, insert; populated created_at, updated_at and add a version for optimistic locking
 	// add watch()
 
-	if err := r.multi(); err != nil {
-		logrus.Errorf("multi() err=%v", err)
-		return nil, err
-	}
-	defer r.discard()
-
 	if _, err := r.Conn.Do(HMSET, redis.Args{}.Add(key).AddFlat(mod)...); err != nil {
 		logrus.Errorf("hmset err=%v", err)
 		return nil, err
@@ -95,11 +88,6 @@ func (r *Repo) Save(hm repo.HatMod) (*repo.HatMod, error) {
 	// set add hats <id>
 	if _, err := r.Conn.Do(SADD, SetName, mod.ID); err != nil {
 		logrus.Errorf("sadd err=%v", err)
-		return nil, err
-	}
-
-	if err := r.exec(); err != nil {
-		logrus.Errorf("exec() err=%v", err)
 		return nil, err
 	}
 
@@ -121,13 +109,6 @@ func (r *Repo) Delete(id string, version int) error {
 		return repo.ErrVersionMismatch
 	}
 
-	// begin multi
-	if err := r.multi(); err != nil {
-		logrus.Errorf("Delete() multi() err=%v", err)
-		return err
-	}
-	defer r.discard()
-
 	// remove the id from the set (hats)
 	_, err = r.Conn.Do(SREM, SetName, id)
 	if err != nil {
@@ -139,11 +120,6 @@ func (r *Repo) Delete(id string, version int) error {
 	// delete the key hat:<id>
 	_, err = r.Conn.Do(DEL, key)
 	if err != nil {
-		return err
-	}
-
-	if err := r.exec(); err != nil {
-		logrus.Errorf("exec() err=%v", err)
 		return err
 	}
 
@@ -185,38 +161,27 @@ func (r *Repo) Find(id string) (*repo.HatMod, error) {
 	return &mod, nil
 }
 
-// multi is used internally to begin an atomic sequence
-func (r *Repo) multi() error {
-
-	v, err := redis.String(r.Conn.Do(MULTI))
-	if err != nil {
-		return err
-	}
-	if v != "OK" {
-		return errors.New("multi failed")
-	}
-
-	return nil
-}
-
-func (r *Repo) exec() error {
-
-	_, err := r.Conn.Do(EXEC)
-	if err != nil {
+// Multi .
+func (r *Repo) Multi() error {
+	if _, err := r.Conn.Do(MULTI); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *Repo) discard() error {
-	v, err := redis.String(r.Conn.Do(DISCARD))
-	if err != nil {
+// Exec .
+func (r *Repo) Exec() error {
+	if _, err := r.Conn.Do(EXEC); err != nil {
 		return err
 	}
-	if v != "OK" {
-		return errors.New("Discard failed")
-	}
+	return nil
+}
 
+// Discard .
+func (r *Repo) Discard() error {
+	if _, err := r.Conn.Do(DISCARD); err != nil {
+		return err
+	}
 	return nil
 }
 
