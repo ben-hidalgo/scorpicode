@@ -50,10 +50,7 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 		return nil, err
 	}
 
-	err = hr.Commit()
-	if err != nil {
-		return nil, err
-	}
+	// TODO: use hr.Exec()
 
 	return &hatspb.MakeHatResponse{
 

@@ -38,7 +38,6 @@ type HatMod struct {
 type HatRepo interface {
 	BeginTxn(ctx context.Context) error
 	Rollback() error
-	Commit() error
 	Close() error
 
 	// Find by id returns nil, nil if not found

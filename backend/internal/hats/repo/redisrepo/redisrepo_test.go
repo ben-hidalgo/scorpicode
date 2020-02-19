@@ -51,11 +51,6 @@ func TestNotExists(t *testing.T) {
 	if exists {
 		t.Fatalf(EXPECTED, false, BUT_WAS, true)
 	}
-
-	err = hr.Commit()
-	if err != nil {
-		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
-	}
 }
 
 func TestExists(t *testing.T) {
@@ -78,11 +73,6 @@ func TestExists(t *testing.T) {
 	if !exists {
 		t.Fatalf(EXPECTED, true, BUT_WAS, false)
 	}
-
-	err = hr.Commit()
-	if err != nil {
-		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
-	}
 }
 
 func TestFindAllEmpty(t *testing.T) {
@@ -99,11 +89,6 @@ func TestFindAllEmpty(t *testing.T) {
 	}
 	if len(hats) != 0 {
 		t.Fatalf(EXPECTED, 0, BUT_WAS, len(hats))
-	}
-
-	err = hr.Commit()
-	if err != nil {
-		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
 	}
 }
 
@@ -146,11 +131,6 @@ func TestFindAllOne(t *testing.T) {
 	if hat.Color != expColor {
 		t.Fatalf(EXPECTED, hat.Color, BUT_WAS, expColor)
 	}
-
-	err = hr.Commit()
-	if err != nil {
-		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
-	}
 }
 
 func TestDeleteNotFound(t *testing.T) {
@@ -164,11 +144,6 @@ func TestDeleteNotFound(t *testing.T) {
 	err := hr.Delete("123456", 0)
 	if !errors.Is(err, repo.ErrNotFound) {
 		t.Fatalf(EXPECTED, repo.ErrNotFound, BUT_WAS, err)
-	}
-
-	err = hr.Commit()
-	if err != nil {
-		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
 	}
 }
 
@@ -197,11 +172,6 @@ func TestDeleteFound(t *testing.T) {
 	if exists {
 		t.Fatalf(EXPECTED, false, BUT_WAS, true)
 	}
-
-	err = hr.Commit()
-	if err != nil {
-		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
-	}
 }
 
 func TestDeleteVersionMismatch(t *testing.T) {
@@ -223,11 +193,6 @@ func TestDeleteVersionMismatch(t *testing.T) {
 	}
 	if !errors.Is(err, repo.ErrVersionMismatch) {
 		t.Fatalf(EXPECTED, repo.ErrNotFound, BUT_WAS, err)
-	}
-
-	err = hr.Commit()
-	if err != nil {
-		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
 	}
 }
 
@@ -275,11 +240,6 @@ func TestSaveInsert(t *testing.T) {
 	if hat.Color != expColor {
 		t.Fatalf(EXPECTED, hat.Color, BUT_WAS, expColor)
 	}
-
-	err = hr.Commit()
-	if err != nil {
-		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
-	}
 }
 
 func TestSaveVersionMismatch(t *testing.T) {
@@ -299,10 +259,5 @@ func TestSaveVersionMismatch(t *testing.T) {
 	}
 	if !errors.Is(err, repo.ErrVersionMismatch) {
 		t.Fatalf(EXPECTED, repo.ErrVersionMismatch, BUT_WAS, err)
-	}
-
-	err = hr.Commit()
-	if err != nil {
-		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
 	}
 }

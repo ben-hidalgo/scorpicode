@@ -72,13 +72,13 @@ const (
 	// PONG ping response
 	PONG = "PONG"
 
-	// MULTI begin txn
+	// MULTI begin atomic commands
 	MULTI = "MULTI"
 
-	// DISCARD rollback
+	// DISCARD discard multi
 	DISCARD = "DISCARD"
 
-	// EXEC commit
+	// EXEC exec multi
 	EXEC = "EXEC"
 
 	// FLUSHDB delete all keys in db
