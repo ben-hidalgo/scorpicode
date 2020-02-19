@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"syscall"
 
 	"github.com/twitchtv/twirp"
 
@@ -40,13 +41,13 @@ func main() {
 
 	go func() {
 		sigint := make(chan os.Signal, 1)
-		signal.Notify(sigint, os.Interrupt)
+		signal.Notify(sigint, os.Interrupt, syscall.SIGTERM, syscall.SIGKILL)
 		<-sigint
 
 		// We received an interrupt signal, shut down.
 		if err := srv.Shutdown(context.Background()); err != nil {
 			// Error from closing listeners, or context timeout:
-			logrus.Infof("HTTP server Shutdown: %v", err)
+			logrus.Infof("HTTP server Shutdown err=%v", err)
 		}
 		close(idleConnsClosed)
 	}()
@@ -55,11 +56,12 @@ func main() {
 
 	if err := srv.ListenAndServe(); err != http.ErrServerClosed {
 		// Error starting or closing listener:
-		logrus.Fatalf("HTTP server ListenAndServe: %v", err)
+		logrus.Fatalf("HTTP server ListenAndServe err=%v", err)
 	}
 
 	<-idleConnsClosed
 
+	logrus.Infof("main() %s shut down", config.AppName)
 }
 
 func initRepo() repo.HatRepo {
