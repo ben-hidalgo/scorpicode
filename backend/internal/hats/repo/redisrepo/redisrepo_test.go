@@ -3,10 +3,9 @@ package redisrepo_test
 import (
 	"backend/internal/hats/repo"
 	"backend/internal/hats/repo/redisrepo"
+	"context"
 	"errors"
 	"testing"
-
-	"github.com/gomodule/redigo/redis"
 )
 
 const (
@@ -27,12 +26,11 @@ func start(t *testing.T) (*redisrepo.Repo, *repo.HatMod) {
 		Version: 0,
 	}
 	hr := redisrepo.NewRepo()
-	v, err := redis.String(hr.Conn.Do(redisrepo.FLUSHDB))
-	if err != nil {
+	if err := hr.BeginTxn(context.Background()); err != nil {
 		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
 	}
-	if v != "OK" {
-		t.Fatalf(EXPECTED, "OK", BUT_WAS, v)
+	if _, err := hr.Conn.Do(redisrepo.FLUSHDB); err != nil {
+		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
 	}
 
 	return hr, hm
