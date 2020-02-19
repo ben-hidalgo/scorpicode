@@ -36,7 +36,7 @@ type HatMod struct {
 
 // HatRepo interface for data storage
 type HatRepo interface {
-	BeginTxn(ctx context.Context) error
+	OpenConn() error
 	Rollback() error
 	Close() error
 
@@ -86,7 +86,7 @@ func Hook(hr HatRepo) *twirp.ServerHooks {
 
 	hook.RequestReceived = func(ctx context.Context) (context.Context, error) {
 
-		err := hr.BeginTxn(ctx)
+		err := hr.OpenConn()
 		if err != nil {
 			logrus.Errorf("repo.Hook() BeginTx failed err=%s", err)
 			return ctx, err

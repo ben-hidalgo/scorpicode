@@ -2,7 +2,6 @@ package redisrepo
 
 import (
 	"backend/internal/hats/repo"
-	"context"
 	"errors"
 	"fmt"
 
@@ -224,9 +223,9 @@ func (r *Repo) discard() error {
 ///////////
 ///////////
 
-// BeginTxn implements HatRepo.BeginTxn()
-func (r *Repo) BeginTxn(ctx context.Context) error {
-	logrus.Debug("redisrepo.BeginTxn()")
+// OpenConn .
+func (r *Repo) OpenConn() error {
+	logrus.Debug("redisrepo.OpenConn()")
 	r.Conn = r.Pool.Get()
 	if _, err := r.Conn.Do(AUTH, RedisPassword); err != nil {
 		return err

@@ -3,7 +3,6 @@ package redisrepo_test
 import (
 	"backend/internal/hats/repo"
 	"backend/internal/hats/repo/redisrepo"
-	"context"
 	"errors"
 	"testing"
 )
@@ -26,7 +25,7 @@ func start(t *testing.T) (*redisrepo.Repo, *repo.HatMod) {
 		Version: 0,
 	}
 	hr := redisrepo.NewRepo()
-	if err := hr.BeginTxn(context.Background()); err != nil {
+	if err := hr.OpenConn(); err != nil {
 		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
 	}
 	if _, err := hr.Conn.Do(redisrepo.FLUSHDB); err != nil {

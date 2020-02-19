@@ -2,7 +2,6 @@ package inmem
 
 import (
 	"backend/internal/hats/repo"
-	"context"
 
 	"github.com/rs/xid"
 	"github.com/sirupsen/logrus"
@@ -89,9 +88,9 @@ func (r *Repo) Find(id string) (*repo.HatMod, error) {
 
 ////////// connection related
 
-// BeginTxn implements HatRepo.BeginTxn()
-func (r *Repo) BeginTxn(ctx context.Context) error {
-	logrus.Debug("inmem.BeginTxn()")
+// OpenConn .
+func (r *Repo) OpenConn() error {
+	logrus.Debug("inmem.OpenConn()")
 	return nil
 }
 
