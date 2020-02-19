@@ -122,25 +122,30 @@ func (r *Repo) Delete(id string, version int) error {
 		return repo.ErrVersionMismatch
 	}
 
-	// delete the id from the set (hats)
+	// begin multi
+	if err := r.multi(); err != nil {
+		logrus.Errorf("Delete() multi() err=%v", err)
+		return err
+	}
+	defer r.discard()
 
-	// value is an integer: 1 or 0; the number of values deleted
-	vs, err := redis.Int(r.Conn.Do(SREM, SetName, id))
+	// remove the id from the set (hats)
+	_, err = r.Conn.Do(SREM, SetName, id)
 	if err != nil {
 		return err
 	}
-	if vs == 0 {
-		return repo.ErrNotFound
-	}
+
+	_, key := idkey(id)
 
 	// delete the key hat:<id>
-	_, key := idkey(id)
-	vk, err := redis.Int(r.Conn.Do(DEL, key))
+	_, err = r.Conn.Do(DEL, key)
 	if err != nil {
 		return err
 	}
-	if vk == 0 {
-		return repo.ErrNotFound
+
+	if err := r.exec(); err != nil {
+		logrus.Errorf("exec() err=%v", err)
+		return err
 	}
 
 	return nil
@@ -169,6 +174,9 @@ func (r *Repo) Find(id string) (*repo.HatMod, error) {
 	v, err := redis.Values(r.Conn.Do(HGETALL, key))
 	if err != nil {
 		return nil, err
+	}
+	if len(v) == 0 {
+		return nil, repo.ErrNotFound
 	}
 
 	if err := redis.ScanStruct(v, &mod); err != nil {

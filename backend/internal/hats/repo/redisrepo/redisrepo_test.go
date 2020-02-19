@@ -163,10 +163,7 @@ func TestDeleteNotFound(t *testing.T) {
 
 	hr, _ := start(t)
 
-	err := hr.Delete("123", 0)
-	if err == nil {
-		t.Fatalf(EXPECTED, NOT_NIL, BUT_WAS, nil)
-	}
+	err := hr.Delete("123456", 0)
 	if !errors.Is(err, repo.ErrNotFound) {
 		t.Fatalf(EXPECTED, repo.ErrNotFound, BUT_WAS, err)
 	}
