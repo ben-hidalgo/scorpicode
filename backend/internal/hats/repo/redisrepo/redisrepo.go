@@ -3,8 +3,7 @@ package redisrepo
 import (
 	"backend/internal/hats/repo"
 	"backend/pkg/envconfig"
-
-	"github.com/sirupsen/logrus"
+	"time"
 
 	"github.com/gomodule/redigo/redis"
 )
@@ -12,6 +11,7 @@ import (
 //Repo implements repo.HatRepo
 type Repo struct {
 	Conn redis.Conn
+	Pool *redis.Pool
 }
 
 // enforces the interface is implemented
@@ -31,22 +31,34 @@ func init() {
 // NewRepo returns a pointer to a new instance of Repo
 // will panic on connection errors
 func NewRepo() *Repo {
-	conn, err := redis.Dial("tcp", RedisAddress)
-	if err != nil {
-		logrus.Panicf("failed to dial redis connection at %s err=%#v", RedisAddress, err)
-	}
 
-	if _, err := conn.Do(AUTH, RedisPassword); err != nil {
-		logrus.Panicf("auth failed err=%#v", err)
-	}
-
-	reply, err := redis.String(conn.Do(PING))
-	if reply != PONG {
-		logrus.Panicf("unexpected reply to PING err=%#v", err)
-	}
+	pool := newPool(RedisAddress)
 
 	return &Repo{
-		Conn: conn,
+		Pool: pool,
+	}
+}
+
+func newPool(address string) *redis.Pool {
+
+	return &redis.Pool{
+
+		// TODO: env vars
+		MaxIdle:     3,
+		IdleTimeout: 240 * time.Second,
+
+		Dial: func() (redis.Conn, error) {
+			c, err := redis.Dial("tcp", address)
+			if err != nil {
+				return nil, err
+			}
+			return c, err
+		},
+
+		TestOnBorrow: func(c redis.Conn, t time.Time) error {
+			_, err := c.Do("PING")
+			return err
+		},
 	}
 }
 

@@ -226,26 +226,30 @@ func (r *Repo) discard() error {
 
 // BeginTxn implements HatRepo.BeginTxn()
 func (r *Repo) BeginTxn(ctx context.Context) error {
-	logrus.Debug("BeginTxn()")
+	logrus.Debug("redisrepo.BeginTxn()")
+	r.Conn = r.Pool.Get()
+	if _, err := r.Conn.Do(AUTH, RedisPassword); err != nil {
+		return err
+	}
 	return nil
 }
 
 // Rollback implements HatRepo.Rollback()
 func (r *Repo) Rollback() error {
-	logrus.Debug("Rollback()")
-
+	logrus.Debug("redisrepo.Rollback()")
+	r.Conn.Close()
 	return nil
 }
 
 // Commit implements HatRepo.Commit()
 func (r *Repo) Commit() error {
-	logrus.Debug("Commit()")
+	logrus.Debug("redisrepo.Commit()")
 	return nil
 }
 
 // Close implements HatRepo.Close()
 func (r *Repo) Close() error {
-	logrus.Debug("Close()")
-	r.Conn.Close()
+	logrus.Debug("redisrepo.Close()")
+	r.Pool.Close()
 	return nil
 }

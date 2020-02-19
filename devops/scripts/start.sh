@@ -18,7 +18,9 @@ go run main.go) &
 go run main.go) &
 
 (cd backend/cmd/hats/ && \
-REDIS_ADDRESS=`minikube ip`:`kubectl get svc scorpicode-redis-master -o json | jq '.spec.ports[0].nodePort'`     \
+DATASTORE_CONFIG=redis \
+REDIS_PASSWORD=redispassword \
+REDIS_ADDRESS=`minikube ip`:`kubectl get svc scorpicode-redis-master -n dev -o json | jq '.spec.ports[0].nodePort'`     \
 go run main.go) &
 
 cat

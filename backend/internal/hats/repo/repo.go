@@ -102,7 +102,7 @@ func Hook(hr HatRepo) *twirp.ServerHooks {
 		// returned before getting the repo (or forgot to defer Rollback)
 		err := hr.Rollback()
 		if err != nil {
-			logrus.Errorf("repo.Hook() BeginTx failed err=%s", err)
+			logrus.Errorf("repo.Hook() Rollback failed err=%s", err)
 		}
 	}
 
