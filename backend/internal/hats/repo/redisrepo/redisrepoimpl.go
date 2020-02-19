@@ -63,7 +63,7 @@ func (r *Repo) FindAll(limit repo.Limit, offset repo.Offset) (hats []*repo.HatMo
 }
 
 // Save performs an upsert
-func (r *Repo) Save(hm repo.HatMod) (*repo.HatMod, error) { //TODO: should we return a UUID and populate the ID here (rather than in the service)???
+func (r *Repo) Save(hm repo.HatMod) (*repo.HatMod, error) {
 
 	if hm.ID == "" && hm.Version != 0 {
 		return nil, repo.ErrVersionMismatch
@@ -80,13 +80,27 @@ func (r *Repo) Save(hm repo.HatMod) (*repo.HatMod, error) { //TODO: should we re
 	}
 
 	//TODO: if id is not populated, insert; populated created_at, updated_at and add a version for optimistic locking
+	// add watch()
+
+	if err := r.multi(); err != nil {
+		logrus.Errorf("multi() err=%v", err)
+		return nil, err
+	}
+	defer r.discard()
 
 	if _, err := r.Conn.Do(HMSET, redis.Args{}.Add(key).AddFlat(mod)...); err != nil {
+		logrus.Errorf("hmset err=%v", err)
 		return nil, err
 	}
 
 	// set add hats <id>
 	if _, err := r.Conn.Do(SADD, SetName, mod.ID); err != nil {
+		logrus.Errorf("sadd err=%v", err)
+		return nil, err
+	}
+
+	if err := r.exec(); err != nil {
+		logrus.Errorf("exec() err=%v", err)
 		return nil, err
 	}
 
@@ -180,12 +194,9 @@ func (r *Repo) multi() error {
 
 func (r *Repo) exec() error {
 
-	v, err := redis.String(r.Conn.Do(EXEC))
+	_, err := r.Conn.Do(EXEC)
 	if err != nil {
 		return err
-	}
-	if v != "OK" {
-		return errors.New("exec failed")
 	}
 	return nil
 }
