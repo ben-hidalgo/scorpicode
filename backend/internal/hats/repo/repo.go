@@ -37,7 +37,7 @@ type HatMod struct {
 // HatRepo interface for data storage
 type HatRepo interface {
 	OpenConn() error
-	Rollback() error
+	CloseConn() error
 	Close() error
 
 	// Find by id returns nil, nil if not found
@@ -99,7 +99,7 @@ func Hook(hr HatRepo) *twirp.ServerHooks {
 
 		// call rollback to close the connection in case the procedure
 		// returned before getting the repo (or forgot to defer Rollback)
-		err := hr.Rollback()
+		err := hr.CloseConn()
 		if err != nil {
 			logrus.Errorf("repo.Hook() Rollback failed err=%s", err)
 		}

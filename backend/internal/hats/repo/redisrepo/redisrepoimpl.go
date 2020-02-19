@@ -233,9 +233,9 @@ func (r *Repo) OpenConn() error {
 	return nil
 }
 
-// Rollback implements HatRepo.Rollback()
-func (r *Repo) Rollback() error {
-	logrus.Debug("redisrepo.Rollback()")
+// CloseConn .
+func (r *Repo) CloseConn() error {
+	logrus.Debug("redisrepo.CloseConn()")
 	r.Conn.Close()
 	return nil
 }
