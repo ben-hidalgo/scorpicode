@@ -10,15 +10,27 @@ type Server struct{}
 
 var _ hatspb.Hats = (*Server)(nil)
 
-//// field names
-
-// Inches .
-const Inches = "inches"
+// NewServer returns an instance of hatserver.Server
+func NewServer() *Server {
+	return &Server{}
+}
 
 //// these will be decoded into multi-lingual, user facing error / warning messages in the UI
 
-// HatTooSmall .
-const HatTooSmall = util.ErrMsg("hat.inches.toosmall")
+// HatInchesTooSmall .
+const HatInchesTooSmall = util.ErrMsg("hat.inches.toosmall")
 
-// HatTooBig .
-const HatTooBig = util.ErrMsg("hat.inches.toobig")
+// HatInchesTooBig .
+const HatInchesTooBig = util.ErrMsg("hat.inches.toobig")
+
+// HatInchesRequired .
+const HatInchesRequired = util.ErrMsg("hat.inches.required")
+
+// HatColorRequired .
+const HatColorRequired = util.ErrMsg("hat.color.required")
+
+// HatSizeRequired .
+const HatSizeRequired = util.ErrMsg("hat.size.required")
+
+// HatNameRequired .
+const HatNameRequired = util.ErrMsg("hat.name.required")

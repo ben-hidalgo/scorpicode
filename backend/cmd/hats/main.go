@@ -28,7 +28,7 @@ func main() {
 	// middleware filter chain
 	hooks := twirp.ChainHooks(repo.Hook(hatRepo))
 
-	twirpHandler := hatspb.NewHatsServer(&hatserver.Server{}, hooks)
+	twirpHandler := hatspb.NewHatsServer(hatserver.NewServer(), hooks)
 
 	srv := &http.Server{
 		Addr:    config.ListenAddress,

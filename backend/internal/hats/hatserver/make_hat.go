@@ -6,7 +6,6 @@ import (
 	"backend/pkg/util"
 	"backend/rpc/hatspb"
 	"context"
-	"math/rand"
 
 	"github.com/twitchtv/twirp"
 
@@ -19,25 +18,19 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 	logrus.Debugf("MakeHat() req=%v", req)
 
 	if req.GetInches() < config.MinSizeInches {
-		return nil, util.InvalidArgumentError(Inches, HatTooSmall)
+		return nil, util.InvalidArgumentError(HatInchesTooSmall)
 	}
 
 	if req.GetInches() > config.MaxSizeInches {
-		return nil, util.InvalidArgumentError(Inches, HatTooBig)
+		return nil, util.InvalidArgumentError(HatInchesTooBig)
 	}
 
-	var color string
 	if req.GetColor() == "" {
-		color = []string{"white", "black", "brown", "red", "blue"}[rand.Intn(4)]
-	} else {
-		color = req.GetColor()
+		return nil, util.InvalidArgumentError(HatColorRequired)
 	}
 
-	var name string
 	if req.GetName() == "" {
-		name = []string{"bowler", "baseball cap", "top hat", "derby"}[rand.Intn(3)]
-	} else {
-		name = req.GetName()
+		return nil, util.InvalidArgumentError(HatNameRequired)
 	}
 
 	hr := repo.GetRepo(ctx)
@@ -48,8 +41,8 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 
 	// a different instance is returned
 	mod, err := hr.Save(repo.HatMod{
-		Color:  color,
-		Name:   name,
+		Color:  req.GetColor(),
+		Name:   req.GetName(),
 		Inches: req.GetInches(),
 	})
 	if err != nil {
