@@ -17,20 +17,24 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 
 	logrus.Debugf("MakeHat() req=%v", req)
 
-	if req.GetInches() < config.MinSizeInches {
-		return nil, util.InvalidArgumentError(HatInchesTooSmall)
-	}
-
-	if req.GetInches() > config.MaxSizeInches {
-		return nil, util.InvalidArgumentError(HatInchesTooBig)
-	}
-
 	if req.GetColor() == "" {
 		return nil, util.InvalidArgumentError(HatColorRequired)
 	}
 
 	if req.GetName() == "" {
 		return nil, util.InvalidArgumentError(HatNameRequired)
+	}
+
+	if req.GetInches() == 0 {
+		return nil, util.InvalidArgumentError(HatInchesRequired)
+	}
+
+	if req.GetInches() < config.MinSizeInches {
+		return nil, util.InvalidArgumentError(HatInchesTooSmall)
+	}
+
+	if req.GetInches() > config.MaxSizeInches {
+		return nil, util.InvalidArgumentError(HatInchesTooBig)
 	}
 
 	hr := repo.GetRepo(ctx)

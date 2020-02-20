@@ -1,9 +1,11 @@
 package hatserver_test
 
 import (
+	"backend/internal/hats/config"
 	"backend/internal/hats/hatserver"
 	"backend/internal/hats/repo"
 	"backend/internal/hats/repo/inmem"
+	"backend/pkg/util"
 	"backend/rpc/hatspb"
 	"context"
 	"testing"
@@ -12,14 +14,13 @@ import (
 )
 
 const (
-	XpctdColor = "red"
-	expColor   = "red"
-	expName    = "cap"
-	expInches  = int32(10)
-	EXPECTED   = "expected %v %s %v"
-	BUT_WAS    = "but was"
-	NOT_NIL    = "!nil"
-	NOT_EMPTY  = "not empty"
+	DefaultColor  = "red"
+	DefaultName   = "cap"
+	DefaultInches = int32(10)
+
+	NOT_NIL = "not nil"
+	GOT     = "got '%v' %s '%v'"
+	WANTED  = "but wanted"
 )
 
 func start() (context.Context, *hatserver.Server, *hatspb.MakeHatRequest) {
@@ -29,74 +30,37 @@ func start() (context.Context, *hatserver.Server, *hatspb.MakeHatRequest) {
 	hs := hatserver.NewServer()
 
 	req := &hatspb.MakeHatRequest{
-		Inches: expInches,
-		Name:   expName,
-		Color:  expColor,
+		Inches: DefaultInches,
+		Name:   DefaultName,
+		Color:  DefaultColor,
 	}
 
 	return ctx, hs, req
 }
 
-/*
-func TestRandomNameColor(t *testing.T) {
-
-	ctx := context.Background()
-	ctx = context.WithValue(ctx, repo.RepoKey, inmem.NewRepo())
-
-	inches := int32(10)
-
-	req := &hatspb.MakeHatRequest{
-		Inches: inches,
-	}
-
-	hs := &hatserver.Server{}
-
-	res, err := hs.MakeHat(ctx, req)
-
-	if err != nil {
-		t.Fatalf("err=%s", err)
-	}
-	if res == nil {
-		t.Fatalf("res must not be nil")
-	}
-	if res.GetHat() == nil {
-		t.Fatalf("hat must not be nil")
-	}
-	if res.GetHat().GetInches() != inches {
-		t.Fatalf("inches must match")
-	}
-	if res.GetHat().GetName() == "" {
-		t.Fatalf("name must be randomly assigned when not provided")
-	}
-	if res.GetHat().GetColor() == "" {
-		t.Fatalf("color must be randomly assigned when not provided")
-	}
-}
-*/
-
-func TestSpecificNameColor(t *testing.T) {
+func TestSuccess(t *testing.T) {
 
 	ctx, hs, req := start()
 
 	res, err := hs.MakeHat(ctx, req)
 
 	if err != nil {
-		t.Fatalf(EXPECTED, nil, BUT_WAS, err)
+		t.Fatalf(GOT, err, WANTED, nil)
 	}
 	if res == nil {
-		t.Fatalf(EXPECTED, NOT_NIL, BUT_WAS, nil)
+		t.Fatalf(GOT, res, WANTED, NOT_NIL)
 	}
 	if res.GetHat() == nil {
-		t.Fatalf(EXPECTED, NOT_NIL, BUT_WAS, nil)
+		t.Fatalf(GOT, res.GetHat(), WANTED, NOT_NIL)
 	}
-	if res.GetHat().GetInches() != expInches {
-		t.Fatalf(EXPECTED, expInches, BUT_WAS, res.GetHat().GetInches())
+	if res.GetHat().GetInches() != DefaultInches {
+		t.Fatalf(GOT, res.GetHat().GetInches(), WANTED, DefaultInches)
 	}
-	if res.GetHat().GetName() != expName {
-		t.Fatalf(EXPECTED, expName, BUT_WAS, res.GetHat().GetName())
+	if res.GetHat().GetName() != DefaultName {
+		t.Fatalf(GOT, res.GetHat().GetName(), WANTED, DefaultName)
 	}
-	if res.GetHat().GetColor() != expColor {
-		t.Fatalf(EXPECTED, expColor, BUT_WAS, res.GetHat().GetColor())
+	if res.GetHat().GetColor() != DefaultColor {
+		t.Fatalf(GOT, res.GetHat().GetColor(), WANTED, DefaultColor)
 	}
 
 }
@@ -105,47 +69,94 @@ func TestInchesTooSmall(t *testing.T) {
 
 	ctx, hs, req := start()
 
-	req.Inches = int32(4)
+	req.Inches = config.MinSizeInches - 1
 
 	res, err := hs.MakeHat(ctx, req)
 
 	if err == nil {
-		t.Fatalf(EXPECTED, NOT_NIL, BUT_WAS, nil)
+		t.Fatalf(GOT, err, WANTED, NOT_NIL)
 	}
 	if res != nil {
-		t.Fatalf(EXPECTED, nil, BUT_WAS, res)
+		t.Fatalf(GOT, res, WANTED, nil)
 	}
 
 	e := err.(twirp.Error)
 	if e.Code() != twirp.InvalidArgument {
-		t.Fatalf(EXPECTED, twirp.InvalidArgument, BUT_WAS, e.Code())
+		t.Fatalf(GOT, e.Code(), WANTED, twirp.InvalidArgument)
 	}
 	if e.Msg() != string(hatserver.HatInchesTooSmall) {
-		t.Fatalf(EXPECTED, hatserver.HatInchesTooSmall, BUT_WAS, e.Msg())
+		t.Fatalf(GOT, e.Msg(), WANTED, hatserver.HatInchesTooSmall)
 	}
-
 }
 
 func TestInchesTooBig(t *testing.T) {
 
 	ctx, hs, req := start()
 
-	req.Inches = int32(16)
+	req.Inches = config.MaxSizeInches + 1
 
 	res, err := hs.MakeHat(ctx, req)
 
 	if err == nil {
-		t.Fatalf(EXPECTED, NOT_NIL, BUT_WAS, nil)
+		t.Fatalf(GOT, err, WANTED, NOT_NIL)
 	}
 	if res != nil {
-		t.Fatalf(EXPECTED, nil, BUT_WAS, res)
+		t.Fatalf(GOT, res, WANTED, nil)
 	}
 
 	e := err.(twirp.Error)
 	if e.Code() != twirp.InvalidArgument {
-		t.Fatalf(EXPECTED, twirp.InvalidArgument, BUT_WAS, e.Code())
+		t.Fatalf(GOT, e.Code(), WANTED, twirp.InvalidArgument)
 	}
 	if e.Msg() != string(hatserver.HatInchesTooBig) {
-		t.Fatalf(EXPECTED, hatserver.HatInchesTooSmall, BUT_WAS, e.Msg())
+		t.Fatalf(GOT, e.Msg(), WANTED, hatserver.HatInchesTooSmall)
 	}
+}
+
+func TestInchesRequired(t *testing.T) {
+
+	ctx, hs, req := start()
+
+	req.Inches = 0
+
+	testRequired(t, ctx, hs, req, hatserver.HatInchesRequired)
+}
+
+func TestColorRequired(t *testing.T) {
+
+	ctx, hs, req := start()
+
+	req.Color = ""
+
+	testRequired(t, ctx, hs, req, hatserver.HatColorRequired)
+}
+
+func TestNameRequired(t *testing.T) {
+
+	ctx, hs, req := start()
+
+	req.Name = ""
+
+	testRequired(t, ctx, hs, req, hatserver.HatNameRequired)
+}
+
+func testRequired(t *testing.T, ctx context.Context, hs *hatserver.Server, req *hatspb.MakeHatRequest, emsg util.ErrMsg) {
+
+	res, err := hs.MakeHat(ctx, req)
+
+	if err == nil {
+		t.Fatalf(GOT, err, WANTED, NOT_NIL)
+	}
+	if res != nil {
+		t.Fatalf(GOT, res, WANTED, nil)
+	}
+
+	e := err.(twirp.Error)
+	if e.Code() != twirp.InvalidArgument {
+		t.Fatalf(GOT, e.Code(), WANTED, twirp.InvalidArgument)
+	}
+	if e.Msg() != string(emsg) {
+		t.Fatalf(GOT, e.Msg(), WANTED, emsg)
+	}
+
 }
