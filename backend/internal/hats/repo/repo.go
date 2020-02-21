@@ -30,7 +30,7 @@ type HatMod struct {
 	ID      string `redis:"id"`
 	Inches  int32  `redis:"inches"`
 	Color   string `redis:"color"`
-	Name    string `redis:"name"`
+	Style   string `redis:"style"`
 	Version int    `redis:"version"`
 }
 

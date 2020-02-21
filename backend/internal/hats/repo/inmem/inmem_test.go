@@ -3,13 +3,14 @@ package inmem_test
 import (
 	"backend/internal/hats/repo"
 	"backend/internal/hats/repo/inmem"
+	"backend/rpc/hatspb"
 	"errors"
 	"testing"
 )
 
 const (
 	DefaultColor  = "red"
-	DefaultName   = "cap"
+	DefaultStyle  = hatspb.Style_BASEBALL
 	DefaultInches = int32(10)
 
 	NOT_NIL = "not nil"
@@ -20,7 +21,7 @@ const (
 func start() (*inmem.Repo, *repo.HatMod) {
 	hm := &repo.HatMod{
 		Color:   DefaultColor,
-		Name:    DefaultName,
+		Style:   DefaultStyle.String(),
 		Inches:  DefaultInches,
 		Version: 0,
 	}
@@ -104,8 +105,8 @@ func TestFindAllOne(t *testing.T) {
 	if hat.Inches != DefaultInches {
 		t.Fatalf(GOT, hat.Inches, WANTED, DefaultInches)
 	}
-	if hat.Name != DefaultName {
-		t.Fatalf(GOT, hat.Name, WANTED, DefaultName)
+	if hat.Style != DefaultStyle.String() {
+		t.Fatalf(GOT, hat.Style, WANTED, DefaultStyle.String())
 	}
 	if hat.Color != DefaultColor {
 		t.Fatalf(GOT, hat.Color, WANTED, DefaultColor)
@@ -200,8 +201,8 @@ func TestSaveInsert(t *testing.T) {
 	if hat.Inches != DefaultInches {
 		t.Fatalf(GOT, hat.Inches, WANTED, DefaultInches)
 	}
-	if hat.Name != DefaultName {
-		t.Fatalf(GOT, hat.Name, WANTED, DefaultName)
+	if hat.Style != DefaultStyle.String() {
+		t.Fatalf(GOT, hat.Style, WANTED, DefaultStyle.String())
 	}
 	if hat.Color != DefaultColor {
 		t.Fatalf(GOT, hat.Color, WANTED, DefaultColor)
@@ -218,11 +219,11 @@ func TestSaveUpdate(t *testing.T) {
 	}
 
 	newColor := "blue"
-	newName := "bowler"
+	newStyle := hatspb.Style_BOWLER.String()
 	newInches := int32(12)
 
 	mod.Color = newColor
-	mod.Name = newName
+	mod.Style = newStyle
 	mod.Inches = newInches
 
 	hat, err := hr.Save(*mod)
@@ -239,8 +240,8 @@ func TestSaveUpdate(t *testing.T) {
 	if hat.Inches != newInches {
 		t.Fatalf(GOT, hat.Inches, WANTED, newInches)
 	}
-	if hat.Name != newName {
-		t.Fatalf(GOT, hat.Name, WANTED, newName)
+	if hat.Style != newStyle {
+		t.Fatalf(GOT, hat.Style, WANTED, newStyle)
 	}
 	if hat.Color != newColor {
 		t.Fatalf(GOT, hat.Color, WANTED, newColor)

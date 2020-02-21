@@ -31,7 +31,7 @@ message Hat {
   string color = 4; // anything but "invisible"
   Style style = 5;
 }
-
+// add Color enum
 message MakeHatRequest {
   int32 inches = 1; // must be > 0
   string color = 2; // anything but "invisible"

@@ -72,7 +72,7 @@ func (r *Repo) Save(hm repo.HatMod) (*repo.HatMod, error) {
 	mod := &repo.HatMod{
 		ID:      id,
 		Color:   hm.Color,
-		Name:    hm.Name,
+		Style:   hm.Style,
 		Inches:  hm.Inches,
 		Version: hm.Version + 1,
 	}

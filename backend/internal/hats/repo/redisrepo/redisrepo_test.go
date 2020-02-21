@@ -3,13 +3,14 @@ package redisrepo_test
 import (
 	"backend/internal/hats/repo"
 	"backend/internal/hats/repo/redisrepo"
+	"backend/rpc/hatspb"
 	"errors"
 	"testing"
 )
 
 const (
 	DefaultColor  = "red"
-	DefaultName   = "cap"
+	DefaultStyle  = hatspb.Style_BASEBALL
 	DefaultInches = int32(10)
 
 	NOT_NIL = "not nil"
@@ -20,7 +21,7 @@ const (
 func start(t *testing.T) (*redisrepo.Repo, *repo.HatMod) {
 	hm := &repo.HatMod{
 		Color:   DefaultColor,
-		Name:    DefaultName,
+		Style:   DefaultStyle.String(),
 		Inches:  DefaultInches,
 		Version: 0,
 	}
@@ -124,8 +125,8 @@ func TestFindAllOne(t *testing.T) {
 	if hat.Inches != DefaultInches {
 		t.Fatalf(GOT, hat.Inches, WANTED, DefaultInches)
 	}
-	if hat.Name != DefaultName {
-		t.Fatalf(GOT, hat.Name, WANTED, DefaultName)
+	if hat.Style != DefaultStyle.String() {
+		t.Fatalf(GOT, hat.Style, WANTED, DefaultStyle.String())
 	}
 	if hat.Color != DefaultColor {
 		t.Fatalf(GOT, hat.Color, WANTED, DefaultColor)
@@ -233,8 +234,8 @@ func TestSaveInsert(t *testing.T) {
 	if hat.Inches != DefaultInches {
 		t.Fatalf(GOT, hat.Inches, WANTED, DefaultInches)
 	}
-	if hat.Name != DefaultName {
-		t.Fatalf(GOT, hat.Name, WANTED, DefaultName)
+	if hat.Style != DefaultStyle.String() {
+		t.Fatalf(GOT, hat.Style, WANTED, DefaultStyle.String())
 	}
 	if hat.Color != DefaultColor {
 		t.Fatalf(GOT, hat.Color, WANTED, DefaultColor)
