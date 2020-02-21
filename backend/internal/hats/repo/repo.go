@@ -37,6 +37,7 @@ type HatMod struct {
 // HatRepo interface for data storage
 type HatRepo interface {
 	// connection related
+	Clone() (HatRepo, error)
 	OpenConn() error
 	CloseConn() error
 	Close() error
@@ -92,20 +93,27 @@ func Hook(hr HatRepo) *twirp.ServerHooks {
 
 	hook.RequestReceived = func(ctx context.Context) (context.Context, error) {
 
-		err := hr.OpenConn()
+		// the clone has the same connection pool
+		clone, err := hr.Clone()
 		if err != nil {
-			logrus.Errorf("repo.Hook() BeginTx failed err=%s", err)
+			logrus.Errorf("repo.Hook() Clone failed err=%s", err)
 			return ctx, err
 		}
 
-		return context.WithValue(ctx, RepoKey, hr), nil
+		// borrow a different connection from the cloned pool
+		err = clone.OpenConn()
+		if err != nil {
+			logrus.Errorf("repo.Hook() OpenConn failed err=%s", err)
+			return ctx, err
+		}
+
+		return context.WithValue(ctx, RepoKey, clone), nil
 	}
 
 	hook.ResponseSent = func(ctx context.Context) {
 
-		// call rollback to close the connection in case the procedure
-		// returned before getting the repo (or forgot to defer Rollback)
-		err := hr.CloseConn()
+		clone := GetRepo(ctx)
+		err := clone.CloseConn()
 		if err != nil {
 			logrus.Errorf("repo.Hook() Rollback failed err=%s", err)
 		}

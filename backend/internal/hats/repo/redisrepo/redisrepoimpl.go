@@ -201,13 +201,27 @@ func (r *Repo) OpenConn() error {
 // CloseConn .
 func (r *Repo) CloseConn() error {
 	logrus.Debug("redisrepo.CloseConn()")
-	r.Conn.Close()
+	if r.Conn == nil {
+		logrus.Warn("redisrepo.CloseConn() conn is nil")
+	} else {
+		r.Conn.Close()
+	}
+
 	return nil
 }
 
-// Close implements HatRepo.Close()
+// Close .
 func (r *Repo) Close() error {
 	logrus.Debug("redisrepo.Close()")
 	r.Pool.Close()
 	return nil
+}
+
+// Clone .
+func (r *Repo) Clone() (repo.HatRepo, error) {
+	logrus.Debug("redisrepo.Clone()")
+	return &Repo{
+		// the pool is cloned, the connection is not
+		Pool: r.Pool,
+	}, nil
 }

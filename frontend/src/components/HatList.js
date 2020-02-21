@@ -17,7 +17,7 @@ const HatList = props => {
       {
         props.hats.map(hat => {
           return (
-            <Hat hat={hat} key={hat.name} />
+            <Hat hat={hat} key={hat.id} />
           );
         })
       }

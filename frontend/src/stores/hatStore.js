@@ -10,8 +10,8 @@ export class HatStore {
     return this.hatRegistry.values();
   };
 
-  getHat(name) {
-    return this.hatRegistry.get(name);
+  getHat(id) {
+    return this.hatRegistry.get(id);
   }
 
   @action makeHat(inches) {
@@ -31,7 +31,7 @@ export class HatStore {
     return this.$req()
       .then(action(({ hats }) => {
         this.hatRegistry.clear();
-        hats.forEach(hat => this.hatRegistry.set(hat.name, hat));
+        hats.forEach(hat => this.hatRegistry.set(hat.id, hat));
       }))
       .finally(action(() => { this.isLoading = false; }));
   }

@@ -27,6 +27,5 @@ spec:
         - containerPort: {{ .Values.frontend.port }}
           name: http
         env:
-          - name: PLACEHOLDER
-            value: "placeholder"
+{{ include "common.shared" . | indent 8 }}
 {{- end }}

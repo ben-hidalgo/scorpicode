@@ -68,7 +68,8 @@ const Tags = {
 
 const Hats = {
   listHats: () => requests.post('/hats/ListHats', {}),
-  makeHat: (inches) => requests.post('/hats/MakeHat', {inches: inches}),
+  // TODO: get color and style from user input
+  makeHat: (inches) => requests.post('/hats/MakeHat', {inches: inches, color: "red", style: "BOWLER"}),
 };
 
 const limit = (count, p) => `limit=${count}&offset=${p ? p * count : 0}`;

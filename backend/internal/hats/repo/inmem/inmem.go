@@ -124,3 +124,11 @@ func (r *Repo) Close() error {
 	r.Storage = nil
 	return nil
 }
+
+// Clone implements HatRepo.Clone()
+func (r *Repo) Clone() (repo.HatRepo, error) {
+	logrus.Debug("inmem.Clone()")
+	return &Repo{
+		Storage: r.Storage,
+	}, nil
+}

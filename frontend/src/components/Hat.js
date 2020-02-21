@@ -7,7 +7,7 @@ export default class Hat extends React.Component {
   render() {
     return (
       <div className="article-preview">
-        <li>id: {this.props.hat.id} name: {this.props.hat.name} inches: {this.props.hat.inches} color: {this.props.hat.color}</li>
+        <li>Id: {this.props.hat.id} Style: {this.props.hat.style} Inches: {this.props.hat.inches} Color: {this.props.hat.color}</li>
       </div>
     );
   }

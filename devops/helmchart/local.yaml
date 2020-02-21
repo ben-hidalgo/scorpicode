@@ -29,6 +29,7 @@ hats:
   maxSizeInches: 16
   datastoreConfig: redis
   redisAddress: scorpicode-redis-master:6379
+  redisPassword: redispassword
 
 website:
   enabled: true

@@ -28,6 +28,7 @@ const stores = {
 };
 
 
+// TODO: remove make and load from here
 hatStore.makeHat(10);
 hatStore.makeHat(12);
 
