@@ -1,6 +1,7 @@
 package util
 
 import (
+	"github.com/sirupsen/logrus"
 	"github.com/twitchtv/twirp"
 )
 
@@ -9,6 +10,12 @@ type ErrMsg string
 
 // InvalidArgumentError wraps twirp.InvalidArgumentError
 func InvalidArgumentError(emsg ErrMsg) twirp.Error {
-	err := twirp.NewError(twirp.InvalidArgument, string(emsg))
-	return err
+	logrus.Debugf("InvalidArgumentError emsg=%s", emsg)
+	return twirp.NewError(twirp.InvalidArgument, string(emsg))
+}
+
+// InternalErrorWith wraps twirp.InternalErrorWith
+func InternalErrorWith(e error) twirp.Error {
+	logrus.Errorf("InternalErrorWith e=%v", e)
+	return twirp.InternalErrorWith(e)
 }

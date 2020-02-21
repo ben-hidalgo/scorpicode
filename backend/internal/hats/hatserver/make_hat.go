@@ -39,7 +39,7 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 
 	hr := repo.GetRepo(ctx)
 	if err := hr.Multi(); err != nil {
-		return nil, twirp.InternalErrorWith(err)
+		return nil, util.InternalErrorWith(err)
 	}
 	defer hr.Discard()
 
