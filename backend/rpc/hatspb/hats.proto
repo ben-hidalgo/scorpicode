@@ -12,19 +12,30 @@ service Hats {
   rpc ListHats(ListHatsRequest) returns (ListHatsResponse);
 }
 
+enum Style {
+  UNKNOWN = 0;
+  BOWLER = 1;
+  FEDORA = 2;
+  BASEBALL = 3;
+  NEWSBOY = 4;
+  COWBOY = 5;
+  DERBY = 6;
+  TOP_HAT = 7;
+}
+
 // A Hat is a piece of headwear made by a Hats.
 message Hat {
   string id = 1;
   int32 version = 2;
   int32 inches = 3;
   string color = 4; // anything but "invisible"
-  string name = 5; // i.e. "bowler"
+  Style style = 5;
 }
 
 message MakeHatRequest {
   int32 inches = 1; // must be > 0
   string color = 2; // anything but "invisible"
-  string name = 3; // i.e. "bowler"
+  Style style = 3; // i.e. "bowler"
 }
 message MakeHatResponse {
   Hat hat = 1;

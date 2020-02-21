@@ -21,8 +21,8 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 		return nil, util.InvalidArgumentError(HatColorRequired)
 	}
 
-	if req.GetName() == "" {
-		return nil, util.InvalidArgumentError(HatNameRequired)
+	if req.GetStyle() == hatspb.Style_UNKNOWN {
+		return nil, util.InvalidArgumentError(HatStyleRequired)
 	}
 
 	if req.GetInches() == 0 {
@@ -46,7 +46,7 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 	// a different instance is returned
 	mod, err := hr.Save(repo.HatMod{
 		Color:  req.GetColor(),
-		Name:   req.GetName(),
+		Name:   req.GetStyle().String(),
 		Inches: req.GetInches(),
 	})
 	if err != nil {
@@ -62,7 +62,7 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 		Hat: &hatspb.Hat{
 			Id:      mod.ID,
 			Color:   mod.Color,
-			Name:    mod.Name,
+			Style:   hatspb.Style(hatspb.Style_value[mod.Name]),
 			Inches:  mod.Inches,
 			Version: int32(mod.Version),
 		},

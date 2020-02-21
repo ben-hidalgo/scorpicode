@@ -15,7 +15,7 @@ import (
 
 const (
 	DefaultColor  = "red"
-	DefaultName   = "cap"
+	DefaultStyle  = hatspb.Style_FEDORA
 	DefaultInches = int32(10)
 
 	NOT_NIL = "not nil"
@@ -31,7 +31,7 @@ func start() (context.Context, *hatserver.Server, *hatspb.MakeHatRequest) {
 
 	req := &hatspb.MakeHatRequest{
 		Inches: DefaultInches,
-		Name:   DefaultName,
+		Style:  DefaultStyle,
 		Color:  DefaultColor,
 	}
 
@@ -56,8 +56,8 @@ func TestSuccess(t *testing.T) {
 	if res.GetHat().GetInches() != DefaultInches {
 		t.Fatalf(GOT, res.GetHat().GetInches(), WANTED, DefaultInches)
 	}
-	if res.GetHat().GetName() != DefaultName {
-		t.Fatalf(GOT, res.GetHat().GetName(), WANTED, DefaultName)
+	if res.GetHat().GetStyle() != DefaultStyle {
+		t.Fatalf(GOT, res.GetHat().GetStyle(), WANTED, DefaultStyle)
 	}
 	if res.GetHat().GetColor() != DefaultColor {
 		t.Fatalf(GOT, res.GetHat().GetColor(), WANTED, DefaultColor)
@@ -135,9 +135,9 @@ func TestNameRequired(t *testing.T) {
 
 	ctx, hs, req := start()
 
-	req.Name = ""
+	req.Style = hatspb.Style_UNKNOWN
 
-	testRequired(t, ctx, hs, req, hatserver.HatNameRequired)
+	testRequired(t, ctx, hs, req, hatserver.HatStyleRequired)
 }
 
 func testRequired(t *testing.T, ctx context.Context, hs *hatserver.Server, req *hatspb.MakeHatRequest, emsg util.ErrMsg) {

@@ -32,5 +32,5 @@ const HatColorRequired = util.ErrMsg("hat.color.required")
 // HatSizeRequired .
 const HatSizeRequired = util.ErrMsg("hat.size.required")
 
-// HatNameRequired .
-const HatNameRequired = util.ErrMsg("hat.name.required")
+// HatStyleRequired .
+const HatStyleRequired = util.ErrMsg("hat.style.required")
