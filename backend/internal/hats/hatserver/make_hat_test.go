@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	DefaultColor  = "red"
+	DefaultColor  = "RED"
 	DefaultStyle  = hatspb.Style_FEDORA
 	DefaultInches = int32(10)
 )
@@ -125,6 +125,30 @@ func TestColorRequired(t *testing.T) {
 	req.Color = ""
 
 	testRequired(t, ctx, hs, req, hatserver.HatColorRequired)
+}
+
+func TestColorDomain(t *testing.T) {
+
+	ctx, hs, req := startHat()
+
+	req.Color = "not a color"
+
+	res, err := hs.MakeHat(ctx, req)
+
+	if err == nil {
+		t.Fatalf(GOT, err, WANTED, NOT_NIL)
+	}
+	if res != nil {
+		t.Fatalf(GOT, res, WANTED, nil)
+	}
+
+	e := err.(twirp.Error)
+	if e.Code() != twirp.InvalidArgument {
+		t.Fatalf(GOT, e.Code(), WANTED, twirp.InvalidArgument)
+	}
+	if e.Msg() != string(hatserver.HatColorDomain) {
+		t.Fatalf(GOT, e.Msg(), WANTED, hatserver.HatColorDomain)
+	}
 }
 
 func TestNameRequired(t *testing.T) {

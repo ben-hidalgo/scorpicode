@@ -12,6 +12,17 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+var colors = map[string]interface{}{
+	"RED":    struct{}{},
+	"BLUE":   struct{}{},
+	"GREEN":  struct{}{},
+	"YELLOW": struct{}{},
+	"PURPLE": struct{}{},
+	"BLACK":  struct{}{},
+	"GREY":   struct{}{},
+	"ORANGE": struct{}{},
+}
+
 // MakeHat makes a hat
 func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hatspb.MakeHatResponse, error) {
 
@@ -19,6 +30,10 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 
 	if req.GetColor() == "" {
 		return nil, util.InvalidArgumentError(HatColorRequired)
+	}
+
+	if _, ok := colors[req.GetColor()]; ok == false {
+		return nil, util.InvalidArgumentError(HatColorDomain)
 	}
 
 	if req.GetStyle() == hatspb.Style_UNKNOWN_STYLE {

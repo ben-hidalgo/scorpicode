@@ -29,6 +29,9 @@ const HatInchesRequired = util.ErrMsg("hat.inches.required")
 // HatColorRequired .
 const HatColorRequired = util.ErrMsg("hat.color.required")
 
+// HatColorDomain .
+const HatColorDomain = util.ErrMsg("hat.color.domain")
+
 // HatSizeRequired .
 const HatSizeRequired = util.ErrMsg("hat.size.required")
 
