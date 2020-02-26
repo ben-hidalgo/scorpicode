@@ -1,67 +1,118 @@
-# ![React + Mobx Example App](project-logo.png)
+![3RMXi New Logotype](https://github.com/alexvcasillas/react-mobx-router/blob/master/3RMXi-New.png?raw=true)
 
-> ### React + Mobx codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld-example-apps) spec and API.
+![3RMXi Logotype](https://raw.githubusercontent.com/alexvcasillas/react-mobx-router/master/3RMXi.jpg)
 
-### [Demo](https://react-mobx.realworld.io/)&nbsp;&nbsp;&nbsp;&nbsp;[RealWorld](https://github.com/gothinkster/realworld)
+### Create React App with React Router 4 and MobX State Tree and Internationalization
 
-Originally created for this [GH issue](https://github.com/reactjs/Redux/issues/1353). The codebase is now feature complete; please submit bug fixes via pull requests & feedback via issues.
+This project is a boilerplate for a quickstart development with [create-react-app](https://github.com/facebookincubator/create-react-app) + [React Router 4](https://github.com/ReactTraining/react-router) and [MobX / MobX-State-Tree](https://github.com/mobxjs/mobx-state-tree) to maintain the state of the App and a custom internationalization module component.
 
-We're currently working on some docs for the codebase (explaining where functionality is located, how it works, etc) but most things should be self explanatory if you have a minimal understanding of React/Mobx.
+This boilerplate doest not implement [custom-react-scripts](https://github.com/kitze/custom-react-scripts) anymore but if you want to to be able to implement @decorators and CSS Modules for Sass/Less/Stylus implementations check that repository to learn how to implement it. Or just check the "official way" of implementing this with [Create React App with CSS Modules](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-a-css-preprocessor-sass-less-etc) at the [create-react-app](https://github.com/facebookincubator/create-react-app) repository.
 
+I'm not interested in creating an opinionated boilerplate with strict rules about how to do stuff. The beauty of Javascript is that, you can do it as you want, the way you feel more confortable with so, **you should** modify the project structure as you want while it's easier for you to work with, also changing any other aspect of the execution.
 
-## Getting started
+### Built with 3RMXi
 
-You can view a live demo over at https://react-mobx.realworld.io/
+The following projects are built with **3RMXi**, some of them are big, some of them are examples:
 
-To get the frontend running locally:
+[Asynchronous Fetching from Github](https://react-git-app.firebaseapp.com/)
 
-- Clone this repo
-- `npm install` to install all req'd dependencies
-- `npm start` to start the local server (this project uses create-react-app)
+### What does 3RMXi includes?
 
-
-### Making requests to the backend API
-
-For convenience, we have a live API server running at https://conduit.productionready.io/api for the application to make requests against. You can view [the API spec here](https://github.com/GoThinkster/productionready/blob/master/api) which contains all routes & responses for the server.
-
-The source code for the backend server (available for Node, Rails and Django) can be found in the [main RealWorld repo](https://github.com/gothinkster/realworld).
-
-If you want to change the API URL to a local server, simply edit `src/agent.js` and change `API_ROOT` to the local server's URL (i.e. `localhost:3000/api`)
+* [x] Create React App - *React Apps with no build configuration.*
+* [x] MobX - *Simple, scalable state management.*
+* [x] Mobx State Tree - *Opinionated, transactional, MobX powered state container.*
+* [x] Styled Components - *Visual primitives for the component age.*
+* [x] CSS Modules - *Use SASS/SCSS/Less/Stylus/etc without ejecting.*
 
 
-## Functionality overview
+### Getting Started
 
-The example application is a social blogging site (i.e. a Medium.com clone) called "Conduit". It uses a custom API for all requests, including authentication. You can view a live demo over at https://react-mobx.realworld.io/
+To get started using this boilerplate you only need to follow a few steps. First of all
+you should run `yarn` on your favorite terminal to initialize Yarn and install all the required
+dependencies.
 
-**General functionality:**
+If you want to start developing your project you should run `yarn start`, this will generate
+a development build (without optimizing the code for easy debug and all that stuff) based on a webpack dev-server
+with hot-reload and all those cool development features that we, programmers, love.
 
-- Authenticate users via JWT (login/signup pages + logout button on settings page)
-- CRU* users (sign up & settings page - no deleting required)
-- CRUD Articles
-- CR*D Comments on articles (no updating required)
-- GET and display paginated lists of articles
-- Favorite articles
-- Follow other users
+If you want a production build of your project you should run `yarn build`, this will create a build folder in the root
+directory of the project and bundle your `src` folder and optimize all the code to get the best possible performance. This build will be minified and the filenames will include the hashes.
 
-**The general page breakdown looks like this:**
+Your app will be ready to be deployed!!
 
-- Home page (URL: /#/ )
-    - List of tags
-    - List of articles pulled from either Feed, Global, or by Tag
-    - Pagination for list of articles
-- Sign in/Sign up pages (URL: /#/login, /#/register )
-    - Use JWT (store the token in localStorage)
-- Settings page (URL: /#/settings )
-- Editor page to create/edit articles (URL: /#/editor, /#/editor/article-slug-here )
-- Article page (URL: /#/article/article-slug-here )
-    - Delete article button (only shown to article's author)
-    - Render markdown from server client side
-    - Comments section at bottom of page
-    - Delete comment button (only shown to comment's author)
-- Profile page (URL: /#/@username, /#/@username/favorites )
-    - Show basic user info
-    - List of articles populated from author's created articles or author's favorited articles
+PS: This development and build process is exactly the same as you will do with [react-create-app](https://github.com/facebookincubator/create-react-app).
 
-<br />
+### Internationalization
 
-[![Brought to you by Thinkster](https://raw.githubusercontent.com/gothinkster/realworld/master/media/end.png)](https://thinkster.io)
+I've created an `Language` component just for you to handle internationalization (i18n) the easiest way ever possible.
+
+But it's not all sorcery and auto-magic stuff. You need a little configuration, but don't worry, it's painless (I think...).
+
+First of all you should see a `stores` folder in the root of your project. This folder is where all the Stores for MobX "should be"
+created. If you take a closer look at the files inside, you should see a `language.js` file, well, this is the file that handles all the
+_Language State_ stuff like: current language, change language, and a few more easy configurations.
+
+**Note:** This will be improved in a future (sooner than expected) release to handle automatically all your language resource files
+but, meanwhile, you will need to do this little thing manually.
+
+The first thing you will see at this file will be the following lines:
+
+```
+import esES from '../language/i18n/es';
+import enUS from '../language/i18n/en';
+```
+
+Well, technically will be this:
+
+```
+import { types } from 'mobx-state-tree';
+
+import esES from '../language/i18n/es';
+import enUS from '../language/i18n/en';
+```
+
+But we will skip the first line for the sake of brevity because it's just MobX-State-Tree imports :)
+
+Now let's take a look where this things come from. This language files will contain a single javascript object with
+a `key/value` structure so we can easily access the _language resource_ that we need.
+
+Let's look at an example:
+
+```
+// ENGLISH LANGUAGE RESOURCES
+const RESOURCES = {
+  CHANGE_SPANISH: 'Change to Spanish',
+  CHANGE_ENGLISH: 'Change to English',
+  USER_TITLE: 'User',
+  XP_TITLE: 'Experience',
+  AGE_TITLE: 'Age',
+  APP_DESCRIPTION: 'React Create App with React Router and MobX and Internationalization.',
+  ACTIONS: {
+    INCREASE_XP: 'Increase Experience Points!',
+    CHANGE_NAME: 'Change My Name!',
+    CHANGE_LASTNAME: 'Change My Last Name!'
+  }
+};
+
+export default RESOURCES;
+
+```
+
+As you can see, we've defined for example a `CHANGE_SPANISH` key with a value of `'Change to Spanish'`.
+
+At the very last line of the file, we export this object to access it from the `Language Store`.
+
+Note that this **Keys** should be exactly the same in each of the language files you create. If the key resource is not found
+nothing will be shown (I don't want to throw exceptions and all that stuff that breaks and stops the app). If you want it, you can create a function that process the required key resource to see if it exists or it's not empty and the `Language` component.
+
+Now, to change the current App Language you only need to call (previously injected language store at the desired component) `this.props.language.changeLanguageTo('es')` from anywhere inside that component (an onClick={} method for example) and if it's a valid key the one you passed to the method it will automatically change the language, the resources and re-render the `<Language resource="CHANGE_SPANISH" />` with the new `CHANGE_SPANISH` value, in this case, will replace _'Change to Spanish'_  with _'Cambiar a Español'_. It's not that hard, see?
+
+You can also see that you have the possibility to use **nested language resource objects** for a more structured language organization. To have access to this **nested language resource objects** you only need to call the language component with the following structure `<Language resource="ACTIONS.INCREASE_XP" />` for example and will render the given resource string into the component. Piece of cake!
+
+**Note:** You should look at the `<Language />` react component located at `src/components/language` to see that it's not a big deal, it just injects the `LanguageStore` and being an `@observer` so it will re-render when an `@observable` property (in this case, `language.resource[resource]`) has changed.
+
+---
+
+Hope you find this useful.
+
+Enjoy!

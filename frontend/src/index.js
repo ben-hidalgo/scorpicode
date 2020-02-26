@@ -1,51 +1,43 @@
-import ReactDOM from "react-dom";
-import promiseFinally from "promise.prototype.finally";
-import React from "react";
-import { HashRouter } from "react-router-dom";
-import { useStrict } from "mobx";
-import { Provider } from "mobx-react";
+import React from 'react';
+import { render } from 'react-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { Provider } from 'mobx-react';
+// Service Worker for PWA
+import serviceWorkerRegister from './registerServiceWorker';
+// Import our Stores Here
+import UserStore from './stores/user';
+import LanguageStore from './stores/language';
+import UIStore from './stores/ui';
 
-import App from "./App";
+// Import Components
+import App from './containers/app';
 
-import articlesStore from "./stores/articlesStore";
-import hatStore from "./stores/hatStore";
-import commentsStore from "./stores/commentsStore";
-import authStore from "./stores/authStore";
-import commonStore from "./stores/commonStore";
-import editorStore from "./stores/editorStore";
-import userStore from "./stores/userStore";
-import profileStore from "./stores/profileStore";
+// Execute the ServiceWorker
+serviceWorkerRegister();
 
-const stores = {
-  articlesStore,
-  hatStore,
-  commentsStore,
-  authStore,
-  commonStore,
-  editorStore,
-  userStore,
-  profileStore
+// Because they're classes, we have to instantiate them here :)
+const userStore = UserStore.create({
+  id: '1',
+  name: 'Alex',
+  lastName: 'Casillas',
+  age: 27,
+  xp: 0
+});
+const languageStore = LanguageStore.create({ language: 'en' });
+const uiStore = UIStore.create({ borderRadius: 3, textColor: 'white' });
+
+const store = {
+  user: userStore,
+  language: languageStore,
+  ui: uiStore
 };
 
-
-// TODO: remove make and load from here
-hatStore.makeHat(10);
-hatStore.makeHat(12);
-
-hatStore.loadHats()
-
-// For easier debugging
-window._____APP_STATE_____ = stores;
-
-promiseFinally.shim();
-
-useStrict(true);
-
-ReactDOM.render(
-  <Provider {...stores}>
-    <HashRouter>
-      <App />
-    </HashRouter>
-  </Provider>,
-  document.getElementById("root")
+const router = (
+  <Provider {...store}>
+    <Router>
+      <Route exact path="/" component={App} />
+    </Router>
+  </Provider>
 );
+
+render(router, document.getElementById('root'));
