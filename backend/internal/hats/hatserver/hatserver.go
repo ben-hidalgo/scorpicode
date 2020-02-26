@@ -37,3 +37,8 @@ const HatSizeRequired = util.ErrMsg("hat.size.required")
 
 // HatStyleRequired .
 const HatStyleRequired = util.ErrMsg("hat.style.required")
+
+// ToStyle converts a string to a Style type
+func ToStyle(s string) hatspb.Style {
+	return hatspb.Style(hatspb.Style_value[s])
+}

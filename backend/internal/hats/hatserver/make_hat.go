@@ -77,7 +77,7 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 		Hat: &hatspb.Hat{
 			Id:      mod.ID,
 			Color:   mod.Color,
-			Style:   hatspb.Style(hatspb.Style_value[mod.Style]),
+			Style:   ToStyle(mod.Style),
 			Inches:  mod.Inches,
 			Version: int32(mod.Version),
 		},
