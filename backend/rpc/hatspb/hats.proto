@@ -6,14 +6,18 @@ option go_package = "hatspb";
 
 // Hats service makes hats for clients.
 service Hats {
-  // MakeHat produces a hat of mysterious, randomly-selected color!
+  // MakeHat creates a hat with the given characteristics
   rpc MakeHat(MakeHatRequest) returns (MakeHatResponse);
-  // ListHats returns hats for the given page
+
+  // ListHats returns hats for the given query
   rpc ListHats(ListHatsRequest) returns (ListHatsResponse);
+
+  // ListSizes returns the available sizes
+  rpc ListSizes(ListSizesRequest) returns (ListSizesResponse);
 }
 
 enum Style {
-  UNKNOWN = 0;
+  UNKNOWN_STYLE = 0;
   BOWLER = 1;
   FEDORA = 2;
   BASEBALL = 3;
@@ -23,7 +27,7 @@ enum Style {
   TOP_HAT = 7;
 }
 
-// A Hat is a piece of headwear made by a Hats.
+// A Hat is a piece of headwear
 message Hat {
   string id = 1;
   int32 version = 2;
@@ -31,7 +35,7 @@ message Hat {
   string color = 4; // anything but "invisible"
   Style style = 5;
 }
-// add Color enum
+
 message MakeHatRequest {
   int32 inches = 1; // must be > 0
   string color = 2; // anything but "invisible"
@@ -49,4 +53,23 @@ message ListHatsResponse {
   repeated Hat hats = 1;
   int32 limit = 2;
   int32 offset = 3;
+}
+
+enum Units {
+  UNKNOWN_UNITS = 0;
+  INCHES = 1;
+  CENTIMETERS = 2;
+}
+
+message Size {
+  string slug = 1;
+  string name = 2;
+  float dimension = 3;
+  Units units = 4;
+}
+
+message ListSizesRequest {
+}
+message ListSizesResponse {
+  repeated Size sizes = 1;
 }

@@ -17,13 +17,9 @@ const (
 	DefaultColor  = "red"
 	DefaultStyle  = hatspb.Style_FEDORA
 	DefaultInches = int32(10)
-
-	NOT_NIL = "not nil"
-	GOT     = "got '%v' %s '%v'"
-	WANTED  = "but wanted"
 )
 
-func start() (context.Context, *hatserver.Server, *hatspb.MakeHatRequest) {
+func startHat() (context.Context, *hatserver.Server, *hatspb.MakeHatRequest) {
 
 	ctx := context.WithValue(context.Background(), repo.RepoKey, inmem.NewRepo())
 
@@ -38,9 +34,9 @@ func start() (context.Context, *hatserver.Server, *hatspb.MakeHatRequest) {
 	return ctx, hs, req
 }
 
-func TestSuccess(t *testing.T) {
+func TestHatSuccess(t *testing.T) {
 
-	ctx, hs, req := start()
+	ctx, hs, req := startHat()
 
 	res, err := hs.MakeHat(ctx, req)
 
@@ -67,7 +63,7 @@ func TestSuccess(t *testing.T) {
 
 func TestInchesTooSmall(t *testing.T) {
 
-	ctx, hs, req := start()
+	ctx, hs, req := startHat()
 
 	req.Inches = config.MinSizeInches - 1
 
@@ -91,7 +87,7 @@ func TestInchesTooSmall(t *testing.T) {
 
 func TestInchesTooBig(t *testing.T) {
 
-	ctx, hs, req := start()
+	ctx, hs, req := startHat()
 
 	req.Inches = config.MaxSizeInches + 1
 
@@ -115,7 +111,7 @@ func TestInchesTooBig(t *testing.T) {
 
 func TestInchesRequired(t *testing.T) {
 
-	ctx, hs, req := start()
+	ctx, hs, req := startHat()
 
 	req.Inches = 0
 
@@ -124,7 +120,7 @@ func TestInchesRequired(t *testing.T) {
 
 func TestColorRequired(t *testing.T) {
 
-	ctx, hs, req := start()
+	ctx, hs, req := startHat()
 
 	req.Color = ""
 
@@ -133,9 +129,9 @@ func TestColorRequired(t *testing.T) {
 
 func TestNameRequired(t *testing.T) {
 
-	ctx, hs, req := start()
+	ctx, hs, req := startHat()
 
-	req.Style = hatspb.Style_UNKNOWN
+	req.Style = hatspb.Style_UNKNOWN_STYLE
 
 	testRequired(t, ctx, hs, req, hatserver.HatStyleRequired)
 }

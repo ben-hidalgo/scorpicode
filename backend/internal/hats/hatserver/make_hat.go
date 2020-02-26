@@ -21,7 +21,7 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 		return nil, util.InvalidArgumentError(HatColorRequired)
 	}
 
-	if req.GetStyle() == hatspb.Style_UNKNOWN {
+	if req.GetStyle() == hatspb.Style_UNKNOWN_STYLE {
 		return nil, util.InvalidArgumentError(HatStyleRequired)
 	}
 
