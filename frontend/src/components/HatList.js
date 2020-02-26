@@ -1,9 +1,10 @@
 import Hat from './Hat';
 import React from 'react';
 
+
 const HatList = props => {
 
-  if (props.hats.length === 0) {
+  if (props.hats.length === 0 || !props.hats ) {
     return (
       <div className="article-preview">
         No hats
@@ -11,16 +12,20 @@ const HatList = props => {
     );
   }
 
+  let hats = []
+  let hat = props.hats.next()
+  // console.log(hat)
+  while (!hat.done) {
+    //hats.push(props.hats.next())
+    hat = props.hats.next()
+    console.log(hat)
+    //hats.push(<Hat hat={hat.value.target} key={hat.value.target.id} />)
+  }
+
   return (
     <div>
       <ul>Hats:</ul>
-      {
-        props.hats.map(hat => {
-          return (
-            <Hat hat={hat} key={hat.id} />
-          );
-        })
-      }
+      {hats}
     </div>
   );
 };

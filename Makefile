@@ -61,9 +61,7 @@ start-backend: go-happy
 	./devops/scripts/start.sh
 
 start-frontend:
-	(cd frontend  && \
-	npm install   && \
-	npm start)
+	(cd frontend && npm start)
 
 protobufs:
 	(cd backend &&             \

@@ -12,9 +12,9 @@ export default class Editor extends React.Component {
     tagInput: ""
   };
 
-  componentWillMount() {
-    this.props.editorStore.setArticleSlug(this.props.match.params.slug);
-  }
+  // componentWillMount() {
+  //   this.props.editorStore.setArticleSlug(this.props.match.params.slug);
+  // }
 
   componentDidMount() {
     this.props.editorStore.loadInitialData();

@@ -9,9 +9,9 @@ import { withRouter } from "react-router-dom";
 @withRouter
 @observer
 export default class MainView extends React.Component {
-  componentWillMount() {
+  // componentWillMount() {
     // this.props.articlesStore.setPredicate(this.getPredicate());
-  }
+  // }
 
   componentDidMount() {
     // this.props.articlesStore.loadArticles();

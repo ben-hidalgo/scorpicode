@@ -16,17 +16,19 @@ import Settings from "pages/Settings";
 @withRouter
 @observer
 export default class App extends React.Component {
-  componentWillMount() {
-    if (!this.props.commonStore.token) {
-      this.props.commonStore.setAppLoaded();
-    }
-  }
+  // componentWillMount() {
+  //   if (!this.props.commonStore.token) {
+  //     this.props.commonStore.setAppLoaded();
+  //   }
+  // }
 
   componentDidMount() {
     if (this.props.commonStore.token) {
       this.props.userStore
         .pullUser()
         .finally(() => this.props.commonStore.setAppLoaded());
+    } else {
+      this.props.commonStore.setAppLoaded();
     }
   }
 

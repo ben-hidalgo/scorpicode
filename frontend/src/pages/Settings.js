@@ -36,16 +36,16 @@ class SettingsForm extends React.Component {
     };
   }
 
-  componentWillMount() {
-    if (this.props.userStore.currentUser) {
-      Object.assign(this.state, {
-        image: this.props.userStore.currentUser.image || "",
-        username: this.props.userStore.currentUser.username,
-        bio: this.props.userStore.currentUser.bio || "",
-        email: this.props.userStore.currentUser.email
-      });
-    }
-  }
+  // componentWillMount() {
+  //   if (this.props.userStore.currentUser) {
+  //     Object.assign(this.state, {
+  //       image: this.props.userStore.currentUser.image || "",
+  //       username: this.props.userStore.currentUser.username,
+  //       bio: this.props.userStore.currentUser.bio || "",
+  //       email: this.props.userStore.currentUser.email
+  //     });
+  //   }
+  // }
 
   render() {
     return (
