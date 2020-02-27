@@ -3,7 +3,7 @@ import React from 'react';
 
 const HatList = props => {
 
-  if (props.hats.length === 0) {
+  if (!props.hats || props.hats.length === 0) {
     return (
       <div className="article-preview">
         No hats

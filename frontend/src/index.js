@@ -7,30 +7,17 @@ import { Provider } from "mobx-react";
 
 import App from "./App";
 
-import articlesStore from "./stores/articlesStore";
+
 import hatStore from "./stores/hatStore";
-import commentsStore from "./stores/commentsStore";
-import authStore from "./stores/authStore";
-import commonStore from "./stores/commonStore";
-import editorStore from "./stores/editorStore";
-import userStore from "./stores/userStore";
-import profileStore from "./stores/profileStore";
 
 const stores = {
-  articlesStore,
   hatStore,
-  commentsStore,
-  authStore,
-  commonStore,
-  editorStore,
-  userStore,
-  profileStore
 };
 
 
 // TODO: remove make and load from here
-hatStore.makeHat(10);
-hatStore.makeHat(12);
+// hatStore.makeHat(10);
+// hatStore.makeHat(12);
 
 hatStore.loadHats()
 
