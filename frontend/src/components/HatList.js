@@ -1,28 +1,34 @@
 import Hat from './Hat';
 import React from 'react';
+import { inject, observer } from "mobx-react";
 
-const HatList = props => {
+@inject("hatStore")
+@observer
+export default class HatList extends React.Component {
 
-  if (!props.hats || props.hats.length === 0) {
+  render() {
+    console.log(this.props)
+    let hats = this.props.hatStore.hats
+    console.log(hats)
+    if (!this.props.hats || this.props.hats.length === 0) {
+      return (
+        <div className="article-preview">
+          No hats
+        </div>
+      )
+    }
+
     return (
-      <div className="article-preview">
-        No hats
+      <div>
+        <ul>Hats:</ul>
+        {
+          this.props.hats.map(hat => {
+            return (
+              <Hat hat={hat} key={hat.id} />
+            )
+          })
+        }
       </div>
-    );
+    )
   }
-
-  return (
-    <div>
-      <ul>Hats:</ul>
-      {
-        props.hats.map(hat => {
-          return (
-            <Hat hat={hat} key={hat.id} />
-          );
-        })
-      }
-    </div>
-  );
-};
-
-export default HatList;
+}
