@@ -8,7 +8,7 @@ export default class HatList extends React.Component {
 
   render() {
     console.log(this.props)
-    let hats = this.props.hatStore.hats
+    let hats = this.props.hats
     console.log(hats)
     if (!this.props.hats || this.props.hats.length === 0) {
       return (
@@ -17,6 +17,7 @@ export default class HatList extends React.Component {
         </div>
       )
     }
+
 
     return (
       <div>
