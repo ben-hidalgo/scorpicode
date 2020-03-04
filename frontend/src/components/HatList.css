@@ -1,0 +1,9 @@
+.HatList {
+  text-align: center;
+  list-style-type: square;
+}
+
+.HatList li {
+  color: blue;
+  border-style: dotted;
+}

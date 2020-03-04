@@ -1,4 +1,5 @@
 import React from 'react'
+import './Hat.css'
 
 function Hat(props) {
   const {
@@ -9,7 +10,7 @@ function Hat(props) {
     version,
   } = props.hat
 
-  return <li>
+  return <li className="Hat">
     <div>ID: {id}</div>
     <div>Inches: {inches}</div>
     <div>Color: {color}</div>
