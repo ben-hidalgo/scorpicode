@@ -7,11 +7,16 @@ import HatList from '../components/HatList'
 class HatListContainer extends Component {
 
   render() {
+
+    const {
+      hats,
+      listHats,
+    } = this.props.stores.hatStore
     
     return (
       <div>
-        <button onClick={this.props.stores.hatStore.listHats} type="button">List Hats</button>
-        <HatList hats={this.props.stores.hatStore.hats}/>
+        <button onClick={listHats} type="button">List Hats</button>
+        <HatList hats={hats}/>
       </div>
     )
   }

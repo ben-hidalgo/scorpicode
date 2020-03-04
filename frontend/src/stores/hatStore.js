@@ -1,5 +1,5 @@
 import { extendObservable, action } from 'mobx'
-import agent from '../agent';
+import agent from '../agent'
 
 class HatStore {
 
@@ -15,14 +15,15 @@ class HatStore {
   } // constructor
 
   listHats = () => {
-    this.isLoading = true
+    action(() => { this.isLoading = true })
     agent.Hats.listHats()
       .then(action(({ hats }) => {
-        this.hats.clear();
-        // articles.forEach(article => this.articlesRegistry.set(article.slug, article));
+        this.hats = []
+        hats.forEach(hat => this.hats.push(hat))
       }))
-      .finally(action(() => { this.isLoading = false; }));
-  }
+      .finally(action(() => { this.isLoading = false }))
+  } // listHats
+
 
 } // HatStore
 
