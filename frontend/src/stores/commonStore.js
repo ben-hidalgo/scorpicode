@@ -1,6 +1,3 @@
-// import { observable, action, reaction } from 'mobx';
-// import { observable } from 'mobx';
-// import agent from '../agent';
 import { extendObservable } from 'mobx';
 
 class CommonStore {
@@ -10,6 +7,14 @@ class CommonStore {
       counter: 0,
     })
   }
+
+  onIncrement = () => {
+    this.counter++;
+  }
+  onDecrement = () => {
+    this.counter--;
+  }
+
 
 }
 
