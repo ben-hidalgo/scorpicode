@@ -32,6 +32,7 @@ func init() {
 // will panic on connection errors
 func NewRepo() *Repo {
 
+	// TODO: ping and panic on error
 	pool := newPool(RedisAddress)
 
 	return &Repo{
