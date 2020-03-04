@@ -1,4 +1,4 @@
-import { extendObservable } from 'mobx';
+import { extendObservable } from 'mobx'
 
 class CommonStore {
 
@@ -9,13 +9,13 @@ class CommonStore {
   }
 
   onIncrement = () => {
-    this.counter++;
+    this.counter++
   }
   onDecrement = () => {
-    this.counter--;
+    this.counter--
   }
 
 
 }
 
-export default new CommonStore();
+export default new CommonStore()

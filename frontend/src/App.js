@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import './App.css';
-import { observer }  from 'mobx-react';
-import HatListContainer from './containers/HatListContainer';
+import React, { Component } from 'react'
+import './App.css'
+import { observer }  from 'mobx-react'
+import HatListContainer from './containers/HatListContainer'
 
 class App extends Component {
 
@@ -21,7 +21,7 @@ class App extends Component {
         <button onClick={onDecrement} type="button">Decrement</button>
         <HatListContainer stores={this.props.stores}/>
       </div>
-    );
+    )
   }
 }
-export default observer(App);
+export default observer(App)

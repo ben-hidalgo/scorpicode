@@ -1,4 +1,4 @@
-import { extendObservable } from 'mobx';
+import { extendObservable } from 'mobx'
 
 class HatStore {
 
@@ -14,4 +14,4 @@ class HatStore {
 
 }
 
-export default new HatStore();
+export default new HatStore()

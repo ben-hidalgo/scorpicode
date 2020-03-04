@@ -1,25 +1,17 @@
-import React, { Component } from 'react';
-import './HatListContainer.css';
-import { observer }  from 'mobx-react';
+import React, { Component } from 'react'
+import './HatListContainer.css'
+import { observer }  from 'mobx-react'
+import HatList from '../components/HatList'
 
 class HatListContainer extends Component {
 
   render() {
     
-    const {
-      counter,
-      onIncrement,
-      onDecrement,
-    } = this.props.stores.commonStore
-
     return (
       <div>
-        <span>Counter: {counter}</span>
-        
-        <button onClick={onIncrement} type="button">Increment</button>
-        <button onClick={onDecrement} type="button">Decrement</button>
+        <HatList hats={this.props.stores.hatStore.hats}/>
       </div>
-    );
+    )
   }
 }
-export default observer(HatListContainer);
+export default observer(HatListContainer)
