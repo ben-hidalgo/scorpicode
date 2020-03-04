@@ -3,10 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+
 import commonStore from './stores/commonStore';
+import hatStore from './stores/hatStore';
 
 const stores = {
   commonStore,
+  hatStore,
 }
   
 // If you want your app to work offline and load faster, you can change
