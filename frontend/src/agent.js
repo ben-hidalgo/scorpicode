@@ -52,8 +52,7 @@ const requests = {
 
 const Hats = {
   listHats: () => requests.post('/hats/ListHats', {}),
-  // TODO: get color and style from user input
-  makeHat: (inches) => requests.post('/hats/MakeHat', {inches: inches, color: "RED", style: "BOWLER"}),
+  makeHat: (inches, color, style) => requests.post('/hats/MakeHat', {inches: inches, color: color, style: style}),
 }
 
 

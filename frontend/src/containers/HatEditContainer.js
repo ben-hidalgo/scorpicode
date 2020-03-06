@@ -10,13 +10,17 @@ class HatEditContainer extends Component {
     super()
     extendObservable(this, {
       color: 'RED',
-      size: '06_00',
+      size: 6,
       units: 'INCHES',
       style: 'DERBY',
     })
   }
 
   render() {
+
+    const {
+      hatStore,
+    } = this.props.stores
 
     return (
       <div className="HatEditContainer">
@@ -30,10 +34,15 @@ class HatEditContainer extends Component {
         <br/>
         <HatStyleInput hec={this}/>
         <br/>
-        <button onClick={() => {console.log('save')}} type="button">Save</button>
+        <button onClick={() => {this.makeHat(this, hatStore)}} type="button">Save</button>
         <button onClick={() => {console.log('cancel')}} type="button">Cancel</button>
       </div>
     )
+  }
+
+  makeHat(hec, hatStore) {
+    console.log('save')
+    hatStore.makeHat(hec.color, hec.size, hec.units, hec.style)
   }
 
 }
@@ -98,9 +107,9 @@ function HatSizes(props) {
 }
 HatSizes.defaultProps = {
   sizes: [
-    {value: '06_00', text: '6 inches'},
-    {value: '06_25', text: '6 1/4 inches'},
-    {value: '06_50', text: '6 1/2 inches'},
+    {value: 6, text: '6 inches'},
+    {value: 7, text: '7 inches'},
+    {value: 8, text: '8 inches'},
   ],
 
 };

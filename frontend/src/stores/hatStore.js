@@ -7,10 +7,7 @@ class HatStore {
     extendObservable(this, {
       counter: 0,
       isLoading: false,
-      hats: [
-        {id: "1", inches: 7, color: "RED", style: "DERBY", version: 0},
-        {id: "2", inches: 7, color: "RED", style: "DERBY", version: 0}
-      ],
+      hats: [],
     })
   } // constructor
 
@@ -21,6 +18,24 @@ class HatStore {
         this.hats = hats
       })
       .finally(() => { this.isLoading = false })
+    this.isLoading = false  
+  } // listHats
+
+  makeHat = (color, size, units, style) => {
+    
+    let inches = 0
+
+    switch(units) {
+      case 'CM':
+        inches = size * 2.54
+        break;
+      case 'INCHES':
+        inches = size
+        break;
+      default:
+        inches = size
+    }
+    agent.Hats.makeHat(inches, color, style)
   } // listHats
 
 } // HatStore
