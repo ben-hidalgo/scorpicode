@@ -18,11 +18,7 @@ class HatStore {
     this.isLoading = true
     agent.Hats.listHats()
       .then(({ hats }) => {
-        let temp = []
-        // populate temp
-        hats.forEach(hat => temp.push(hat))
-        // "deep" observable doesn't work without "action()"
-        this.hats = temp        
+        this.hats = hats
       })
       .finally(() => { this.isLoading = false })
   } // listHats
