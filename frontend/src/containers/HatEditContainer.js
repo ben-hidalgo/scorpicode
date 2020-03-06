@@ -10,6 +10,7 @@ class HatEditContainer extends Component {
     super()
     extendObservable(this, {
       color: 'RED',
+      size: '06_00',
     })
   }
 
@@ -17,9 +18,10 @@ class HatEditContainer extends Component {
 
     return (
       <div className="HatEditContainer">
-        <span>_color_ {this.color}</span>
+        <span>_color_ {this.color}, _size_ {this.size}</span>
         <br/>
         <HatColors hec={this}/>
+        <HatSizes hec={this}/>
         <br/>
         <button onClick={() => {console.log('save')}} type="button">Save</button>
         <button onClick={() => {console.log('cancel')}} type="button">Cancel</button>
@@ -60,5 +62,30 @@ HatColors.defaultProps = {
 
 };
 
+function HatSizes(props) {
+
+  return (
+      <label>
+        <select onChange={(ce) => {props.hec.size = ce.target.value}}>
+          {
+            props.sizes.map(size => {
+              return (
+                <option key={size.value} value={size.value} >{size.text}</option>
+              )
+            })              
+          }
+        </select>
+        Size
+      </label>
+  )
+}
+HatSizes.defaultProps = {
+  sizes: [
+    {value: '06_00', text: '6 inches'},
+    {value: '06_25', text: '6 1/4 inches'},
+    {value: '06_50', text: '6 1/2 inches'},
+  ],
+
+};
 
 export default observer(HatEditContainer)
