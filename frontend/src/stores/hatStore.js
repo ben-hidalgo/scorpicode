@@ -1,4 +1,4 @@
-import { extendObservable, action } from 'mobx'
+import { extendObservable } from 'mobx'
 import agent from '../agent'
 
 class HatStore {
@@ -15,15 +15,17 @@ class HatStore {
   } // constructor
 
   listHats = () => {
-    action(() => { this.isLoading = true })
+    this.isLoading = true
     agent.Hats.listHats()
-      .then(action(({ hats }) => {
-        this.hats = []
-        hats.forEach(hat => this.hats.push(hat))
-      }))
-      .finally(action(() => { this.isLoading = false }))
+      .then(({ hats }) => {
+        let temp = []
+        // populate temp
+        hats.forEach(hat => temp.push(hat))
+        // "deep" observable doesn't work without "action()"
+        this.hats = temp        
+      })
+      .finally(() => { this.isLoading = false })
   } // listHats
-
 
 } // HatStore
 
