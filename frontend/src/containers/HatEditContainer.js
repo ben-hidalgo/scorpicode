@@ -11,6 +11,7 @@ class HatEditContainer extends Component {
     extendObservable(this, {
       color: 'RED',
       size: '06_00',
+      units: 'INCHES',
     })
   }
 
@@ -18,10 +19,11 @@ class HatEditContainer extends Component {
 
     return (
       <div className="HatEditContainer">
-        <span>_color_ {this.color}, _size_ {this.size}</span>
+        <span>_color_ {this.color}, _size_ {this.size} _units_ {this.units}</span>
         <br/>
         <HatColors hec={this}/>
         <HatSizes hec={this}/>
+        <HatSizeUnits hec={this}/>
         <br/>
         <button onClick={() => {console.log('save')}} type="button">Save</button>
         <button onClick={() => {console.log('cancel')}} type="button">Cancel</button>
@@ -84,6 +86,38 @@ HatSizes.defaultProps = {
     {value: '06_00', text: '6 inches'},
     {value: '06_25', text: '6 1/4 inches'},
     {value: '06_50', text: '6 1/2 inches'},
+  ],
+
+};
+
+function HatSizeUnits(props) {
+
+  return (
+      <form>
+        {
+          props.units.map(unit => {
+            return (
+              <label key={unit.value}>
+                <input
+                key={unit.value}
+                type="radio"
+                name="hat-units"
+                value={unit.value}
+
+                onChange={(ce) => {props.hec.units = ce.target.value}}
+              />
+              {unit.text}
+            </label>
+            )
+          })
+        }
+      </form>
+  )
+}
+HatSizeUnits.defaultProps = {
+  units: [
+    {value: 'INCHES', text: 'inches'},
+    {value: 'CM', text: 'centimeters'},
   ],
 
 };
