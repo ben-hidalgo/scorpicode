@@ -19,13 +19,14 @@ class HatEditContainer extends Component {
 
     const {
       hatStore,
+      languageStore,
     } = this.props.stores
 
     return (
       <div className="HatEditContainer">
         <span>_color_ {this.color}, _size_ {this.size} _units_ {this.units} _style_ {this.style}</span><br/>
         <br/>
-        {hatStore.error && <span>{hatStore.error.msg}</span>}
+        {hatStore.error && <span>{languageStore.decode(hatStore.error.msg)}</span>}
         <br/>
         <HatColors hec={this}/>
         <br/>
