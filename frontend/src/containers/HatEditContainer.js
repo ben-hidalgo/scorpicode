@@ -12,6 +12,7 @@ class HatEditContainer extends Component {
       color: 'RED',
       size: '06_00',
       units: 'INCHES',
+      style: 'DERBY',
     })
   }
 
@@ -19,11 +20,15 @@ class HatEditContainer extends Component {
 
     return (
       <div className="HatEditContainer">
-        <span>_color_ {this.color}, _size_ {this.size} _units_ {this.units}</span>
+        <span>_color_ {this.color}, _size_ {this.size} _units_ {this.units} _style_ {this.style}</span><br/>
         <br/>
         <HatColors hec={this}/>
+        <br/>
         <HatSizes hec={this}/>
+        <br/>
         <HatSizeUnits hec={this}/>
+        <br/>
+        <HatStyleInput hec={this}/>
         <br/>
         <button onClick={() => {console.log('save')}} type="button">Save</button>
         <button onClick={() => {console.log('cancel')}} type="button">Cancel</button>
@@ -33,10 +38,21 @@ class HatEditContainer extends Component {
 
 }
 
+function HatStyleInput(props) {
+
+  return (
+      <label>
+        Style
+        <input type="text" value={props.hec.style} onChange={(ce) => {props.hec.style = ce.target.value}} />
+      </label>
+  )
+}
+
 function HatColors(props) {
 
   return (
       <label>
+        Color
         <select onChange={(ce) => {props.hec.color = ce.target.value}}>
           {
             props.colors.map(color => {
@@ -46,7 +62,6 @@ function HatColors(props) {
             })              
           }
         </select>
-        Color
       </label>
   )
 }
@@ -68,6 +83,7 @@ function HatSizes(props) {
 
   return (
       <label>
+        Size
         <select onChange={(ce) => {props.hec.size = ce.target.value}}>
           {
             props.sizes.map(size => {
@@ -77,7 +93,6 @@ function HatSizes(props) {
             })              
           }
         </select>
-        Size
       </label>
   )
 }
