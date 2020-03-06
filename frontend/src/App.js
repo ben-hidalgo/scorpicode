@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import './App.css'
 import { observer }  from 'mobx-react'
 import HatListContainer from './containers/HatListContainer'
+import HatEditContainer from './containers/HatEditContainer'
 
 class App extends Component {
 
@@ -19,6 +20,8 @@ class App extends Component {
         
         <button onClick={onIncrement} type="button">Increment</button>
         <button onClick={onDecrement} type="button">Decrement</button>
+        <br/><br/><br/><br/><br/><br/>
+        <HatEditContainer stores={this.props.stores}/>
         <HatListContainer stores={this.props.stores}/>
       </div>
     )
