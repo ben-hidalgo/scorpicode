@@ -32,14 +32,14 @@ message Hat {
   string id = 1;
   int32 version = 2;
   int32 inches = 3;
-  string color = 4; // anything but "invisible"
+  string color = 4;
   Style style = 5;
 }
 
 message MakeHatRequest {
-  int32 inches = 1; // must be > 0
+  int32 inches = 1;
   string color = 2; // one of: RED, BLUE, GREEN, YELLOW, PURPLE, BLACK, GREY, ORANGE
-  Style style = 3; // i.e. "bowler"
+  Style style = 3;
 }
 message MakeHatResponse {
   Hat hat = 1;

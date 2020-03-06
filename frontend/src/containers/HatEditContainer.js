@@ -11,8 +11,7 @@ class HatEditContainer extends Component {
     extendObservable(this, {
       color: 'RED',
       size: 6,
-      units: 'INCHES',
-      style: 'DERBY',
+      style: 'UNKNOWN_STYLE',
     })
   }
 
@@ -26,35 +25,62 @@ class HatEditContainer extends Component {
       <div className="HatEditContainer">
         <span>_color_ {this.color}, _size_ {this.size} _units_ {this.units} _style_ {this.style}</span><br/>
         <br/>
+        {hatStore.error && <span>{hatStore.error.msg}</span>}
+        <br/>
         <HatColors hec={this}/>
         <br/>
         <HatSizes hec={this}/>
         <br/>
-        <HatSizeUnits hec={this}/>
+        <HatStyles hec={this}/>
         <br/>
-        <HatStyleInput hec={this}/>
-        <br/>
-        <button onClick={() => {this.makeHat(this, hatStore)}} type="button">Save</button>
-        <button onClick={() => {console.log('cancel')}} type="button">Cancel</button>
+        <button onClick={() => {this.save(this, hatStore)}} type="button">Save</button>
+        <button onClick={() => {this.cancel(this, hatStore)}} type="button">Cancel</button>
       </div>
     )
   }
 
-  makeHat(hec, hatStore) {
-    console.log('save')
-    hatStore.makeHat(hec.color, hec.size, hec.units, hec.style)
+  save(hec, hatStore) {
+    hatStore.makeHat(hec.color, hec.size, hec.style)
   }
+
+  cancel(hec, hatStore) {
+    hec.color = 'RED'
+    hec.size = 6
+    hec.style = 'UNKNOWN_STYLE'
+    hatStore.error = null
+  }
+
 
 }
 
-function HatStyleInput(props) {
+function HatStyles(props) {
 
   return (
       <label>
         Style
-        <input type="text" value={props.hec.style} onChange={(ce) => {props.hec.style = ce.target.value}} />
+        <select onChange={(ce) => {props.hec.style = ce.target.value}} value={props.hec.style}>
+          {
+            props.styles.map(style => {
+              return (
+                <option key={style.value} value={style.value} >{style.text}</option>
+              )
+            })              
+          }
+        </select>
       </label>
   )
+}
+HatStyles.defaultProps = {
+  styles: [
+    {value: 'UNKNOWN_STYLE', text: 'Please select a style'},
+    {value: 'BOWLER', text: 'Bowler'},
+    {value: 'FEDORA', text: 'Fedora'},
+    {value: 'BASEBALL', text: 'Baseball Cap'},
+    {value: 'NEWSBOY', text: 'Newsboy'},
+    {value: 'COWBOY', text: 'Cowboy Hat'},
+    {value: 'DERBY', text: 'Derby'},
+    {value: 'TOP_HAT', text: 'Top Hat'},
+  ],
 }
 
 function HatColors(props) {
@@ -62,7 +88,7 @@ function HatColors(props) {
   return (
       <label>
         Color
-        <select onChange={(ce) => {props.hec.color = ce.target.value}}>
+        <select onChange={(ce) => {props.hec.color = ce.target.value}} value={props.hec.color}>
           {
             props.colors.map(color => {
               return (
@@ -85,15 +111,14 @@ HatColors.defaultProps = {
     {value: 'GREY', text: 'Grey'},
     {value: 'ORANGE', text: 'Orange'},
   ],
-
-};
+}
 
 function HatSizes(props) {
 
   return (
       <label>
         Size
-        <select onChange={(ce) => {props.hec.size = ce.target.value}}>
+        <select onChange={(ce) => {props.hec.size = ce.target.value}} value={props.hec.size}>
           {
             props.sizes.map(size => {
               return (
@@ -111,39 +136,7 @@ HatSizes.defaultProps = {
     {value: 7, text: '7 inches'},
     {value: 8, text: '8 inches'},
   ],
-
-};
-
-function HatSizeUnits(props) {
-
-  return (
-      <form>
-        {
-          props.units.map(unit => {
-            return (
-              <label key={unit.value}>
-                <input
-                key={unit.value}
-                type="radio"
-                name="hat-units"
-                value={unit.value}
-
-                onChange={(ce) => {props.hec.units = ce.target.value}}
-              />
-              {unit.text}
-            </label>
-            )
-          })
-        }
-      </form>
-  )
 }
-HatSizeUnits.defaultProps = {
-  units: [
-    {value: 'INCHES', text: 'inches'},
-    {value: 'CM', text: 'centimeters'},
-  ],
 
-};
 
 export default observer(HatEditContainer)

@@ -8,6 +8,7 @@ class HatStore {
       counter: 0,
       isLoading: false,
       hats: [],
+      error: null,
     })
   } // constructor
 
@@ -19,39 +20,34 @@ class HatStore {
         this.hats = hats
       })
       .finally(() => { this.isLoading = false })
-    this.isLoading = false  
+    
+    this.isLoading = false
   } // listHats
 
   // saves a new hat
-  makeHat = (color, size, units, style) => {
+  makeHat = (color, size, style) => {
     
-    this.isLoading = false
+    this.isLoading = true
 
-    let inches = 0
+    // size is inches
+    agent.Hats.makeHat(size, color, style)
+      .then(({ hat }) => {
+        
+        var tempHats = []
+        // add to the front of the list
+        tempHats.push(hat)
 
-    switch(units) {
-      case 'CM':
-        inches = size * 2.54
-        break;
-      case 'INCHES':
-        inches = size
-        break;
-      default:
-        inches = size
-    }
-    agent.Hats.makeHat(inches, color, style)
-    .then(({ hat }) => {
-      
-      var tempHats = []
-      // add to the front of the list
-      tempHats.push(hat)
-      
-      // for some reason added an element doesn't trigger a render
-      this.hats.forEach(h => tempHats.push(h))
-      this.hats = tempHats
-    })
-    .finally(() => { this.isLoading = false })
-
+        // for some reason adding an element isn't triggering render
+        this.hats.forEach(h => tempHats.push(h))
+        this.hats = tempHats
+      })
+      .catch(err => {
+        this.error = {code: err.response.body.code, msg: err.response.body.msg, status: err.response.status}
+      })
+      .finally(() => { 
+        this.isLoading = false 
+      })
+    
   } // makeHat
 
 } // HatStore
