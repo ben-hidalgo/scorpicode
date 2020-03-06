@@ -24,8 +24,6 @@ class HatEditContainer extends Component {
 
     return (
       <div className="HatEditContainer">
-        <span>_color_ {this.color}, _size_ {this.size} _units_ {this.units} _style_ {this.style}</span><br/>
-        <br/>
         {hatStore.error && <span>{languageStore.decode(hatStore.error.msg)}</span>}
         <br/>
         <HatColors hec={this}/>

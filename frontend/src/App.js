@@ -9,20 +9,13 @@ class App extends Component {
   render() {
 
     const {
-      counter,
-      onIncrement,
-      onDecrement,
-    } = this.props.stores.commonStore
+      stores,
+    } = this.props
 
     return (
       <div className="App">
-        <span>Counter: {counter}</span>
-        
-        <button onClick={onIncrement} type="button">Increment</button>
-        <button onClick={onDecrement} type="button">Decrement</button>
-        <br/><br/><br/><br/><br/><br/>
-        <HatEditContainer stores={this.props.stores}/>
-        <HatListContainer stores={this.props.stores}/>
+        <HatEditContainer stores={stores}/>
+        <HatListContainer stores={stores}/>
       </div>
     )
   }
