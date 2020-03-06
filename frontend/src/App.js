@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
 import './App.css'
 import { observer }  from 'mobx-react'
+import HeaderContainer from './containers/HeaderContainer'
+import TopNavContainer from './containers/TopNavContainer'
+import LeftNavContainer from './containers/LeftNavContainer'
 import HatListContainer from './containers/HatListContainer'
 import HatEditContainer from './containers/HatEditContainer'
+import FooterContainer from './containers/FooterContainer'
 
 class App extends Component {
 
@@ -14,8 +18,12 @@ class App extends Component {
 
     return (
       <div className="App">
-        <HatEditContainer stores={stores}/>
-        <HatListContainer stores={stores}/>
+        <HeaderContainer stores={stores} />
+        <TopNavContainer stores={stores} />
+        <LeftNavContainer stores={stores} />
+        <HatEditContainer stores={stores} />
+        <HatListContainer stores={stores} />
+        <FooterContainer stores={stores} />
       </div>
     )
   }

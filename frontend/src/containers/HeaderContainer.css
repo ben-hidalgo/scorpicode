@@ -1,0 +1,9 @@
+.HeaderContainer {
+  padding: 30px;
+  text-align: center;
+  background: white;
+}
+
+.HeaderContainer h1 {
+  font-size: 50px;
+}

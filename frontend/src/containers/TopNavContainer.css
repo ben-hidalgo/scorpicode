@@ -1,0 +1,31 @@
+.TopNavContainer {
+  overflow: hidden;
+  background-color: #333;
+}
+
+/* Style the topnav links */
+.TopNavContainer a {
+  /* float: left; */
+  display: block;
+  /* color: #f2f2f2; */
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Change color on hover */
+.TopNavContainer a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.LeftLink {
+  color: red;
+  float: left;
+}
+
+.RightLink {
+  color: yellow;
+  float: right;
+}
+
