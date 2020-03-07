@@ -1,3 +1,11 @@
 .LeftNavContainer {
   text-align: left;
+  float: left;
+  background: lightyellow;
+  /* width: 25%;   */
+}
+
+.LeftNavContainer a:before {
+  content: '\A';
+  white-space: pre;
 }

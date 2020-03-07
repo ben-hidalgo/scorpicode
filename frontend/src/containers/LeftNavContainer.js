@@ -17,7 +17,11 @@ class LeftNavContainer extends Component {
 
     return (
       <div className="LeftNavContainer">
-      </div>
+        <a href="./" >Context</a>
+        <a href="./" >Menu</a>
+        <a href="./" >Actions</a>
+        <a href="./" >Here</a>
+    </div>
     )
   }
 

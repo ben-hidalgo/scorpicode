@@ -21,8 +21,10 @@ class App extends Component {
         <HeaderContainer stores={stores} />
         <TopNavContainer stores={stores} />
         <LeftNavContainer stores={stores} />
-        <HatEditContainer stores={stores} />
-        <HatListContainer stores={stores} />
+        <div className="RightColumn" >
+          <HatEditContainer stores={stores} />
+          <HatListContainer stores={stores} />
+        </div>
         <FooterContainer stores={stores} />
       </div>
     )

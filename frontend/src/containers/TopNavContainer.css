@@ -29,3 +29,10 @@
   float: right;
 }
 
+.TopNavContainer span {
+  /* display: block; */
+  text-align: center;
+  /* padding: 14px 16px; */
+  color: orange;
+  text-decoration: none;
+}

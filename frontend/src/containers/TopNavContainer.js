@@ -17,10 +17,11 @@ class TopNavContainer extends Component {
 
     return (
       <div className="TopNavContainer">
-        <a href="./" className="LeftLink">Link</a>
-        <a href="./" className="LeftLink">Link</a>
-        <a href="./" className="LeftLink">Link</a>
-        <a href="./" className="RightLink">Link</a>
+        <a href="./" className="LeftLink">Hats</a>
+        <a href="./" className="LeftLink">Accounts</a>
+        <a href="./" className="LeftLink">Comms</a>
+        <span>{this.username}</span>
+        <a href="./" className="RightLink">Logout</a>
     </div>
     )
   }
