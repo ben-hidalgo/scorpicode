@@ -6,6 +6,7 @@ option go_package = "hatspb";
 
 // Hats service makes hats for clients.
 service Hats {
+
   // MakeHat creates a hat with the given characteristics
   rpc MakeHat(MakeHatRequest) returns (MakeHatResponse);
 
@@ -14,6 +15,9 @@ service Hats {
 
   // ListSizes returns the available sizes
   rpc ListSizes(ListSizesRequest) returns (ListSizesResponse);
+
+  // DeleteHat deletes the given hat
+  rpc DeleteHat(DeleteHatRequest) returns (DeleteHatResponse);
 }
 
 enum Style {
@@ -72,4 +76,12 @@ message ListSizesRequest {
 }
 message ListSizesResponse {
   repeated Size sizes = 1;
+}
+
+message DeleteHatRequest {
+  string id = 1;
+  int32 version = 2;
+}
+
+message DeleteHatResponse {
 }

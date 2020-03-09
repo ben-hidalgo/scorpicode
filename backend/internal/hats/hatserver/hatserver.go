@@ -17,6 +17,12 @@ func NewServer() *Server {
 
 //// these will be decoded into multi-lingual, user facing error / warning messages in the UI
 
+// HatIDRequired .
+const HatIDRequired = util.ErrMsg("hat.id.required")
+
+// HatVersionRequired .
+const HatVersionRequired = util.ErrMsg("hat.version.required")
+
 // HatInchesTooSmall .
 const HatInchesTooSmall = util.ErrMsg("hat.inches.toosmall")
 
