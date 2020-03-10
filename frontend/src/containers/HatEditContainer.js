@@ -9,8 +9,8 @@ class HatEditContainer extends Component {
   constructor() {
     super()
     extendObservable(this, {
-      color: 'RED',
-      size: 6,
+      color: '',
+      size: 0,
       style: 'UNKNOWN_STYLE',
     })
   }
@@ -43,8 +43,8 @@ class HatEditContainer extends Component {
   }
 
   cancel(hec, hatStore) {
-    hec.color = 'RED'
-    hec.size = 6
+    hec.color = ''
+    hec.size = 0
     hec.style = 'UNKNOWN_STYLE'
     hatStore.error = null
   }
@@ -82,7 +82,7 @@ HatStyles.defaultProps = {
   ],
 }
 
-function HatColors(props) {
+const HatColors = observer((props) => {
 
   return (
       <label>
@@ -98,9 +98,10 @@ function HatColors(props) {
         </select>
       </label>
   )
-}
+})
 HatColors.defaultProps = {
   colors: [
+    {value: '', text: 'Please select a color'},
     {value: 'RED', text: 'Red'},
     {value: 'BLUE', text: 'Blue'},
     {value: 'GREEN', text: 'Green'},
@@ -112,7 +113,7 @@ HatColors.defaultProps = {
   ],
 }
 
-function HatSizes(props) {
+const HatSizes = observer((props) => {
 
   return (
       <label>
@@ -128,9 +129,10 @@ function HatSizes(props) {
         </select>
       </label>
   )
-}
+})
 HatSizes.defaultProps = {
   sizes: [
+    {value: 0, text: 'Please select a size'},
     {value: 6, text: '6 inches'},
     {value: 7, text: '7 inches'},
     {value: 8, text: '8 inches'},
