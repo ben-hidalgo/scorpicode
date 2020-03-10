@@ -17,7 +17,9 @@ class HeaderContainer extends Component {
 
     return (
       <div className="HeaderContainer">
-        <h1>Scorpicode</h1>
+        <a href="/#" >
+          <img src="scorpicode210.png" alt="scorpicode logo" />
+        </a>
       </div>
     )
   }

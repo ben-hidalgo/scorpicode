@@ -17,7 +17,7 @@ class FooterContainer extends Component {
 
     return (
       <div className="FooterContainer">
-        <div className="copyright">&copy; Scorpicode 2020</div>
+        <span className="copyright">&copy; Scorpicode 2020</span>
         <a href="https://www.instagram.com/scorpicode" >
           <img src="instagram504.png" alt="instagram logo" />
         </a>
