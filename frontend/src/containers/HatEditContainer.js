@@ -40,6 +40,9 @@ class HatEditContainer extends Component {
 
   save(hec, hatStore) {
     hatStore.makeHat(hec.color, hec.size, hec.style)
+    hec.color = ''
+    hec.size = 0
+    hec.style = 'UNKNOWN_STYLE'
   }
 
   cancel(hec, hatStore) {

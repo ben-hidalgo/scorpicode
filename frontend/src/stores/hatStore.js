@@ -43,7 +43,8 @@ class HatStore {
         this.error = {code: err.response.body.code, msg: err.response.body.msg, status: err.response.status}
       })
       .finally(() => { 
-        this.isLoading = false 
+        this.isLoading = false
+        this.error = null
       })
     
   } // makeHat
