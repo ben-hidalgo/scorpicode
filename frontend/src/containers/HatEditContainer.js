@@ -52,7 +52,7 @@ class HatEditContainer extends Component {
 
 }
 
-function HatStyles(props) {
+const HatStyles = observer((props) => {
 
   return (
       <label>
@@ -68,7 +68,7 @@ function HatStyles(props) {
         </select>
       </label>
   )
-}
+})
 HatStyles.defaultProps = {
   styles: [
     {value: 'UNKNOWN_STYLE', text: 'Please select a style'},
