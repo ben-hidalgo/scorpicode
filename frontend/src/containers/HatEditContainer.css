@@ -1,4 +1,10 @@
 .HatEditContainer {
   text-align: left;
-  /* float: right; */
+  background-color: #f1ebed;
+  overflow: hidden;
+  width: 100%;
+}
+
+.warning {
+  color: #f26700;
 }

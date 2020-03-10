@@ -17,7 +17,13 @@ class FooterContainer extends Component {
 
     return (
       <div className="FooterContainer">
-        <h1>Footer</h1>
+        <div className="copyright">&copy; Scorpicode 2020</div>
+        <a href="https://www.instagram.com/scorpicode" >
+          <img src="instagram504.png" alt="instagram logo" />
+        </a>
+        <a href="https://twitter.com/BenHidalgo8" >
+          <img src="twitter400.png" alt="twitter logo" />
+        </a>
       </div>
     )
   }

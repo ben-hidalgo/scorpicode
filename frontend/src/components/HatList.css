@@ -4,6 +4,8 @@
 }
 
 .HatList li {
-  color: blue;
+  color: #010101;
+  background-color: #f1ebed;
   border-style: dotted;
+  border-color: #3d3d3d;
 }

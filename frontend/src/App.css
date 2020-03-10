@@ -5,7 +5,7 @@
 body {
   font-family: Arial;
   padding: 10px;
-  background: #f1f1f1;
+  background: #a9cad3;
 }
 
 .App {
@@ -47,24 +47,3 @@ body {
   }
 }
 
-.RightColumn {
-  float: left;
-  width: 90%;
-  background-color: #f1f1f1;
-  padding-left: 20px;
-}
-
-@media screen and (max-width: 800px) {
-  .LeftNavContainer, .RightColumn {   
-    width: 100%;
-    padding: 0;
-  }
-}
-
-/* Responsive layout - when the screen is less than 400px wide, make the navigation links stack on top of each other instead of next to each other */
-@media screen and (max-width: 400px) {
-  .TopNavContainer a {
-    float: none;
-    width: 100%;
-  }
-}

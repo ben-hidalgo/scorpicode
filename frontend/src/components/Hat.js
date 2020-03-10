@@ -25,7 +25,7 @@ function Hat(props) {
       <div>Version: {version}</div>
     </li>
     
-    <button onClick={() => {deleteHat(id, version)}} type="button">DeleteNA</button>
+    <button onClick={() => {deleteHat(id, version)}} type="button">Delete</button>
   </div>
 }
 

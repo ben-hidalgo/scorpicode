@@ -24,7 +24,7 @@ class HatEditContainer extends Component {
 
     return (
       <div className="HatEditContainer">
-        {hatStore.error && <span>{languageStore.decode(hatStore.error.msg)}</span>}
+        {hatStore.error && <span className="warning">{languageStore.decode(hatStore.error.msg)}</span>}
         <br/>
         <HatColors hec={this}/>
         <br/>

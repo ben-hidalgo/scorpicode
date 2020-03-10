@@ -3,7 +3,7 @@ import './App.css'
 import { observer }  from 'mobx-react'
 import HeaderContainer from './containers/HeaderContainer'
 import TopNavContainer from './containers/TopNavContainer'
-import LeftNavContainer from './containers/LeftNavContainer'
+// import LeftNavContainer from './containers/LeftNavContainer'
 import HatListContainer from './containers/HatListContainer'
 import HatEditContainer from './containers/HatEditContainer'
 import FooterContainer from './containers/FooterContainer'
@@ -20,7 +20,7 @@ class App extends Component {
       <div className="App">
         <HeaderContainer stores={stores} />
         <TopNavContainer stores={stores} />
-        <LeftNavContainer stores={stores} />
+        {/*<LeftNavContainer stores={stores} />*/}
         <div className="RightColumn" >
           <HatEditContainer stores={stores} />
           <HatListContainer stores={stores} />
