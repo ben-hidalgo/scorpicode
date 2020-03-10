@@ -18,14 +18,14 @@ function Hat(props) {
 
   return <div>
     <li className="Hat">
-      <div>ID: {id}</div>
-      <div>Inches: {inches}</div>
-      <div>Color: {color}</div>
-      <div>Style: {style}</div>
-      <div>Version: {version}</div>
+      <button onClick={() => {deleteHat(id, version)}} type="button">Delete</button>
+      <label>ID: {id}</label><br/>
+      <label>Inches: {inches}</label><br/>
+      <label>Color: {color}</label><br/>
+      <label>Style: {style}</label><br/>
+      <label>Version: {version}</label><br/>
     </li>
-    
-    <button onClick={() => {deleteHat(id, version)}} type="button">Delete</button>
+    <br/>
   </div>
 }
 

@@ -8,7 +8,7 @@ function HatList(props) {
       {
         props.hats.map(hat => {
           return (
-              <Hat stores={props.stores} hat={hat} key={hat.id} />
+            <Hat stores={props.stores} hat={hat} key={hat.id} />
           )
         })
       }

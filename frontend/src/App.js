@@ -23,6 +23,7 @@ class App extends Component {
         {/*<LeftNavContainer stores={stores} />*/}
         <div className="RightColumn" >
           <HatEditContainer stores={stores} />
+          <hr/>
           <HatListContainer stores={stores} />
         </div>
         <FooterContainer stores={stores} />
