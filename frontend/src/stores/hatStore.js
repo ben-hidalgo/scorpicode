@@ -33,13 +33,11 @@ class HatStore {
     agent.Hats.makeHat(size, color, style)
       .then(({ hat }) => {
         
-        var tempHats = []
-        // add to the front of the list
-        tempHats.push(hat)
+        var temp = [hat]
 
         // for some reason adding an element isn't triggering render
-        this.hats.forEach(h => tempHats.push(h))
-        this.hats = tempHats
+        this.hats.forEach(h => temp.push(h))
+        this.hats = temp
       })
       .catch(err => {
         this.error = {code: err.response.body.code, msg: err.response.body.msg, status: err.response.status}
@@ -52,15 +50,12 @@ class HatStore {
 
   // returns all hats
   deleteHat = (id, version) => {
-    console.log('delete hat')
     this.isLoading = true
     agent.Hats.deleteHat(id, version)
       .then(() => {
-        console.log('delete hat then')
-        this.hats = []
+        this.hats = this.hats.filter((v, i, a) => {return v.id !== id})
       })
       .catch(err => {
-        console.log('deleteHat error')
         this.error = {code: err.response.body.code, msg: err.response.body.msg, status: err.response.status}
       })
       .finally(() => { this.isLoading = false })

@@ -28,9 +28,9 @@ class HatEditContainer extends Component {
         <br/>
         <HatColors hec={this}/>
         <br/>
-        <HatSizes hec={this}/>
-        <br/>
         <HatStyles hec={this}/>
+        <br/>
+        <HatSizes hec={this}/>
         <br/>
         <button onClick={() => {this.save(this, hatStore)}} type="button">Save</button>
         <button onClick={() => {this.cancel(this, hatStore)}} type="button">Cancel</button>
