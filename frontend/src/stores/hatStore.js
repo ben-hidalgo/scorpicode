@@ -38,13 +38,13 @@ class HatStore {
         // for some reason adding an element isn't triggering render
         this.hats.forEach(h => temp.push(h))
         this.hats = temp
+        this.error = null
       })
       .catch(err => {
         this.error = {code: err.response.body.code, msg: err.response.body.msg, status: err.response.status}
       })
       .finally(() => { 
         this.isLoading = false
-        this.error = null
       })
     
   } // makeHat
