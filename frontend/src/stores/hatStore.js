@@ -50,6 +50,23 @@ class HatStore {
     
   } // makeHat
 
+  // returns all hats
+  deleteHat = (id, version) => {
+    console.log('delete hat')
+    this.isLoading = true
+    agent.Hats.deleteHat(id, version)
+      .then(() => {
+        console.log('delete hat then')
+        this.hats = []
+      })
+      .catch(err => {
+        console.log('deleteHat error')
+        this.error = {code: err.response.body.code, msg: err.response.body.msg, status: err.response.status}
+      })
+      .finally(() => { this.isLoading = false })
+
+  } // deleteHat
+
 } // HatStore
 
 export default new HatStore()

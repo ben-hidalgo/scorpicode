@@ -16,7 +16,7 @@ class HatListContainer extends Component {
     return (
       <div>
         <button onClick={listHats} type="button">List Hats</button>
-        <HatList hats={hats}/>
+        <HatList stores={this.props.stores} hats={hats}/>
       </div>
     )
   }

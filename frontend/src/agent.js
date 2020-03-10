@@ -9,6 +9,7 @@ const superagent = superagentPromise(_superagent, global.Promise)
 // const encode = encodeURIComponent
 
 const handleErrors = err => {
+  console.log(`handleErrors err=${err}`)
   if (err && err.response && err.response.status === 401) {
     // authStore.logout()
   }
@@ -53,6 +54,7 @@ const requests = {
 const Hats = {
   listHats: () => requests.post('/hats/ListHats', {}),
   makeHat: (inches, color, style) => requests.post('/hats/MakeHat', {inches: inches, color: color, style: style}),
+  deleteHat: (id, version) => requests.post('/hats/DeleteHat', {id: id, version: version}),
 }
 
 

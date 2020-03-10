@@ -1,7 +1,9 @@
 import React from 'react'
 import './Hat.css'
+// import { action } from 'mobx'
 
 function Hat(props) {
+
   const {
     id, 
     inches, 
@@ -10,13 +12,21 @@ function Hat(props) {
     version,
   } = props.hat
 
-  return <li className="Hat">
-    <div>ID: {id}</div>
-    <div>Inches: {inches}</div>
-    <div>Color: {color}</div>
-    <div>Style: {style}</div>
-    <div>Version: {version}</div>
-  </li>
+  const {
+    deleteHat,
+  } = props.stores.hatStore
+
+  return <div>
+    <li className="Hat">
+      <div>ID: {id}</div>
+      <div>Inches: {inches}</div>
+      <div>Color: {color}</div>
+      <div>Style: {style}</div>
+      <div>Version: {version}</div>
+    </li>
+    
+    <button onClick={() => {deleteHat(id, version)}} type="button">DeleteNA</button>
+  </div>
 }
 
 export default Hat
