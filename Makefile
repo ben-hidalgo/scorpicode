@@ -14,6 +14,7 @@ upgrade: #images
 	helm upgrade --install scorpicode ./devops/helmchart \
 	-f devops/helmchart/local.yaml \
 	--set common.cacheBuster=`date +%s` \
+	--set website.auth0ClientId=$(AUTH0_CLIENT_ID) \
 	--set hats.tag=$(TAG) \
 	--set website.tag=$(TAG) \
 	--set roxie.tag=$(TAG) \

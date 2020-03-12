@@ -23,6 +23,22 @@ func main() {
 			FromPath:   "/",
 			ToPath:     "/",
 		},
+		&server.Proxy{
+			HostPrefix: config.WebsitePrefix,
+			FromPath:   "/login",
+			ToPath:     "/login",
+		},
+		&server.Proxy{
+			HostPrefix: config.WebsitePrefix,
+			FromPath:   "/logincallback",
+			ToPath:     "/logincallback",
+		},
+		&server.Proxy{
+			HostPrefix: config.WebsitePrefix,
+			FromPath:   "/logout",
+			ToPath:     "/logout",
+		},
+
 		// frontend
 		&server.Proxy{
 			HostPrefix: config.FrontendPrefix,
