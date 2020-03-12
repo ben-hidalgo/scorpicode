@@ -33,12 +33,4 @@ spec:
 {{ include "common.shared" . | indent 8 }}
         - name: STATIC_PATH
           value: {{ .Values.website.staticPath | quote }}
-        - name: AUTH0_AUTHORIZE_URL
-          value: {{ .Values.website.auth0AuthorizeUrl | quote }}
-        - name: AUTH0_RESPONSE_TYPE
-          value: {{ .Values.website.auth0ResponseType | quote }}
-        - name: AUTH0_CLIENT_ID
-          value: {{ .Values.website.auth0ClientId | quote }}
-        - name: AUTH0_REDIRECT_URI
-          value: {{ .Values.website.auth0RedirectUri | quote }}
 {{- end }}

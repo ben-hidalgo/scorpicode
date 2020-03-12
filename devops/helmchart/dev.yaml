@@ -43,12 +43,6 @@ website:
   listendAddress: :8080
   staticPath: ./cmd/website/static
 
-  auth0AuthorizeUrl: https://scorpicode.auth0.com/authorize
-  auth0ResponseType: token
-  auth0ClientId: TODO use SOPS secret
-  auth0RedirectUri: http://localhost:8080/logincallback
-
-
 roxie:
   enabled: false
   name: roxie
@@ -63,6 +57,12 @@ roxie:
   websitePrefix: http://website:8080
   frontendPrefix: http://frontend
   enableCors: false
+
+  loginSuccessTarget: ./sc
+  auth0AuthorizeUrl: https://scorpicode.auth0.com/authorize
+  auth0ResponseType: token
+  auth0ClientId: TODO use SOPS secret
+  auth0RedirectUri: http://localhost:8080/logincallback
 
 ingress:
   enabled: false
