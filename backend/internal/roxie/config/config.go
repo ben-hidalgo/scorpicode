@@ -14,7 +14,7 @@ var AppName = "roxie"
 var WebsitePrefix = "http://localhost:8081"
 
 // FrontendPrefix .
-var FrontendPrefix = "http://localhost:8082"
+var FrontendPrefix = "http://localhost:3000"
 
 // HatsPrefix .
 var HatsPrefix = "http://localhost:8083"
@@ -23,7 +23,7 @@ var HatsPrefix = "http://localhost:8083"
 var EnableCors = true
 
 // LoginSuccessTarget .
-var LoginSuccessTarget = "http://localhost:3000"
+var LoginSuccessTarget = "http://localhost:8080/sc/"
 
 // Auth0AuthorizeURL is static here
 var Auth0AuthorizeURL = "https://scorpicode.auth0.com/authorize"

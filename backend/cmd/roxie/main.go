@@ -6,6 +6,7 @@ import (
 	_ "backend/pkg/logging" // init logrus
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -30,6 +31,16 @@ func main() {
 			HostPrefix: config.FrontendPrefix,
 			FromPath:   "/sc/",
 			ToPath:     "/",
+		},
+		&server.Proxy{
+			HostPrefix: config.FrontendPrefix,
+			FromPath:   "/static/",
+			ToPath:     "/static/",
+		},
+		&server.Proxy{
+			HostPrefix: config.FrontendPrefix,
+			FromPath:   "/manifest.json",
+			ToPath:     "/manifest.json",
 		},
 		// hats
 		&server.Proxy{
@@ -57,16 +68,10 @@ func main() {
 }
 
 func callback(w http.ResponseWriter, r *http.Request) {
-	logrus.Infof("callback() r=%#v", r)
-	logrus.Infof("callback() r.URL=%s", r.URL)
-	logrus.Infof("callback() r.URL.Query()=%#v", r.URL.Query())
 
-	// vals := r.URL.Query()
 	code := r.URL.Query().Get("code")
 
-	logrus.Debugf("callback() code=%s", code)
-
-	body, err := json.Marshal(map[string]string{
+	reqBody, err := json.Marshal(map[string]string{
 		"grant_type":    "authorization_code",
 		"client_id":     config.Auth0ClientID,
 		"client_secret": config.Auth0ClientSecret,
@@ -80,7 +85,7 @@ func callback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res, err := http.Post(config.Auth0OAuthTokenURL, "application/json", bytes.NewBuffer(body))
+	res, err := http.Post(config.Auth0OAuthTokenURL, "application/json", bytes.NewBuffer(reqBody))
 	if err != nil {
 		w.WriteHeader(500)
 		w.Write([]byte(err.Error()))
@@ -103,10 +108,24 @@ func callback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	logrus.Debugf("callback() dat=%#v", dat)
+	body := fmt.Sprintf(`
+<!DOCTYPE html> 
+<html>
+<body> 
+	<script> 
+		window.onload = () => { 
+			console.log('BXH start')
+			window.localStorage.setItem('id_token', '%s')
+			window.location.href = '%s'
+			console.log('BXH done')
+		} 
+	</script> 
+</body> 
+	
+</html>`, dat["id_token"], config.LoginSuccessTarget)
 
 	w.WriteHeader(200)
-	w.Write(b)
+	w.Write([]byte(body))
 	return
 }
 
