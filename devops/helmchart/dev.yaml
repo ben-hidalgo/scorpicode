@@ -59,10 +59,9 @@ roxie:
   enableCors: false
 
   loginSuccessTarget: ./sc
-  auth0AuthorizeUrl: https://scorpicode.auth0.com/authorize
-  auth0ResponseType: token
   auth0ClientId: TODO use SOPS secret
-  auth0RedirectUri: http://localhost:8080/logincallback
+  auth0ClientSecret: TODO use SOPS secret
+  auth0RedirectUri: unused in dev
 
 ingress:
   enabled: false

@@ -4,6 +4,9 @@ import (
 	"backend/internal/roxie/config"
 	"backend/internal/roxie/server"
 	_ "backend/pkg/logging" // init logrus
+	"bytes"
+	"encoding/json"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/rs/xid"
@@ -58,11 +61,53 @@ func callback(w http.ResponseWriter, r *http.Request) {
 	logrus.Infof("callback() r.URL=%s", r.URL)
 	logrus.Infof("callback() r.URL.Query()=%#v", r.URL.Query())
 
-	w.WriteHeader(200)
-	w.Write([]byte("Welcome!"))
-	return
+	// vals := r.URL.Query()
+	code := r.URL.Query().Get("code")
 
-	// http.Redirect(w, r, "/sc", 302)
+	logrus.Debugf("callback() code=%s", code)
+
+	body, err := json.Marshal(map[string]string{
+		"grant_type":    "authorization_code",
+		"client_id":     config.Auth0ClientID,
+		"client_secret": config.Auth0ClientSecret,
+		"code":          code,
+		"redirect_uri":  config.Auth0RedirectURI,
+		"audience":      config.Auth0Audience,
+	})
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	res, err := http.Post(config.Auth0OAuthTokenURL, "application/json", bytes.NewBuffer(body))
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	defer res.Body.Close()
+
+	b, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	var dat map[string]interface{}
+
+	if err := json.Unmarshal(b, &dat); err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	logrus.Debugf("callback() dat=%#v", dat)
+
+	w.WriteHeader(200)
+	w.Write(b)
+	return
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
@@ -83,6 +128,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	q.Add("client_id", config.Auth0ClientID)
 	q.Add("redirect_uri", config.Auth0RedirectURI)
 	q.Add("state", uuid)
+	q.Add("scope", "openid profile email")
 	req.URL.RawQuery = q.Encode()
 
 	http.Redirect(w, r, req.URL.String(), 302)
