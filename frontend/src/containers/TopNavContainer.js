@@ -15,11 +15,16 @@ class TopNavContainer extends Component {
 
   render() {
 
+    const {
+      getPayload,
+    } = this.props.stores.authStore
+
     return (
       <div className="TopNavContainer">
         <a href="./" className="LeftLink">Hats</a>
         <a href="./" className="LeftLink">Accounts</a>
         <a href="./" className="LeftLink">Comms</a>
+        <a href="./" className="RightLink"><img src={getPayload().picture}></img></a>
         <a href="./" className="RightLink">Logout</a>
     </div>
     )

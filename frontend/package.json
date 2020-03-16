@@ -8,6 +8,7 @@
     "@testing-library/jest-dom": "^5.1.1",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^10.0.0",
+    "jsonwebtoken": "^8.5.1",
     "mobx": "^5.15.4",
     "mobx-react": "^6.1.8",
     "react": "^16.13.0",

@@ -5,6 +5,7 @@ import App from './App'
 import * as serviceWorker from './serviceWorker'
 
 import commonStore from './stores/commonStore'
+import authStore from './stores/authStore'
 import hatStore from './stores/hatStore'
 import languageStore from './stores/languageStore'
 
@@ -12,6 +13,7 @@ const stores = {
   commonStore,
   hatStore,
   languageStore,
+  authStore,
 }
 
 // If you want your app to work offline and load faster, you can change

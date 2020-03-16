@@ -28,3 +28,9 @@
   color: #a9cad3;
   float: right;
 }
+
+.TopNavContainer img {
+  height: 29px;
+  width: 29px;
+  margin: 5px;
+}

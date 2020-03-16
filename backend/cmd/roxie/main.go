@@ -109,6 +109,7 @@ func callback(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// TODO: conditionally on env var, use secure cookie document.cookie = "name = value;secure";
+	// TODO: make the cookie name environment specific
 	tmpl := `
 	<!DOCTYPE html> 
 	<html>
