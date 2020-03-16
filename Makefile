@@ -14,7 +14,10 @@ upgrade: #images
 	helm upgrade --install scorpicode ./devops/helmchart \
 	-f devops/helmchart/local.yaml \
 	--set common.cacheBuster=`date +%s` \
-	--set website.auth0ClientId=$(AUTH0_CLIENT_ID) \
+	--set roxie.auth0ClientId=$(AUTH0_CLIENT_ID) \
+	--set roxie.auth0ClientSecret=$(AUTH0_CLIENT_SECRET) \
+	--set roxie.auth0RedirectUri=http://`minikube ip`:`kubectl get svc roxie -o json | jq '.spec.ports[0].nodePort'`/callback \
+	--set roxie.loginSuccessTarget=http://`minikube ip`:`kubectl get svc roxie -o json | jq '.spec.ports[0].nodePort'`/sc \
 	--set hats.tag=$(TAG) \
 	--set website.tag=$(TAG) \
 	--set roxie.tag=$(TAG) \

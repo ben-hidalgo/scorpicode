@@ -108,21 +108,28 @@ func callback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	body := fmt.Sprintf(`
-<!DOCTYPE html> 
-<html>
-<body> 
-	<script> 
-		window.onload = () => { 
-			console.log('BXH start')
-			window.localStorage.setItem('id_token', '%s')
-			window.location.href = '%s'
-			console.log('BXH done')
-		} 
-	</script> 
-</body> 
-	
-</html>`, dat["id_token"], config.LoginSuccessTarget)
+	// TODO: conditionally on env var, use secure cookie document.cookie = "name = value;secure";
+	tmpl := `
+	<!DOCTYPE html> 
+	<html>
+	<body> 
+		<script>
+			function setCookie(name, value, days) {
+				var d = new Date;
+				d.setTime(d.getTime() + 24*60*60*1000*days);
+				// not using string interpolation because we're inside a Go string literal
+				document.cookie = name + "=" + value + ";path=/;expires=" + d.toGMTString();
+			}
+			window.onload = () => { 
+				setCookie('id_token', '%s', 3)
+				window.location.href = '%s'
+			} 
+		</script> 
+	</body> 
+	</html>
+	`
+
+	body := fmt.Sprintf(tmpl, dat["id_token"], config.LoginSuccessTarget)
 
 	w.WriteHeader(200)
 	w.Write([]byte(body))

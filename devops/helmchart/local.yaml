@@ -59,7 +59,7 @@ roxie:
   frontendPrefix: http://frontend
   enableCors: false
 
-  loginSuccessTarget: ./sc
+  loginSuccessTarget: set by dynamic env var
   auth0ClientId: TODO use SOPS secret
   auth0ClientSecret: TODO use SOPS secret
   auth0RedirectUri: set by dynamic env var

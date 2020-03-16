@@ -40,11 +40,11 @@ spec:
         - name: ENABLE_CORS
           value: {{ .Values.roxie.enableCors | quote }}
         - name: LOGIN_SUCCESS_TARGET
-          value: {{ .Values.website.loginSuccessTarget | quote }}
+          value: {{ .Values.roxie.loginSuccessTarget | quote }}
         - name: AUTH0_CLIENT_ID
-          value: {{ .Values.website.auth0ClientId | quote }}
+          value: {{ .Values.roxie.auth0ClientId | quote }}
         - name: AUTH0_CLIENT_SECRET
-          value: {{ .Values.website.auth0ClientSecret | quote }}
+          value: {{ .Values.roxie.auth0ClientSecret | quote }}
         - name: AUTH0_REDIRECT_URI
-          value: {{ .Values.website.auth0RedirectUri | quote }}
+          value: {{ .Values.roxie.auth0RedirectUri | quote }}
 {{- end }}
