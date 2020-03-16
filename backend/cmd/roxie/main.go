@@ -32,16 +32,6 @@ func main() {
 			FromPath:   "/sc/",
 			ToPath:     "/",
 		},
-		&server.Proxy{
-			HostPrefix: config.FrontendPrefix,
-			FromPath:   "/static/",
-			ToPath:     "/static/",
-		},
-		&server.Proxy{
-			HostPrefix: config.FrontendPrefix,
-			FromPath:   "/manifest.json",
-			ToPath:     "/manifest.json",
-		},
 		// hats
 		&server.Proxy{
 			HostPrefix: config.HatsPrefix,
@@ -59,8 +49,7 @@ func main() {
 	}
 
 	mux.HandleFunc("/login", login)
-
-	mux.HandleFunc("/callback/", callback)
+	mux.HandleFunc("/callback", callback)
 
 	logrus.Infof("main() %s listening on %s", config.AppName, config.ListenAddress)
 
