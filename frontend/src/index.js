@@ -16,6 +16,11 @@ const stores = {
   authStore,
 }
 
+if (authStore.decoded == null) {
+  // TODO: inject value
+  window.location.href = 'http://localhost:8080/'
+}
+
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA

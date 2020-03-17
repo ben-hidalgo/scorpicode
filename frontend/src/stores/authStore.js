@@ -11,6 +11,10 @@ class AuthStore {
       token: null,
       decoded: null,
     })
+    this.token = getCookie(TokenCookieName)
+    if (this.token) {
+      this.decoded = jwt.decode(this.token, {complete: true});
+    }
   } // constructor
 
   hasRole = (name) => {
@@ -19,19 +23,7 @@ class AuthStore {
   }
 
   getPayload = () => {
-
-    if (this.decoded) {
-      return this.decoded.payload  
-    }
-
-    this.token = getCookie(TokenCookieName)
-    if (this.token) {
-      this.decoded = jwt.decode(this.token, {complete: true});
-      return this.decoded.payload
-    }
-
-    // TODO: this should never happen
-    return {}
+    return this.decoded.payload
   }
 
   getToken = () => {
