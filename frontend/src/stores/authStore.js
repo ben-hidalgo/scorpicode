@@ -8,6 +8,7 @@ class AuthStore {
 
   constructor() {
     extendObservable(this, {
+      token: null,
       decoded: null,
     })
   } // constructor
@@ -23,13 +24,18 @@ class AuthStore {
       return this.decoded.payload  
     }
 
-    var token = getCookie(TokenCookieName)
-    if (token) {
-      this.decoded = jwt.decode(token, {complete: true});
+    this.token = getCookie(TokenCookieName)
+    if (this.token) {
+      this.decoded = jwt.decode(this.token, {complete: true});
       return this.decoded.payload
     }
 
+    // TODO: this should never happen
     return {}
+  }
+
+  getToken = () => {
+    return this.token
   }
 
   logout = () => {
