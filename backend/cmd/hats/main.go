@@ -6,7 +6,9 @@ import (
 	"backend/internal/hats/repo"
 	"backend/internal/hats/repo/inmem"
 	"backend/internal/hats/repo/redisrepo"
+	"backend/pkg/httpwrap"
 	_ "backend/pkg/logging" // init logrus
+	"backend/pkg/token"
 	"backend/rpc/hatspb"
 	"context"
 	"net/http"
@@ -26,16 +28,17 @@ func main() {
 	defer hatRepo.Close()
 
 	// middleware filter chain
-	hooks := twirp.ChainHooks(repo.Hook(hatRepo))
+	hooks := twirp.ChainHooks(repo.Hook(hatRepo), token.Hook(&token.JwtToken{}))
 
 	twirpHandler := hatspb.NewHatsServer(hatserver.NewServer(), hooks)
 
+	// grabs the http headers
+	wrapped := httpwrap.WithHeaders(twirpHandler)
+
 	srv := &http.Server{
 		Addr:    config.ListenAddress,
-		Handler: twirpHandler,
+		Handler: wrapped,
 	}
-
-	srv.Handler = twirpHandler
 
 	idleConnsClosed := make(chan struct{})
 

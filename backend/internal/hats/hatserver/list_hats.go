@@ -13,6 +13,10 @@ func (hs *Server) ListHats(ctx context.Context, req *hatspb.ListHatsRequest) (*h
 
 	logrus.Debugf("ListHats() req=%v", req)
 
+	// headers := httpwrap.GetHeaders(ctx)
+
+	// logrus.Debugf("headers=%#v", headers)
+
 	hr := repo.GetRepo(ctx)
 
 	mods, err := hr.FindAll(repo.Limit(10), repo.Offset(0))
