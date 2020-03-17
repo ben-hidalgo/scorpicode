@@ -1,6 +1,7 @@
 package httpwrap
 
 import (
+	"backend/pkg/token"
 	"context"
 	"net/http"
 )
@@ -44,6 +45,18 @@ func WithHeaders(base http.Handler) http.Handler {
 
 		ctx := context.WithValue(r.Context(), Key, *headers)
 		r = r.WithContext(ctx)
+
+		// parsing the token here so that a 401 can be returned
+		// twirp server hooks don't have access to the response writer
+		bearer, err := token.ParseJWT(headers.Authorization)
+		if err != nil {
+			// any error in the token is a 401
+			w.WriteHeader(401)
+		}
+
+		ctx = context.WithValue(r.Context(), token.Key, bearer)
+		r = r.WithContext(ctx)
+
 		base.ServeHTTP(w, r)
 	}
 	return http.HandlerFunc(fn)

@@ -8,7 +8,6 @@ import (
 	"backend/internal/hats/repo/redisrepo"
 	"backend/pkg/httpwrap"
 	_ "backend/pkg/logging" // init logrus
-	"backend/pkg/token"
 	"backend/rpc/hatspb"
 	"context"
 	"net/http"
@@ -28,7 +27,7 @@ func main() {
 	defer hatRepo.Close()
 
 	// middleware filter chain
-	hooks := twirp.ChainHooks(repo.Hook(hatRepo), token.Hook(&token.JwtToken{}))
+	hooks := twirp.ChainHooks(repo.Hook(hatRepo))
 
 	twirpHandler := hatspb.NewHatsServer(hatserver.NewServer(), hooks)
 

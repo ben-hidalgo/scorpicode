@@ -2,6 +2,7 @@ package hatserver
 
 import (
 	"backend/internal/hats/repo"
+	"backend/pkg/token"
 	"backend/rpc/hatspb"
 	"context"
 
@@ -16,6 +17,10 @@ func (hs *Server) ListHats(ctx context.Context, req *hatspb.ListHatsRequest) (*h
 	// headers := httpwrap.GetHeaders(ctx)
 
 	// logrus.Debugf("headers=%#v", headers)
+
+	b := token.GetBearer(ctx)
+
+	logrus.Debugf("ListHats() bearer=%#v", b)
 
 	hr := repo.GetRepo(ctx)
 

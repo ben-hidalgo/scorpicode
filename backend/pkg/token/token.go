@@ -1,17 +1,24 @@
 package token
 
 import (
-	"backend/pkg/httpwrap"
 	"context"
+	"errors"
+	"strings"
 
-	"github.com/sirupsen/logrus"
-	"github.com/twitchtv/twirp"
+	// jose "gopkg.in/square/go-jose.v2"
+	"gopkg.in/square/go-jose.v2/jwt"
 )
+
+// Role is user role
+type Role string
+
+// CSR is customer service representative
+const CSR = Role("CSR")
 
 // Bearer interface for token abstraction
 type Bearer interface {
-	Clone() Bearer
-	// HasRole() bool
+	// has any role provided
+	HasRole(r ...Role) bool
 }
 
 // used to store the Bearer in Context
@@ -31,31 +38,38 @@ func GetBearer(ctx context.Context) Bearer {
 	}
 }
 
-// Hook middleware injects the DB impl
-func Hook(tw Bearer) *twirp.ServerHooks {
-
-	hook := &twirp.ServerHooks{}
-
-	hook.RequestReceived = func(ctx context.Context) (context.Context, error) {
-
-		headers := httpwrap.GetHeaders(ctx)
-
-		logrus.Debugf("headers=%#v", headers)
-
-		return context.WithValue(ctx, Key, tw.Clone()), nil
-	}
-
-	return hook
-}
-
-// JwtToken impl
-type JwtToken struct {
+// BearerToken impl
+type BearerToken struct {
+	JWT *jwt.JSONWebToken
 }
 
 // enforces the interface is implemented
-var _ Bearer = (*JwtToken)(nil)
+var _ Bearer = (*BearerToken)(nil)
 
-// Clone .
-func (jt *JwtToken) Clone() Bearer {
-	return &JwtToken{}
+// HasRole .
+func (bt *BearerToken) HasRole(r ...Role) bool {
+	return true
+}
+
+// ParseJWT parses the provided authorization header
+func ParseJWT(auth string) (Bearer, error) {
+
+	if len(auth) == 0 {
+		return nil, errors.New("missing authorization header")
+	}
+
+	split := strings.Split(auth, " ")
+
+	if len(split) != 2 {
+		return nil, errors.New("unexpected length after splitting authorization header")
+	}
+
+	t, err := jwt.ParseSigned(split[1])
+	if err != nil {
+		return nil, err
+	}
+
+	return &BearerToken{
+		JWT: t,
+	}, nil
 }
