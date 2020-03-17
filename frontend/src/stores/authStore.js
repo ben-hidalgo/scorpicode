@@ -1,5 +1,5 @@
 import { extendObservable } from 'mobx'
-import { getCookie, deleteCookie } from '../util'
+import { getCookie, delCookie } from '../util'
 import jwt from 'jsonwebtoken'
 
 const TokenCookieName = 'id_token'
@@ -31,7 +31,7 @@ class AuthStore {
   }
 
   logout = () => {
-    deleteCookie(TokenCookieName)
+    delCookie(TokenCookieName)
     this.decoded = null
     // TODO: navigate by injected variable
     window.location.href = 'http://localhost:8080'

@@ -16,6 +16,7 @@ const stores = {
   authStore,
 }
 
+// prevent anonymous access
 if (authStore.decoded == null) {
   // TODO: inject value
   window.location.href = 'http://localhost:8080/'

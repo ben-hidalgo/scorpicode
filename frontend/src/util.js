@@ -2,8 +2,7 @@
 const setCookie = (name, value, days) => {
   var d = new Date();
   d.setTime(d.getTime() + 24*60*60*1000*days);
-  // not using string interpolation because we're inside a Go string literal
-  document.cookie = name + "=" + value + ";path=/;expires=" + d.toGMTString();
+  document.cookie = `${name}=${value};path=/;expires=${d.toGMTString()}`
 }
 
 const getCookie = (name) => {
@@ -11,7 +10,7 @@ const getCookie = (name) => {
   return v ? v[2] : null
 }
 
-const deleteCookie = (name) => { 
+const delCookie = (name) => { 
   setCookie(name, '', -1)
 }
 
@@ -19,5 +18,5 @@ const deleteCookie = (name) => {
 export {
   setCookie,
   getCookie,
-  deleteCookie,
+  delCookie,
 }
