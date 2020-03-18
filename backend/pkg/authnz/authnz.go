@@ -5,6 +5,7 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -108,9 +109,13 @@ func loadPublicKey() (interface{}, error) {
 		return nil, err
 	}
 
-	block, _ := pem.Decode(pemFile)
+	p, rest := pem.Decode(pemFile)
+	if len(rest) != 0 {
+		return nil, fmt.Errorf("loadPublicKey() unexpected len(rest)=%d", len(rest))
+	}
 
-	cert, err := x509.ParseCertificate(block.Bytes)
+	cert, err := x509.ParseCertificate(p.Bytes)
+
 	if err != nil {
 		return nil, err
 	}
