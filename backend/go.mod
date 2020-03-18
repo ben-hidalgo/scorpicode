@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/auth0-community/go-auth0 v1.0.0
-	github.com/golang/protobuf v1.3.2
+	github.com/golang/protobuf v1.3.5
 	github.com/gomodule/redigo v2.0.0+incompatible
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/pkg/errors v0.9.0 // indirect

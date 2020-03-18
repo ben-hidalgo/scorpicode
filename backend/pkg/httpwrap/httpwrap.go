@@ -1,7 +1,7 @@
 package httpwrap
 
 import (
-	"backend/pkg/token"
+	"backend/pkg/authnz"
 	"context"
 	"net/http"
 
@@ -41,7 +41,7 @@ func WithHeaders(base http.Handler) http.Handler {
 
 		// parsing the token here so that a 401 can be returned
 		// twirp server hooks don't have access to the response writer
-		bearer, err := token.ValidateRequest(r)
+		bearer, err := authnz.ValidateRequest(r)
 		if err != nil {
 			logrus.Warnf("WithHeaders() err=%#v", err)
 			// any error in the token is a 401
@@ -49,7 +49,7 @@ func WithHeaders(base http.Handler) http.Handler {
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), token.Key, bearer)
+		ctx := context.WithValue(r.Context(), authnz.Key, bearer)
 		r = r.WithContext(ctx)
 
 		///////////////////////

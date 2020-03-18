@@ -7,7 +7,7 @@ const superagent = superagentPromise(_superagent, global.Promise)
 
 const handleErrors = err => {
   if (err && err.response && err.response.status === 401) {
-    authStore.logout()
+    // authStore.logout()
   }
   return err
 }
