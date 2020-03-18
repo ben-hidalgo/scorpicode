@@ -5,7 +5,6 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -57,18 +56,9 @@ func (bt *BearerToken) HasRole(r ...Role) bool {
 	return true
 }
 
-var pemFile []byte
-
 // ValidateRequest .
 func ValidateRequest(r *http.Request) (Bearer, error) {
 
-	// the auth0 internals do not validate inputs
-	// if clientSecret == "" {
-	// 	return nil, errors.New("validateRequest() clientSecret is required")
-	// }
-	// if audience == "" {
-	// 	return nil, errors.New("validateRequest() audience is required")
-	// }
 	if Auth0Issuer == "" {
 		return nil, errors.New("validateRequest() Auth0Issuer is required")
 	}
@@ -82,15 +72,9 @@ func ValidateRequest(r *http.Request) (Bearer, error) {
 	var err error
 
 	/////////////////////////////
-	if len(pemFile) == 0 {
-		pemFile, err = ioutil.ReadFile(Auth0PemfilePath)
-		if err != nil {
-			return nil, err
-		}
-	}
-	publicKey, err := loadPublicKey(pemFile)
+	publicKey, err := loadPublicKey()
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	/////////////////////////////////
@@ -111,24 +95,26 @@ func ValidateRequest(r *http.Request) (Bearer, error) {
 	}, nil
 }
 
-func loadPublicKey(data []byte) (interface{}, error) {
-	input := data
+// cache in memory
+var pemFile []byte
 
-	block, _ := pem.Decode(data)
-	if block != nil {
-		input = block.Bytes
+func loadPublicKey() (interface{}, error) {
+
+	// forward declare the error so as to not shadow the package level pemFile contents
+	var err error
+	if len(pemFile) == 0 {
+		pemFile, err = ioutil.ReadFile(Auth0PemfilePath)
+	}
+	if err != nil {
+		return nil, err
 	}
 
-	// Try to load SubjectPublicKeyInfo
-	pub, err0 := x509.ParsePKIXPublicKey(input)
-	if err0 == nil {
-		return pub, nil
+	block, _ := pem.Decode(pemFile)
+
+	cert, err := x509.ParseCertificate(block.Bytes)
+	if err != nil {
+		return nil, err
 	}
 
-	cert, err1 := x509.ParseCertificate(input)
-	if err1 == nil {
-		return cert.PublicKey, nil
-	}
-
-	return nil, fmt.Errorf("square/go-jose: parse error, got '%s' and '%s'", err0, err1)
+	return cert.PublicKey, nil
 }
