@@ -28,6 +28,9 @@ var LoginSuccessTarget = "http://localhost:3000"
 // Auth0AuthorizeURL is static here
 var Auth0AuthorizeURL = "https://scorpicode.auth0.com/authorize"
 
+// Auth0Issuer is static here
+var Auth0Issuer = "https://scorpicode.auth0.com/"
+
 // Auth0OAuthTokenURL is static here
 var Auth0OAuthTokenURL = "https://scorpicode.auth0.com/oauth/token"
 

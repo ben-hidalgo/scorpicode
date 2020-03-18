@@ -4,6 +4,8 @@ import (
 	"backend/pkg/token"
 	"context"
 	"net/http"
+
+	"github.com/sirupsen/logrus"
 )
 
 // used to store the Headers in the Context
@@ -37,24 +39,28 @@ func WithHeaders(base http.Handler) http.Handler {
 			return
 		}
 
+		// parsing the token here so that a 401 can be returned
+		// twirp server hooks don't have access to the response writer
+		bearer, err := token.ValidateRequest(r)
+		if err != nil {
+			logrus.Warnf("WithHeaders() err=%#v", err)
+			// any error in the token is a 401
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+
+		ctx := context.WithValue(r.Context(), token.Key, bearer)
+		r = r.WithContext(ctx)
+
+		///////////////////////
+		///////////////////////
 		headers := &Headers{
 			Authorization: r.Header.Get("Authorization"),
 			UserAgent:     r.Header.Get("User-Agent"),
 			ContentType:   r.Header.Get("Content-Type"),
 		}
 
-		ctx := context.WithValue(r.Context(), Key, *headers)
-		r = r.WithContext(ctx)
-
-		// parsing the token here so that a 401 can be returned
-		// twirp server hooks don't have access to the response writer
-		bearer, err := token.ParseJWT(headers.Authorization)
-		if err != nil {
-			// any error in the token is a 401
-			w.WriteHeader(401)
-		}
-
-		ctx = context.WithValue(r.Context(), token.Key, bearer)
+		ctx = context.WithValue(r.Context(), Key, *headers)
 		r = r.WithContext(ctx)
 
 		base.ServeHTTP(w, r)

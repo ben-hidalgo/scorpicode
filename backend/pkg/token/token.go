@@ -1,11 +1,13 @@
 package token
 
 import (
+	"backend/internal/roxie/config"
 	"context"
-	"errors"
-	"strings"
+	"net/http"
 
 	// jose "gopkg.in/square/go-jose.v2"
+	auth0 "github.com/auth0-community/go-auth0"
+	"gopkg.in/square/go-jose.v2"
 	"gopkg.in/square/go-jose.v2/jwt"
 )
 
@@ -51,6 +53,7 @@ func (bt *BearerToken) HasRole(r ...Role) bool {
 	return true
 }
 
+/*
 // ParseJWT parses the provided authorization header
 func ParseJWT(auth string) (Bearer, error) {
 
@@ -64,11 +67,32 @@ func ParseJWT(auth string) (Bearer, error) {
 		return nil, errors.New("unexpected length after splitting authorization header")
 	}
 
-	t, err := jwt.ParseSigned(split[1])
+	obj, err := jwt.ParseSigned(split[1])
 	if err != nil {
 		return nil, err
 	}
 
+	// obj.Claims()
+
+	return &BearerToken{
+		JWT: obj,
+	}, nil
+}
+*/
+
+// ValidateRequest .
+func ValidateRequest(r *http.Request) (Bearer, error) {
+	secret := []byte(config.Auth0ClientSecret)
+	secretProvider := auth0.NewKeyProvider(secret)
+	audience := []string{config.Auth0Audience}
+
+	configuration := auth0.NewConfiguration(secretProvider, audience, config.Auth0Issuer, jose.RS256)
+	validator := auth0.NewValidator(configuration, nil)
+
+	t, err := validator.ValidateRequest(r)
+	if err != nil {
+		return nil, err
+	}
 	return &BearerToken{
 		JWT: t,
 	}, nil

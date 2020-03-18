@@ -15,8 +15,8 @@ const handleErrors = err => {
 const responseBody = res => res.body
 
 const tokenPlugin = req => {
-  if (authStore.getToken()) {
-    req.set('authorization', `Bearer ${authStore.getToken()}`)
+  if (authStore.token) {
+    req.set('Authorization', `BEARER ${authStore.token}`)
   }
 }
 

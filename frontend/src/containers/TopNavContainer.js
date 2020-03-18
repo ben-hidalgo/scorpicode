@@ -24,7 +24,7 @@ class TopNavContainer extends Component {
         <a href="./" className="LeftLink">Hats</a>
         <a href="./" className="LeftLink">Accounts</a>
         <a href="./" className="LeftLink">Comms</a>
-        {authStore.getPayload().picture && <a href="./" className="RightLink"><img src={authStore.getPayload().picture} alt="profile"></img></a>}
+        <a href="./" className="RightLink"><img src={authStore.picture} alt="profile"></img></a>
         <button onClick={() => {authStore.logout()}} type="button">Logout</button>
     </div>
     )
