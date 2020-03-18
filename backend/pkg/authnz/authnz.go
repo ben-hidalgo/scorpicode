@@ -25,6 +25,7 @@ const CSR = Role("CSR")
 type Bearer interface {
 	// has any role provided
 	HasRole(r ...Role) bool
+	GetEmail() string
 }
 
 // used to store the Bearer in Context
@@ -47,6 +48,7 @@ func GetBearer(ctx context.Context) Bearer {
 // BearerToken impl
 type BearerToken struct {
 	JWT *jwt.JSONWebToken
+	CC  *CustomClaims
 }
 
 // enforces the interface is implemented
@@ -55,6 +57,21 @@ var _ Bearer = (*BearerToken)(nil)
 // HasRole .
 func (bt *BearerToken) HasRole(r ...Role) bool {
 	return true
+}
+
+// GetEmail .
+func (bt *BearerToken) GetEmail() string {
+	if bt.CC == nil {
+		return ""
+	}
+	return bt.CC.Email
+}
+
+// CustomClaims .
+type CustomClaims struct {
+	jwt.Claims
+	Email string `json:"email"`
+	// Roles []Role `json:"roles"`
 }
 
 // ValidateRequest .
@@ -85,13 +102,21 @@ func ValidateRequest(r *http.Request) (Bearer, error) {
 	// nil defaults the extractor to: from request authorization header
 	validator := auth0.NewValidator(configuration, nil)
 
-	t, err := validator.ValidateRequest(r)
+	jt, err := validator.ValidateRequest(r)
+	if err != nil {
+		return nil, err
+	}
+
+	cc := &CustomClaims{}
+
+	err = jt.Claims(publicKey, cc)
 	if err != nil {
 		return nil, err
 	}
 
 	return &BearerToken{
-		JWT: t,
+		JWT: jt,
+		CC:  cc,
 	}, nil
 }
 

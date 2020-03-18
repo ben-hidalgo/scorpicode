@@ -22,6 +22,8 @@ func (hs *Server) ListHats(ctx context.Context, req *hatspb.ListHatsRequest) (*h
 
 	logrus.Debugf("ListHats() bearer=%#v", b)
 
+	logrus.Debugf("ListHats() b.GetEmail()=%s", b.GetEmail())
+
 	hr := repo.GetRepo(ctx)
 
 	mods, err := hr.FindAll(repo.Limit(10), repo.Offset(0))
