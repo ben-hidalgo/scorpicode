@@ -11,7 +11,6 @@ import (
 
 	// jose "gopkg.in/square/go-jose.v2"
 	auth0 "github.com/auth0-community/go-auth0"
-	"github.com/sirupsen/logrus"
 	"gopkg.in/square/go-jose.v2"
 	"gopkg.in/square/go-jose.v2/jwt"
 )
@@ -58,64 +57,33 @@ func (bt *BearerToken) HasRole(r ...Role) bool {
 	return true
 }
 
-/*
-// ParseJWT parses the provided authorization header
-func ParseJWT(auth string) (Bearer, error) {
-
-	if len(auth) == 0 {
-		return nil, errors.New("missing authorization header")
-	}
-
-	split := strings.Split(auth, " ")
-
-	if len(split) != 2 {
-		return nil, errors.New("unexpected length after splitting authorization header")
-	}
-
-	obj, err := jwt.ParseSigned(split[1])
-	if err != nil {
-		return nil, err
-	}
-
-	// obj.Claims()
-
-	return &BearerToken{
-		JWT: obj,
-	}, nil
-}
-*/
+var pemFile []byte
 
 // ValidateRequest .
 func ValidateRequest(r *http.Request) (Bearer, error) {
-	return validateRequest(r, Auth0ClientSecret, Auth0Audience, Auth0Issuer, Auth0PemfilePath)
-}
-
-var pemFile []byte
-
-// private version to validate env vars
-func validateRequest(r *http.Request, clientSecret, audience, issuer, pemfilePath string) (Bearer, error) {
-
-	logrus.Debugf("clientSecret=%s audience=%s issuer=%s pemfilePath=%s", clientSecret, audience, issuer, pemfilePath)
 
 	// the auth0 internals do not validate inputs
-	if clientSecret == "" {
-		return nil, errors.New("validateRequest() clientSecret is required")
+	// if clientSecret == "" {
+	// 	return nil, errors.New("validateRequest() clientSecret is required")
+	// }
+	// if audience == "" {
+	// 	return nil, errors.New("validateRequest() audience is required")
+	// }
+	if Auth0Issuer == "" {
+		return nil, errors.New("validateRequest() Auth0Issuer is required")
 	}
-	if audience == "" {
-		return nil, errors.New("validateRequest() audience is required")
+	if Auth0ClientID == "" {
+		return nil, errors.New("validateRequest() Auth0ClientID is required")
 	}
-	if issuer == "" {
-		return nil, errors.New("validateRequest() issuer is required")
-	}
-	if pemfilePath == "" {
-		return nil, errors.New("validateRequest() pemfilePath is required")
+	if Auth0PemfilePath == "" {
+		return nil, errors.New("validateRequest() Auth0PemfilePath is required")
 	}
 
 	var err error
 
 	/////////////////////////////
 	if len(pemFile) == 0 {
-		pemFile, err = ioutil.ReadFile(pemfilePath)
+		pemFile, err = ioutil.ReadFile(Auth0PemfilePath)
 		if err != nil {
 			return nil, err
 		}
@@ -129,7 +97,7 @@ func validateRequest(r *http.Request, clientSecret, audience, issuer, pemfilePat
 	secretProvider := auth0.NewKeyProvider(publicKey)
 
 	// audience is the client ID
-	configuration := auth0.NewConfiguration(secretProvider, []string{Auth0ClientID}, issuer, jose.RS256)
+	configuration := auth0.NewConfiguration(secretProvider, []string{Auth0ClientID}, Auth0Issuer, jose.RS256)
 
 	validator := auth0.NewValidator(configuration, nil)
 
