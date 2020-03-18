@@ -69,20 +69,19 @@ func ValidateRequest(r *http.Request) (Bearer, error) {
 		return nil, errors.New("validateRequest() Auth0PemfilePath is required")
 	}
 
-	var err error
-
-	/////////////////////////////
+	// read the pem file and parse the certificate
 	publicKey, err := loadPublicKey()
 	if err != nil {
 		return nil, err
 	}
 
-	/////////////////////////////////
+	// the key provider holds the public key value
 	secretProvider := auth0.NewKeyProvider(publicKey)
 
 	// audience is the client ID
 	configuration := auth0.NewConfiguration(secretProvider, []string{Auth0ClientID}, Auth0Issuer, jose.RS256)
 
+	// nil defaults the extractor to: from request authorization header
 	validator := auth0.NewValidator(configuration, nil)
 
 	t, err := validator.ValidateRequest(r)

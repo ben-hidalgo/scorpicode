@@ -16,7 +16,7 @@ const responseBody = res => res.body
 
 const tokenPlugin = req => {
   if (authStore.token) {
-    req.set('Authorization', `BEARER ${authStore.token}`)
+    req.set('authorization', `Bearer ${authStore.token}`)
   }
 }
 
