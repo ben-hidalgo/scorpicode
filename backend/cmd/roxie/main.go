@@ -60,6 +60,8 @@ func callback(w http.ResponseWriter, r *http.Request) {
 
 	code := r.URL.Query().Get("code")
 
+	logrus.Debugf("callback() r.URL.Query()=%#v", r.URL.Query())
+
 	reqBody, err := json.Marshal(map[string]string{
 		"grant_type":    "authorization_code",
 		"client_id":     config.Auth0ClientID,
@@ -88,6 +90,8 @@ func callback(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(err.Error()))
 		return
 	}
+
+	logrus.Debugf("callback() oauth/token response=%s", b)
 
 	var dat map[string]interface{}
 
@@ -146,6 +150,8 @@ func login(w http.ResponseWriter, r *http.Request) {
 	q.Add("state", uuid)
 	q.Add("scope", "openid profile email")
 	req.URL.RawQuery = q.Encode()
+
+	logrus.Debugf("login() req.URL.Query()=%#v", req.URL.Query())
 
 	http.Redirect(w, r, req.URL.String(), 302)
 }

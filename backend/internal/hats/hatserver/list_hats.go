@@ -12,7 +12,7 @@ import (
 // ListHats returns a list of hats
 func (hs *Server) ListHats(ctx context.Context, req *hatspb.ListHatsRequest) (*hatspb.ListHatsResponse, error) {
 
-	logrus.Debugf("ListHats() req=%v", req)
+	logrus.Debugf("ListHats() req=%#v", req)
 
 	// headers := httpwrap.GetHeaders(ctx)
 
