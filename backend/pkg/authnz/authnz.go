@@ -30,6 +30,7 @@ type Bearer interface {
 	// has any role provided
 	HasRole(r ...Role) bool
 	GetEmail() string
+	GetRoles() []string
 }
 
 // used to store the Bearer in Context
@@ -71,12 +72,22 @@ func (bt *BearerToken) GetEmail() string {
 	return bt.CC.Email
 }
 
+// GetRoles .
+func (bt *BearerToken) GetRoles() []string {
+	if bt.CC == nil {
+		return []string{}
+	}
+	return bt.CC.Roles
+}
+
 // CustomClaims .
 type CustomClaims struct {
 	jwt.Claims
-	Email string `json:"email"`
-	// Roles []Role `json:"roles"`
+	Email string   `json:"email"`
+	Roles []string `json:"https://scorpicode.com/roles"`
 }
+
+// DEBU[0622] debug() https://scorpicode.com/roles: [CSR]
 
 // ValidateRequest .
 func ValidateRequest(r *http.Request) (Bearer, error) {

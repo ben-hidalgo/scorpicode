@@ -23,6 +23,7 @@ func (hs *Server) ListHats(ctx context.Context, req *hatspb.ListHatsRequest) (*h
 	logrus.Debugf("ListHats() bearer=%#v", b)
 
 	logrus.Debugf("ListHats() b.GetEmail()=%s", b.GetEmail())
+	logrus.Debugf("ListHats() b.GetRoles()=%s", b.GetRoles())
 
 	hr := repo.GetRepo(ctx)
 
