@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { extendObservable } from 'mobx'
-import './FooterContainer.css'
 import { observer }  from 'mobx-react'
-
+import { FaTwitter, FaInstagram } from 'react-icons/fa'
 
 class FooterContainer extends Component {
 
@@ -16,17 +15,19 @@ class FooterContainer extends Component {
   render() {
 
     return (
-      <div className="FooterContainer">
-        <span className="copyright">&copy; Scorpicode 2020</span>
-        <a href="https://www.instagram.com/scorpicode" >
-          <img src="instagram504.png" alt="instagram logo" />
-        </a>
-        <a href="https://twitter.com/BenHidalgo8" >
-          <img src="twitter400.png" alt="twitter logo" />
-        </a>
-      </div>
-    )
-  }
+      <footer className="footer columns is-vcentered is-centered">
+      <span>
+          &copy; Scorpicode 2020
+      </span>
+      <span>&nbsp;&nbsp;&nbsp;</span>
+      <a href="https://www.instagram.com/scorpicode" >
+          <FaInstagram className="no-underline" size="29px" />
+      </a>
+      <a href="https://twitter.com/BenHidalgo8" >
+          <FaTwitter size="29px" />
+      </a>
+  </footer>)
+}
 
 }
 

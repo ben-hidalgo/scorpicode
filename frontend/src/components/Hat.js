@@ -1,6 +1,4 @@
 import React from 'react'
-import './Hat.css'
-// import { action } from 'mobx'
 
 function Hat(props) {
 

@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
-import './App.css'
 import { observer }  from 'mobx-react'
 import HeaderContainer from './containers/HeaderContainer'
 import TopNavContainer from './containers/TopNavContainer'
-// import LeftNavContainer from './containers/LeftNavContainer'
 import HatListContainer from './containers/HatListContainer'
 import HatEditContainer from './containers/HatEditContainer'
 import FooterContainer from './containers/FooterContainer'
+import './components/style.scss';
 
 class App extends Component {
 
@@ -17,11 +16,10 @@ class App extends Component {
     } = this.props
 
     return (
-      <div className="App">
+      <div>
         <HeaderContainer stores={stores} />
         <TopNavContainer stores={stores} />
-        {/*<LeftNavContainer stores={stores} />*/}
-        <div className="RightColumn" >
+        <div>
           <HatEditContainer stores={stores} />
           <hr/>
           <HatListContainer stores={stores} />

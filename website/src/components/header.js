@@ -5,7 +5,7 @@ import './style.scss';
 import Navbar from './navbar';
 
 const Header = ({ siteTitle }) => (
-	<section className="hero gradientBg ">
+	<section className="hero gradientBg" >
 		<Navbar />
 	</section>
 );

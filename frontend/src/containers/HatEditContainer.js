@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { extendObservable } from 'mobx'
-import './HatEditContainer.css'
 import { observer }  from 'mobx-react'
 
 
@@ -23,7 +22,7 @@ class HatEditContainer extends Component {
     } = this.props.stores
 
     return (
-      <div className="HatEditContainer">
+      <div>
         {hatStore.error && <span className="warning">{languageStore.decode(hatStore.error.msg)}</span>}
         <br/>
         <HatColors hec={this}/>

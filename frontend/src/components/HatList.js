@@ -1,6 +1,5 @@
 import React from 'react'
 import Hat from './Hat'
-import './HatList.css'
 
 function HatList(props) {
     return (

@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import './HatListContainer.css'
 import { observer }  from 'mobx-react'
 import HatList from '../components/HatList'
 
