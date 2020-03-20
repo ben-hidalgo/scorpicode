@@ -14,9 +14,6 @@ killall() {
 (cd backend/cmd/roxie/ && \
 go run main.go) &
 
-(cd backend/cmd/website/ && \
-go run main.go) &
-
 (cd backend/cmd/hats/ && \
 DATASTORE_CONFIG=redis \
 REDIS_PASSWORD=redispassword \

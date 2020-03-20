@@ -11,7 +11,7 @@ var ListenAddress = ":8080"
 var AppName = "roxie"
 
 // WebsitePrefix .
-var WebsitePrefix = "http://localhost:8081"
+var WebsitePrefix = "http://localhost:8000"
 
 // FrontendPrefix .
 var FrontendPrefix = "http://localhost:3000"
