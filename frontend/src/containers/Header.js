@@ -3,7 +3,7 @@ import { extendObservable } from 'mobx'
 import { observer }  from 'mobx-react'
 
 
-class HeaderContainer extends Component {
+class Header extends Component {
 
   constructor() {
     super()
@@ -21,4 +21,4 @@ class HeaderContainer extends Component {
 
 }
 
-export default observer(HeaderContainer)
+export default observer(Header)

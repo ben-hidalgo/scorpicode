@@ -3,7 +3,7 @@ import { extendObservable } from 'mobx'
 import { observer }  from 'mobx-react'
 import { FaTwitter, FaInstagram } from 'react-icons/fa'
 
-class FooterContainer extends Component {
+class Footer extends Component {
 
   constructor() {
     super()
@@ -31,4 +31,4 @@ class FooterContainer extends Component {
 
 }
 
-export default observer(FooterContainer)
+export default observer(Footer)

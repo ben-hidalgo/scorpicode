@@ -4,7 +4,7 @@ import { observer }  from 'mobx-react'
 import logo from '../images/scorpicode210.png';
 import '../components/style.scss';
 
-class TopNavContainer extends Component {
+class NavBar extends Component {
 
   constructor() {
     super()
@@ -38,4 +38,4 @@ class TopNavContainer extends Component {
 
 }
 
-export default observer(TopNavContainer)
+export default observer(NavBar)

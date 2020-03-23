@@ -3,7 +3,7 @@ import { extendObservable } from 'mobx'
 import { observer }  from 'mobx-react'
 
 
-class HatEditContainer extends Component {
+class HatEdit extends Component {
 
   constructor() {
     super()
@@ -142,4 +142,4 @@ HatSizes.defaultProps = {
 }
 
 
-export default observer(HatEditContainer)
+export default observer(HatEdit)
