@@ -22,7 +22,7 @@ class HatEdit extends Component {
     } = this.props.stores
 
     return (
-      <div className="container is-white is-medium is-danger">
+      <div className="container is-white">
         {
           hatStore.error 
           && 

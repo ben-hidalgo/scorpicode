@@ -59,7 +59,7 @@ class NavBar extends Component {
           <div className="navbar-end">
           <div className="navbar-item">
               <figure className="image is-48x48px">
-                <img src={authStore.picture} className="is-rounded" style={{width: 'auto'}} />
+                <img src={authStore.picture} className="is-rounded" style={{width: 'auto'}} alt="profile" />
               </figure>
             </div>
             <div className="navbar-item">
