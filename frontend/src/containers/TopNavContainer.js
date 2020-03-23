@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { extendObservable } from 'mobx'
 import { observer }  from 'mobx-react'
-// import logo from '/public/scorpicode210.png';
+import logo from '../images/scorpicode210.png';
 import '../components/style.scss';
 
 class TopNavContainer extends Component {
@@ -27,7 +27,7 @@ class TopNavContainer extends Component {
 						className="navbar-item"
 						href="."
 					>
-						<img src="/scorpicode210.png" size="29px" alt="scorpicode logo" />
+						<img src={logo} size="29px" alt="scorpicode logo" />
 					</a>
           <button onClick={() => {authStore.logout()}} type="button">Logout</button>
 				</div>
