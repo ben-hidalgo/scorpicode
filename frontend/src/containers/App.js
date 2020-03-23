@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { observer }  from 'mobx-react'
-import Header from './Header'
+// import Header from './Header'
 import NavBar from './NavBar'
 import HatList from './HatList'
 import HatEdit from './HatEdit'
@@ -17,13 +17,9 @@ class App extends Component {
 
     return (
       <div>
-        <Header stores={stores} />
         <NavBar stores={stores} />
-        <div>
-          <HatEdit stores={stores} />
-          <hr/>
-          <HatList stores={stores} />
-        </div>
+        <HatEdit stores={stores} />
+        <HatList stores={stores} />
         <Footer stores={stores} />
       </div>
     )

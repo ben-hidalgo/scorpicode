@@ -20,19 +20,59 @@ class NavBar extends Component {
     } = this.props.stores
 
     return (
-      <nav className="navbar">
-			<div className="container">
-				<div className="navbar-brand">
-					<a
-						className="navbar-item"
-						href="."
-					>
-						<img src={logo} size="29px" alt="scorpicode logo" />
-					</a>
-          <button onClick={() => {authStore.logout()}} type="button">Logout</button>
-				</div>
-			</div>
-		</nav>
+      <nav className="navbar" role="navigation" aria-label="main navigation">
+        <div className="navbar-brand">
+          <a href="." className="navbar-item" >
+            <img src={logo} alt="scorpicode logo" />
+          </a>
+        </div>
+
+        <div id="navbarBasicExample" className="navbar-menu">
+          <div className="navbar-start">
+            <a href="." className="navbar-item">
+              Home
+            </a>
+
+            <div className="navbar-item has-dropdown is-hoverable">
+              <a href="." className="navbar-link">
+                More
+              </a>
+
+              <div className="navbar-dropdown">
+                <a href="." className="navbar-item">
+                  About
+                </a>
+                <a href="." className="navbar-item">
+                  Jobs
+                </a>
+                <a href="." className="navbar-item">
+                  Contact
+                </a>
+                <hr className="navbar-divider" />
+                <a href="." className="navbar-item">
+                  Report an issue
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className="navbar-end">
+          <div className="navbar-item">
+              <figure className="image is-48x48px">
+                <img src={authStore.picture} className="is-rounded" style={{width: 'auto'}} />
+              </figure>
+            </div>
+            <div className="navbar-item">
+              <span>Welcome, {authStore.payload.given_name}</span>
+            </div>
+            <div className="navbar-item">
+              <div className="buttons">
+                <button className="button" onClick={() => {authStore.logout()}} type="button">Logout</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
     )
   }
 
