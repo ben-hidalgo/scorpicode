@@ -4,7 +4,7 @@ import './style.scss';
 import logo from '../images/scorpicode210.png';
 
 const Navbar = () => (
-		<nav className="navbar">
+		<nav className="navbar is-light">
 			<div className="container">
 				<div className="navbar-brand">
 					<a
