@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { extendObservable } from 'mobx'
 import { observer }  from 'mobx-react'
 import logo from '../images/scorpicode210.png';
-import '../components/style.scss';
 
 class NavBar extends Component {
 

@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import { observer }  from 'mobx-react'
-// import Header from './Header'
 import NavBar from './NavBar'
 import HatList from './HatList'
 import HatEdit from './HatEdit'
 import Footer from './Footer'
-import '../components/style.scss';
+import '../style.scss';
 
 class App extends Component {
 
