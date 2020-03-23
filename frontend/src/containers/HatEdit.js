@@ -22,8 +22,16 @@ class HatEdit extends Component {
     } = this.props.stores
 
     return (
-      <div>
-        {hatStore.error && <span className="warning">{languageStore.decode(hatStore.error.msg)}</span>}
+      <div className="container is-white is-medium is-danger">
+        {
+          hatStore.error 
+          && 
+          <article class="message is-warning">
+            <div class="message-body">
+              {languageStore.decode(hatStore.error.msg)}
+            </div>
+          </article>
+        }
         <br/>
         <HatColors hec={this}/>
         <br/>
@@ -31,8 +39,14 @@ class HatEdit extends Component {
         <br/>
         <HatSizes hec={this}/>
         <br/>
-        <button onClick={() => {this.save(this, hatStore)}} type="button">Save</button>
-        <button onClick={() => {this.cancel(this, hatStore)}} type="button">Cancel</button>
+        <div class="field is-grouped">
+          <div class="control">
+            <button onClick={() => {this.save(this, hatStore)}} className="button is-link">Save</button>
+          </div>
+          <div class="control">
+            <button onClick={() => {this.cancel(this, hatStore)}} className="button is-link is-light">Cancel</button>
+          </div>
+        </div>
       </div>
     )
   }
@@ -57,18 +71,22 @@ class HatEdit extends Component {
 const HatStyles = observer((props) => {
 
   return (
-      <label>
-        Style
-        <select onChange={(ce) => {props.hec.style = ce.target.value}} value={props.hec.style}>
-          {
-            props.styles.map(style => {
-              return (
-                <option key={style.value} value={style.value} >{style.text}</option>
-              )
-            })              
-          }
-        </select>
-      </label>
+    <div class="field">
+      <label class="label">Style</label>
+      <div class="control">
+        <div class="select">
+          <select onChange={(ce) => {props.hec.style = ce.target.value}} value={props.hec.style}>
+            {
+              props.styles.map(style => {
+                return (
+                  <option key={style.value} value={style.value} >{style.text}</option>
+                )
+              })              
+            }
+          </select>
+        </div>
+    </div>
+  </div>
   )
 })
 HatStyles.defaultProps = {
@@ -87,18 +105,22 @@ HatStyles.defaultProps = {
 const HatColors = observer((props) => {
 
   return (
-      <label>
-        Color
-        <select onChange={(ce) => {props.hec.color = ce.target.value}} value={props.hec.color}>
-          {
-            props.colors.map(color => {
-              return (
-                <option key={color.value} value={color.value} >{color.text}</option>
-              )
-            })              
-          }
-        </select>
-      </label>
+    <div class="field">
+      <label class="label">Color</label>
+      <div class="control">
+        <div class="select">
+          <select onChange={(ce) => {props.hec.color = ce.target.value}} value={props.hec.color}>
+            {
+              props.colors.map(color => {
+                return (
+                  <option key={color.value} value={color.value} >{color.text}</option>
+                )
+              })              
+            }
+          </select>
+        </div>
+    </div>
+  </div>
   )
 })
 HatColors.defaultProps = {
@@ -118,18 +140,22 @@ HatColors.defaultProps = {
 const HatSizes = observer((props) => {
 
   return (
-      <label>
-        Size
-        <select onChange={(ce) => {props.hec.size = ce.target.value}} value={props.hec.size}>
-          {
-            props.sizes.map(size => {
-              return (
-                <option key={size.value} value={size.value} >{size.text}</option>
-              )
-            })              
-          }
-        </select>
-      </label>
+    <div class="field">
+      <label class="label">Size</label>
+      <div class="control">
+        <div class="select">
+          <select onChange={(ce) => {props.hec.size = ce.target.value}} value={props.hec.size}>
+            {
+              props.sizes.map(size => {
+                return (
+                  <option key={size.value} value={size.value} >{size.text}</option>
+                )
+              })              
+            }
+          </select>
+        </div>
+    </div>
+  </div>
   )
 })
 HatSizes.defaultProps = {

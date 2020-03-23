@@ -20,14 +20,14 @@ class NavBar extends Component {
     } = this.props.stores
 
     return (
-      <nav className="navbar" role="navigation" aria-label="main navigation">
+      <nav className="navbar is-light" role="navigation" aria-label="main navigation">
         <div className="navbar-brand">
           <a href="." className="navbar-item" >
             <img src={logo} alt="scorpicode logo" />
           </a>
         </div>
 
-        <div id="navbarBasicExample" className="navbar-menu">
+        <div className="navbar-menu">
           <div className="navbar-start">
             <a href="." className="navbar-item">
               Home
