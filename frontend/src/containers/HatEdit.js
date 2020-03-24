@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
 import { extendObservable } from 'mobx'
 import { observer }  from 'mobx-react'
 
@@ -63,6 +64,8 @@ class HatEdit extends Component {
     hec.size = 0
     hec.style = 'UNKNOWN_STYLE'
     hatStore.error = null
+
+    hec.props.history.push('/hats')
   }
 
 
@@ -168,4 +171,4 @@ HatSizes.defaultProps = {
 }
 
 
-export default observer(HatEdit)
+export default withRouter(observer(HatEdit))

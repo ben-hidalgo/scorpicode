@@ -14,7 +14,7 @@ class App extends Component {
             Welcome to Scorpicode
           </h1>
           <h2 class="subtitle">
-            Please select an option from the "Hats" menu above
+            Please select an option from the menu above
           </h2>
         </div>
       </div>

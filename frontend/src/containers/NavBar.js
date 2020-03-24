@@ -29,20 +29,8 @@ class NavBar extends Component {
 
         <div className="navbar-menu">
           <div className="navbar-start">
-            <a href="." className="navbar-item">
-              Home
-            </a>
-
-            <div className="navbar-item has-dropdown is-hoverable">
-              <a href="." className="navbar-link">
-                Hats
-              </a>
-
-              <div className="navbar-dropdown">
-                <Link to="/hatsnew" className="navbar-item">Create A Hat</Link>
-                <Link to="/hats" className="navbar-item">List My Hats</Link>
-              </div>
-            </div>
+            <Link to="/hatsnew" className="navbar-item">Create Hat</Link>
+            <Link to="/hats" className="navbar-item">List Hats</Link>
           </div>
 
           <div className="navbar-end">
