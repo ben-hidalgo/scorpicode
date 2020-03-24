@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import { extendObservable } from 'mobx'
 import { observer }  from 'mobx-react'
 import logo from '../images/scorpicode210.png';
@@ -34,23 +35,12 @@ class NavBar extends Component {
 
             <div className="navbar-item has-dropdown is-hoverable">
               <a href="." className="navbar-link">
-                More
+                Hats
               </a>
 
               <div className="navbar-dropdown">
-                <a href="." className="navbar-item">
-                  About
-                </a>
-                <a href="." className="navbar-item">
-                  Jobs
-                </a>
-                <a href="." className="navbar-item">
-                  Contact
-                </a>
-                <hr className="navbar-divider" />
-                <a href="." className="navbar-item">
-                  Report an issue
-                </a>
+                <Link to="/hatsnew" className="navbar-item">Create A Hat</Link>
+                <Link to="/hats" className="navbar-item">List My Hats</Link>
               </div>
             </div>
           </div>

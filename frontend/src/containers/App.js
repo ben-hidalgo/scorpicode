@@ -1,29 +1,24 @@
 import React, { Component } from 'react'
 import { observer }  from 'mobx-react'
-import Helmet from '../components/Helmet'
-import NavBar from './NavBar'
-import HatList from './HatList'
-import HatEdit from './HatEdit'
-import Footer from './Footer'
 import '../style.scss';
 
 class App extends Component {
 
   render() {
 
-    const {
-      stores,
-    } = this.props
-
     return (
-      <div>
-        <Helmet />
-        <NavBar stores={stores} />
-        <HatEdit stores={stores} />
-        <HatList stores={stores} />
-        <Footer stores={stores} />
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            Welcome to Scorpicode
+          </h1>
+          <h2 class="subtitle">
+            Please select an option from the "Hats" menu above
+          </h2>
+        </div>
       </div>
-    )
+    </section>)
   }
 }
 export default observer(App)

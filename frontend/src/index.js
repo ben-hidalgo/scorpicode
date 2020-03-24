@@ -1,6 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Route } from 'react-router'
+import { HashRouter } from 'react-router-dom'
 import App from './containers/App'
+import Helmet from './components/Helmet'
+import NavBar from './containers/NavBar'
+import HatList from './containers/HatList'
+import HatEdit from './containers/HatEdit'
+import Footer from './containers/Footer'
 import * as serviceWorker from './serviceWorker'
 
 import commonStore from './stores/commonStore'
@@ -27,6 +34,14 @@ if (authStore.decoded == null) {
 serviceWorker.unregister()
 
 ReactDOM.render(
-  <App stores={stores}/>,
+  <HashRouter>
+    <Helmet />
+    <NavBar stores={stores} />
+    <Route path='/' render={() => <App stores={stores}/>}/>
+    <Route path='/hats' render={() => <HatList stores={stores}/>}/>
+    <Route path='/hatsnew' render={() => <HatEdit stores={stores}/>}/>
+    <br/>
+    <Footer stores={stores} />
+  </HashRouter>,
   document.getElementById("root")
 )
