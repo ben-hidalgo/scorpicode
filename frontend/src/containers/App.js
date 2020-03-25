@@ -7,13 +7,13 @@ class App extends Component {
   render() {
 
     return (
-    <section class="hero is-primary">
-      <div class="hero-body">
-        <div class="container">
-          <h1 class="title">
+    <section className="hero is-primary">
+      <div className="hero-body">
+        <div className="container">
+          <h1 className="title">
             Welcome to Scorpicode
           </h1>
-          <h2 class="subtitle">
+          <h2 className="subtitle">
             Please select an option from the menu above
           </h2>
         </div>

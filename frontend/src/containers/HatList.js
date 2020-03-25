@@ -23,7 +23,7 @@ class HatList extends Component {
     <div className="container is-white">
       <br/>
       <button onClick={listHats} className="button is-primary">List Hats</button>
-      <table class="table">
+      <table className="table">
         <thead>
           <tr>
             <th>ID</th>
@@ -38,7 +38,7 @@ class HatList extends Component {
         {
           hats.map(h => {
             return (
-              <tr>
+              <tr key={h.id}>
                 <td>{h.id}</td>
                 <td>{h.inches}</td>
                 <td>{h.color}</td>

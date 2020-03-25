@@ -25,14 +25,24 @@ class AuthStore {
     }
   } // constructor
 
+  givenName = () => {
+    if (this.payload) {
+      return this.payload.given_name
+    }
+    return ''
+  }
+
+  isLoggedIn = () => {
+    return this.decoded != null
+  }
+
 
   logout = () => {
     delCookie(TokenCookieName)
     this.token = null
     this.decoded = null
     this.payload = null
-    // TODO: navigate by injected variable
-    window.location.href = 'http://localhost:8080'
+    window.location.href = '/login'
   }
 
 }

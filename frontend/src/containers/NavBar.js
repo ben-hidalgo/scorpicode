@@ -40,7 +40,7 @@ class NavBar extends Component {
               </figure>
             </div>
             <div className="navbar-item">
-              <span>Welcome, {authStore.payload.given_name}</span>
+              <span>Welcome, {authStore.givenName()}</span>
             </div>
             <div className="navbar-item">
               <div className="buttons">

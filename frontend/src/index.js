@@ -8,7 +8,6 @@ import NavBar from './containers/NavBar'
 import HatList from './containers/HatList'
 import HatEdit from './containers/HatEdit'
 import Footer from './containers/Footer'
-import * as serviceWorker from './serviceWorker'
 
 import commonStore from './stores/commonStore'
 import authStore from './stores/authStore'
@@ -23,17 +22,11 @@ const stores = {
 }
 
 // prevent anonymous access
-if (authStore.decoded == null) {
-  // TODO: inject value
-  // window.location.href = 'http://localhost:8080/'
-}
+let jsx = <span>You have been logged out.  Please login to continue.</span>
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister()
+if (authStore.isLoggedIn()) {
 
-ReactDOM.render(
+  jsx = 
   <HashRouter>
     <Helmet />
     <NavBar stores={stores} />
@@ -42,6 +35,8 @@ ReactDOM.render(
     <Route path='/hatsnew' render={() => <HatEdit stores={stores}/>}/>
     <br/>
     <Footer stores={stores} />
-  </HashRouter>,
-  document.getElementById("root")
-)
+  </HashRouter>  
+
+}
+
+ReactDOM.render(jsx , document.getElementById("root"))

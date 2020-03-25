@@ -12,12 +12,23 @@ class HatStore {
     })
   } // constructor
 
+  handleCatch(err) {
+
+    this.error = {code: err.response.statusCode, msg: '', status: err.response.status}
+    if (err.response.body) {
+      this.error.msg = err.response.body.msg
+    }
+  }
+
   // returns all hats
   listHats = () => {
     this.isLoading = true
     agent.Hats.listHats()
       .then(({ hats }) => {
         this.hats = hats
+      })
+      .catch(err => {
+        this.handleCatch(err)
       })
       .finally(() => { this.isLoading = false })
     
@@ -41,7 +52,7 @@ class HatStore {
         this.error = null
       })
       .catch(err => {
-        this.error = {code: err.response.body.code, msg: err.response.body.msg, status: err.response.status}
+        this.handleCatch(err)
       })
       .finally(() => { 
         this.isLoading = false
@@ -57,7 +68,7 @@ class HatStore {
         this.hats = this.hats.filter((v, i, a) => {return v.id !== id})
       })
       .catch(err => {
-        this.error = {code: err.response.body.code, msg: err.response.body.msg, status: err.response.status}
+        this.handleCatch(err)
       })
       .finally(() => { this.isLoading = false })
 
