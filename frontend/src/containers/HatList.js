@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import { observer }  from 'mobx-react'
 
 
@@ -35,6 +36,7 @@ class HatList extends Component {
           hats.map(h => {
             return (
               <tr key={h.id}>
+                <td><Link to={`/hatsview/${h.id}`}>{h.id}</Link></td>
                 <td>{h.id}</td>
                 <td>{h.inches}</td>
                 <td>{h.color}</td>
