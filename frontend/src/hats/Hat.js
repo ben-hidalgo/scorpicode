@@ -23,15 +23,10 @@ const Hat = (props) => {
   return (
     <div className="container">
       <div className="card">
-        <header className="card-header">
+        <header className="card-header is-danger">
           <p className="card-header-title">
             Hat: {hat.id}
           </p>
-          <a href="#" className="card-header-icon" aria-label="more options" >
-            <span className="icon">
-              <i className="fas fa-angle-down" aria-hidden="true"></i>
-            </span>
-          </a>
         </header>
         <div className="card-content">
           <div className="content">
