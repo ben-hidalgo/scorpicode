@@ -8,6 +8,7 @@ class HatStore {
       counter: 0,
       isLoading: false,
       hats: [],
+      current: null,
       error: null,
     })
   } // constructor
@@ -19,6 +20,30 @@ class HatStore {
       this.error.msg = err.response.body.msg
     }
   }
+
+  fetchHat = (id) => {
+    this.isLoading = true
+
+    if (this.current && this.current.id === id) {
+      return this.current
+    }
+    this.current = {id: '123', inches: 0, color: 'RED', style: 'DERBY', version: 0}
+
+    this.isLoading = false
+    return this.current
+
+    // agent.Hats.listHats()
+    //   .then(({ hats }) => {
+    //     this.hats = hats
+    //   })
+    //   .catch(err => {
+    //     this.handleCatch(err)
+    //   })
+    //   .finally(() => { this.isLoading = false })
+    
+    
+  } // listHats
+
 
   // returns all hats
   listHats = () => {
