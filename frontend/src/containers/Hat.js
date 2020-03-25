@@ -22,9 +22,9 @@ const Hat = (props) => {
 
   return (
     <fieldset className="container">
-      <div class="columns">
+      <div className="columns">
 
-        <div class="column">
+        <div className="column">
           <div className="field">
             <label className="label">ID:</label>
               {hat.id}
@@ -41,7 +41,7 @@ const Hat = (props) => {
           </div>
         </div>
 
-        <div class="column">
+        <div className="column">
           <div className="field">
             <label className="label">Color:</label>
             {hat.color}

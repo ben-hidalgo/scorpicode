@@ -12,14 +12,13 @@ class HatList extends Component {
   render() {
 
     const {
-      hats,
-      listHats,
-    } = this.props.stores.hatStore
+      hatStore,
+    } = this.props.stores
 
     return (
     <div className="container is-white">
       <br/>
-      <button onClick={listHats} className="button is-primary">Refresh</button>
+      <button onClick={hatStore.listHats} className="button is-primary">Refresh</button>
       <table className="table">
         <thead>
           <tr>
@@ -33,15 +32,15 @@ class HatList extends Component {
         </thead>
         <tbody>
         {
-          hats.map(h => {
+          hatStore.hats.map(h => {
             return (
               <tr key={h.id}>
                 <td><Link to={`/hatsview/${h.id}`}>{h.id}</Link></td>
-                <td>{h.id}</td>
                 <td>{h.inches}</td>
                 <td>{h.color}</td>
                 <td>{h.style}</td>
                 <td>{h.version}</td>
+                <td><button onClick={() => {hatStore.deleteHat(h.id, h.version)}} className="delete"/></td>
               </tr>
             )
           })
