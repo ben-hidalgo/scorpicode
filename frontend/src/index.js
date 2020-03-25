@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Route } from 'react-router'
 import { HashRouter } from 'react-router-dom'
-import App from './containers/App'
+import Hero from './containers/Hero'
 import Helmet from './components/Helmet'
 import NavBar from './containers/NavBar'
 import HatList from './containers/HatList'
@@ -30,7 +30,7 @@ if (authStore.isLoggedIn()) {
   <HashRouter>
     <Helmet />
     <NavBar stores={stores} />
-    <Route path='/' render={() => <App stores={stores}/>}/>
+    <Route path='/' render={() => <Hero stores={stores}/>}/>
     <Route path='/hats' render={() => <HatList stores={stores}/>}/>
     <Route path='/hatsnew' render={() => <HatEdit stores={stores}/>}/>
     <br/>

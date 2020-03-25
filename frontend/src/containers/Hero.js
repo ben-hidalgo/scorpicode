@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { observer }  from 'mobx-react'
 import '../style.scss';
 
-class App extends Component {
+class Hero extends Component {
 
   render() {
 
@@ -21,4 +21,4 @@ class App extends Component {
     </section>)
   }
 }
-export default observer(App)
+export default observer(Hero)
