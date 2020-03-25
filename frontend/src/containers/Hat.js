@@ -21,42 +21,50 @@ const Hat = (props) => {
   }
 
   return (
-    <fieldset className="container">
-      <div className="columns">
+    <div className="container">
+      <div className="card">
+        <header className="card-header">
+          <p className="card-header-title">
+            Hat: {hat.id}
+          </p>
+          <a href="#" className="card-header-icon" aria-label="more options" >
+            <span className="icon">
+              <i className="fas fa-angle-down" aria-hidden="true"></i>
+            </span>
+          </a>
+        </header>
+        <div className="card-content">
+          <div className="content">
+            <div className="columns">
 
-        <div className="column">
-          <div className="field">
-            <label className="label">ID:</label>
-              {hat.id}
-          </div>
-          
-          <div className="field">
-            <label className="label">Inches:</label>
-            {hat.inches}
-          </div>
+              <div className="column">              
+                <div className="field">
+                  <label className="label">Inches:</label>
+                  {hat.inches}
+                </div>
+                <div className="field">
+                  <label className="label">Version:</label>
+                  {hat.version}
+                </div>
+              </div>
 
-          <div className="field">
-            <label className="label">Version:</label>
-            {hat.version}
+              <div className="column">
+                <div className="field">
+                  <label className="label">Color:</label>
+                  {hat.color}
+                </div>
+                <div className="field">
+                  <label className="label">Style:</label>
+                  {hat.style}
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
-
-        <div className="column">
-          <div className="field">
-            <label className="label">Color:</label>
-            {hat.color}
-          </div>
-
-          <div className="field">
-            <label className="label">Style:</label>
-            {hat.style}
-          </div>
-
-        </div>
-
       </div>
-    </fieldset>    
-    )
+    </div>
+  )
 }
 
 export default observer(Hat)

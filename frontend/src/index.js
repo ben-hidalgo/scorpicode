@@ -31,7 +31,9 @@ if (authStore.isLoggedIn()) {
   <HashRouter>
     <Helmet />
     <NavBar stores={stores} />
+    
     <Route path='/' render={() => <Hero stores={stores}/>}/>
+    <br/>
     <Route path='/hats' render={() => <HatList stores={stores}/>}/>
     <Route path='/hatsview/:id' render={() => <Hat stores={stores}/>}/>
     <Route path='/hatsnew' render={() => <HatEdit stores={stores}/>}/>

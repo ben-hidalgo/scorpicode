@@ -20,6 +20,7 @@ const tokenPlugin = req => {
   }
 }
 
+// all requests should be POST due to Twirp
 const requests = {
   del: url =>
     superagent
