@@ -4,6 +4,10 @@ import { observer }  from 'mobx-react'
 
 class HatList extends Component {
 
+  componentDidMount() {
+    this.props.stores.hatStore.listHats()
+  }
+
   render() {
 
     const {
@@ -11,18 +15,10 @@ class HatList extends Component {
       listHats,
     } = this.props.stores.hatStore
 
-    if (!hats.length) {
-      return (
-      <div className="container is-white">
-        <br/>
-        <button onClick={listHats} className="button is-primary">List Hats</button>
-      </div>)
-    }
-    
     return (
     <div className="container is-white">
       <br/>
-      <button onClick={listHats} className="button is-primary">List Hats</button>
+      <button onClick={listHats} className="button is-primary">Refresh</button>
       <table className="table">
         <thead>
           <tr>
