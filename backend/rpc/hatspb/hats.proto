@@ -18,6 +18,9 @@ service Hats {
 
   // DeleteHat deletes the given hat
   rpc DeleteHat(DeleteHatRequest) returns (DeleteHatResponse);
+
+  // FetchHat returns the hat by ID
+  rpc FetchHat(FetchHatRequest) returns (FetchHatResponse);
 }
 
 enum Style {
@@ -84,4 +87,12 @@ message DeleteHatRequest {
 }
 
 message DeleteHatResponse {
+}
+
+message FetchHatRequest {
+  string id = 1;
+}
+
+message FetchHatResponse {
+  Hat hat = 1;
 }
