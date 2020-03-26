@@ -17,7 +17,7 @@ const Hat = (props) => {
 
   if (!hat) {
     // TODO
-    return <div>not found</div>
+    return <NotFound id={id} />
   }
 
   return (
@@ -61,5 +61,19 @@ const Hat = (props) => {
     </div>
   )
 }
+
+const NotFound = (props) => {
+  return (
+    <div className="container">
+      <div className="card">
+        <header className="card-header is-danger">
+          <p className="card-header-title">
+            Hat: {props.id} not found
+          </p>
+        </header>
+      </div>
+    </div>
+  )
+} // NotFound
 
 export default observer(Hat)

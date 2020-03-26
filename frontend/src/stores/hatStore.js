@@ -34,6 +34,7 @@ class HatStore {
       })
       .catch(err => {
         this.handleCatch(err)
+        this.current = null
       })
       .finally(() => { this.isLoading = false })
 
