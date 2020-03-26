@@ -16,9 +16,10 @@ const Hat = (props) => {
   let hat = hatStore.fetchHat(id)
 
   if (!hat) {
-    // TODO
     return <NotFound id={id} />
   }
+
+  // TODO: add edit feature (link here)
 
   return (
     <div className="container">

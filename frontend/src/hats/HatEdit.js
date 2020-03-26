@@ -27,8 +27,8 @@ class HatEdit extends Component {
         {
           hatStore.error 
           && 
-          <article class="message is-warning">
-            <div class="message-body">
+          <article className="message is-warning">
+            <div className="message-body">
               {languageStore.decode(hatStore.error.msg)}
             </div>
           </article>
@@ -40,11 +40,11 @@ class HatEdit extends Component {
         <br/>
         <HatSizes hec={this}/>
         <br/>
-        <div class="field is-grouped">
-          <div class="control">
+        <div className="field is-grouped">
+          <div className="control">
             <button onClick={() => {this.save(this, hatStore)}} className="button is-link">Save</button>
           </div>
-          <div class="control">
+          <div className="control">
             <button onClick={() => {this.cancel(this, hatStore)}} className="button is-link is-light">Cancel</button>
           </div>
         </div>
@@ -74,27 +74,25 @@ class HatEdit extends Component {
 const HatStyles = observer((props) => {
 
   return (
-    <div class="field">
-      <label class="label">Style</label>
-      <div class="control">
-        <div class="select">
-          <select onChange={(ce) => {props.hec.style = ce.target.value}} value={props.hec.style}>
-            {
-              props.styles.map(style => {
-                return (
-                  <option key={style.value} value={style.value} >{style.text}</option>
-                )
-              })              
-            }
-          </select>
-        </div>
+    <div className="field">
+      <label className="label">Style</label>
+      <div className="control">
+        {
+          props.styles.map(style => {
+            return (
+              <label className="radio" key={style.value}>
+                <input type="radio" name="style" value={style.value} onChange={(ce) => {props.hec.style = ce.target.value}}/>
+                {style.text}
+            </label>
+            )
+          })              
+        }
     </div>
   </div>
   )
 })
 HatStyles.defaultProps = {
   styles: [
-    {value: 'UNKNOWN_STYLE', text: 'Please select a style'},
     {value: 'BOWLER', text: 'Bowler'},
     {value: 'FEDORA', text: 'Fedora'},
     {value: 'BASEBALL', text: 'Baseball Cap'},
@@ -108,10 +106,10 @@ HatStyles.defaultProps = {
 const HatColors = observer((props) => {
 
   return (
-    <div class="field">
-      <label class="label">Color</label>
-      <div class="control">
-        <div class="select">
+    <div className="field">
+      <label className="label">Color</label>
+      <div className="control">
+        <div className="select">
           <select onChange={(ce) => {props.hec.color = ce.target.value}} value={props.hec.color}>
             {
               props.colors.map(color => {
@@ -143,10 +141,10 @@ HatColors.defaultProps = {
 const HatSizes = observer((props) => {
 
   return (
-    <div class="field">
-      <label class="label">Size</label>
-      <div class="control">
-        <div class="select">
+    <div className="field">
+      <label className="label">Size</label>
+      <div className="control">
+        <div className="select">
           <select onChange={(ce) => {props.hec.size = ce.target.value}} value={props.hec.size}>
             {
               props.sizes.map(size => {
