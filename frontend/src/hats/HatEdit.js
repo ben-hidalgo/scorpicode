@@ -23,7 +23,7 @@ class HatEdit extends Component {
     } = this.props.stores
 
     return (
-      <div className="container is-white">
+      <div className="box">
         {
           hatStore.error 
           && 
@@ -33,13 +33,9 @@ class HatEdit extends Component {
             </div>
           </article>
         }
-        <br/>
         <HatColors hec={this}/>
-        <br/>
         <HatStyles hec={this}/>
-        <br/>
         <HatSizes hec={this}/>
-        <br/>
         <div className="field is-grouped">
           <div className="control">
             <button onClick={() => {this.save(this, hatStore)}} className="button is-link">Save</button>
