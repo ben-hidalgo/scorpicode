@@ -24,15 +24,7 @@ class HatEdit extends Component {
 
     return (
       <div className="box">
-        {
-          hatStore.error 
-          && 
-          <article className="message is-warning">
-            <div className="message-body">
-              {languageStore.decode(hatStore.error.msg)}
-            </div>
-          </article>
-        }
+        <HatError hatStore={hatStore} languageStore={languageStore} />
         <HatColors hec={this}/>
         <HatStyles hec={this}/>
         <HatSizes hec={this}/>
@@ -66,6 +58,23 @@ class HatEdit extends Component {
 
 
 }
+
+const HatError = observer((props) => {
+
+  return (
+    <div>
+      {
+        props.hatStore.error
+        && 
+        <article className="message is-warning">
+          <div className="message-body">
+            {props.languageStore.decode(props.hatStore.error.msg)}
+          </div>
+        </article>
+      }
+    </div>
+  )
+})
 
 const HatStyles = observer((props) => {
 
