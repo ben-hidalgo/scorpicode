@@ -27,22 +27,18 @@ class HatStore {
     if (this.current && this.current.id === id) {
       return this.current
     }
-    this.current = {id: '123', inches: 0, color: 'RED', style: 'DERBY', version: 0}
 
-    this.isLoading = false
-    return this.current
+    agent.Hats.fetchHat(id)
+      .then(({ hat }) => {
+        this.current = hat
+      })
+      .catch(err => {
+        this.handleCatch(err)
+      })
+      .finally(() => { this.isLoading = false })
 
-    // agent.Hats.listHats()
-    //   .then(({ hats }) => {
-    //     this.hats = hats
-    //   })
-    //   .catch(err => {
-    //     this.handleCatch(err)
-    //   })
-    //   .finally(() => { this.isLoading = false })
-    
-    
-  } // listHats
+    return this.current    
+  } // fetchHat
 
 
   // returns all hats
