@@ -29,7 +29,7 @@
 }
 
 .bd-color-false {
-    border-radius: 2px;
+    // border-radius: 2px;
     box-shadow: 0 2px 3px 0 rgba(0,0,0,.1), inset 0 0 0 1px rgba(0,0,0,.1);
     display: inline-block;
     height: 24px;
@@ -38,14 +38,14 @@
 }
 
 .bd-color-true {
-    border-radius: 2px;
+    // border-radius: 4px;
     box-shadow: 0 2px 3px 0 rgba(0,0,0,.1), inset 0 0 0 1px rgba(0,0,0,.1);
     display: inline-block;
-    height: 24px;
+    height: 32px;
     margin-right: 8px;
-	width: 24px;
+	width: 32px;
 	border-style: solid;
-	border-color: $black;
+	border-color: $white;
 }
 
 
