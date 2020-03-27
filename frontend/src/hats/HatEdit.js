@@ -118,8 +118,8 @@ const HatColours = observer((props) => {
           props.colors.map(color => {
             return (
               <label className="radio" key={color.value}>
-                <span onClick={(ce) => {props.hec.color = color.value}} className={`bd-color has-background-${color.c}`} ></span>{color.text}
-            </label>
+                <span onClick={(ce) => {props.hec.color = color.value}} className={`bd-color-${color.value === props.hec.color} has-background-${color.c}`} ></span>
+              </label>
             )
           })              
         }
