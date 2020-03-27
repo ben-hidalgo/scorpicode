@@ -58,20 +58,16 @@ class HatStore {
   } // listHats
 
   // saves a new hat
-  makeHat = (color, size, style) => {
+  makeHat = (color, size, style, history) => {
     
     this.isLoading = true
 
     // size is inches
     agent.Hats.makeHat(size, color, style)
-      .then(({ hat }) => {
-        
-        var temp = [hat]
-
-        // for some reason adding an element isn't triggering render
-        this.hats.forEach(h => temp.push(h))
-        this.hats = temp
+      .then(({ hat }) => {        
         this.error = null
+        this.current = hat
+        history.push(`/hatsview/${hat.id}`)
       })
       .catch(err => {
         this.handleCatch(err)

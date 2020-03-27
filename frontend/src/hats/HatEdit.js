@@ -41,7 +41,10 @@ class HatEdit extends Component {
   }
 
   save(hec, hatStore) {
-    hatStore.makeHat(hec.color, hec.size, hec.style)
+    hatStore.makeHat(hec.color, hec.size, hec.style, hec.props.history)
+
+    // TODO: this is why a server side error resets the form...
+    // How to split the "store" logic from the form updating logic...?
     hec.color = ''
     hec.size = 0
     hec.style = 'UNKNOWN_STYLE'
