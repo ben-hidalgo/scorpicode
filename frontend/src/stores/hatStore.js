@@ -5,7 +5,6 @@ class HatStore {
 
   constructor() {
     extendObservable(this, {
-      counter: 0,
       isLoading: false,
       hats: [],
       current: null,
@@ -57,7 +56,7 @@ class HatStore {
     this.isLoading = false
   } // listHats
 
-  // saves a new hat
+  // creates a new hat
   makeHat = (color, size, style, history) => {
     
     this.isLoading = true
@@ -78,7 +77,7 @@ class HatStore {
     
   } // makeHat
 
-  // returns all hats
+  // deletes an existing hat
   deleteHat = (id, version) => {
     this.isLoading = true
     agent.Hats.deleteHat(id, version)

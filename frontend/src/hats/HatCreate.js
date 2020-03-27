@@ -4,7 +4,7 @@ import { extendObservable } from 'mobx'
 import { observer }  from 'mobx-react'
 
 
-class HatEdit extends Component {
+class HatCreate extends Component {
 
   constructor() {
     super()
@@ -175,4 +175,4 @@ HatSizes.defaultProps = {
 }
 
 
-export default withRouter(observer(HatEdit))
+export default withRouter(observer(HatCreate))

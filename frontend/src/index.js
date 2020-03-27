@@ -8,7 +8,7 @@ import NavBar from './globals/NavBar'
 import Footer from './globals/Footer'
 import Hat from './hats/Hat'
 import HatList from './hats/HatList'
-import HatEdit from './hats/HatEdit'
+import HatCreate from './hats/HatCreate'
 
 
 import commonStore from './stores/commonStore'
@@ -37,7 +37,7 @@ if (authStore.isLoggedIn()) {
     <br/>
     <Route path='/hats' render={() => <HatList stores={stores}/>}/>
     <Route path='/hatsview/:id' render={() => <Hat stores={stores}/>}/>
-    <Route path='/hatsnew' render={() => <HatEdit stores={stores}/>}/>
+    <Route path='/hatsnew' render={() => <HatCreate stores={stores}/>}/>
     <br/>
     <Footer stores={stores} />
   </HashRouter>  
