@@ -25,7 +25,7 @@ class HatEdit extends Component {
     return (
       <div className="box">
         <HatError hatStore={hatStore} languageStore={languageStore} />
-        <HatColors hec={this}/>
+        <HatColours hec={this}/>
         <HatStyles hec={this}/>
         <HatSizes hec={this}/>
         <div className="field is-grouped">
@@ -108,40 +108,38 @@ HatStyles.defaultProps = {
   ],
 }
 
-const HatColors = observer((props) => {
+const HatColours = observer((props) => {
 
   return (
     <div className="field">
-      <label className="label">Color</label>
+      <label className="label">Colour</label>
       <div className="control">
-        <div className="select">
-          <select onChange={(ce) => {props.hec.color = ce.target.value}} value={props.hec.color}>
-            {
-              props.colors.map(color => {
-                return (
-                  <option key={color.value} value={color.value} >{color.text}</option>
-                )
-              })              
-            }
-          </select>
-        </div>
+        {
+          props.colors.map(color => {
+            return (
+              <label className="radio" key={color.value}>
+                <span onClick={(ce) => {props.hec.color = color.value}} className={`bd-color has-background-${color.c}`} ></span>{color.text}
+            </label>
+            )
+          })              
+        }
     </div>
   </div>
   )
 })
-HatColors.defaultProps = {
+HatColours.defaultProps = {
   colors: [
-    {value: '', text: 'Please select a color'},
-    {value: 'RED', text: 'Red'},
-    {value: 'BLUE', text: 'Blue'},
-    {value: 'GREEN', text: 'Green'},
-    {value: 'YELLOW', text: 'Yellow'},
-    {value: 'PURPLE', text: 'Purple'},
-    {value: 'BLACK', text: 'Black'},
-    {value: 'GREY', text: 'Grey'},
-    {value: 'ORANGE', text: 'Orange'},
+    {value: 'RED', text: 'Red', c: 'red'},
+    {value: 'BLUE', text: 'Blue', c: 'blue'},
+    {value: 'GREEN', text: 'Green', c: 'green'},
+    {value: 'YELLOW', text: 'Yellow', c: 'yellow'},
+    {value: 'PURPLE', text: 'Purple', c: 'purple'},
+    {value: 'BLACK', text: 'Black', c: 'black'},
+    {value: 'GREY', text: 'Grey', c: 'grey'},
+    {value: 'ORANGE', text: 'Orange', c: 'orange'},
   ],
 }
+
 
 const HatSizes = observer((props) => {
 

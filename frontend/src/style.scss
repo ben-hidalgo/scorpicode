@@ -27,3 +27,31 @@
 		color: $secondary-color;
 	}
 }
+
+.bd-color {
+    border-radius: 2px;
+    box-shadow: 0 2px 3px 0 rgba(0,0,0,.1), inset 0 0 0 1px rgba(0,0,0,.1);
+    display: inline-block;
+    height: 24px;
+    margin-right: 8px;
+    width: 24px;
+}
+
+.has-background-red {
+    background-color: $red !important;
+}
+.has-background-blue {
+    background-color: $blue !important;
+}
+.has-background-green {
+    background-color: $green !important;
+}
+.has-background-yellow {
+    background-color: $yellow !important;
+}
+.has-background-purple {
+    background-color: $purple !important;
+}
+.has-background-orange {
+    background-color: $orange !important;
+}
