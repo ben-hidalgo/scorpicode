@@ -1,7 +1,6 @@
 package hatserver
 
 import (
-	"backend/internal/hats/config"
 	"backend/internal/hats/repo"
 	"backend/pkg/util"
 	"backend/rpc/hatspb"
@@ -32,6 +31,10 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 		return nil, util.InvalidArgumentError(HatColorRequired)
 	}
 
+	if req.GetSize() == "" {
+		return nil, util.InvalidArgumentError(HatSizeRequired)
+	}
+
 	if _, ok := colors[req.GetColor()]; ok == false {
 		return nil, util.InvalidArgumentError(HatColorDomain)
 	}
@@ -40,17 +43,7 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 		return nil, util.InvalidArgumentError(HatStyleRequired)
 	}
 
-	if req.GetInches() == 0 {
-		return nil, util.InvalidArgumentError(HatInchesRequired)
-	}
-
-	if req.GetInches() < config.MinSizeInches {
-		return nil, util.InvalidArgumentError(HatInchesTooSmall)
-	}
-
-	if req.GetInches() > config.MaxSizeInches {
-		return nil, util.InvalidArgumentError(HatInchesTooBig)
-	}
+	// TODO: validate size slug
 
 	hr := repo.GetRepo(ctx)
 	if err := hr.Multi(); err != nil {
@@ -60,9 +53,9 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 
 	// a different instance is returned
 	mod, err := hr.Save(repo.HatMod{
-		Color:  req.GetColor(),
-		Style:  req.GetStyle().String(),
-		Inches: req.GetInches(),
+		Color: req.GetColor(),
+		Style: req.GetStyle().String(),
+		Size:  req.GetSize(),
 	})
 	if err != nil {
 		return nil, err
@@ -78,7 +71,7 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 			Id:      mod.ID,
 			Color:   mod.Color,
 			Style:   ToStyle(mod.Style),
-			Inches:  mod.Inches,
+			Size:    mod.Size,
 			Version: int32(mod.Version),
 		},
 	}, nil

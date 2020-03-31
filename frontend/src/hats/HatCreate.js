@@ -10,7 +10,7 @@ class HatCreate extends Component {
     super()
     extendObservable(this, {
       color: '',
-      size: 0,
+      size: '',
       style: 'UNKNOWN_STYLE',
     })
   }
@@ -41,18 +41,18 @@ class HatCreate extends Component {
   }
 
   save(hec, hatStore) {
-    hatStore.makeHat(hec.color, hec.size, hec.style, hec.props.history)
+    hatStore.makeHat(hec.size, hec.color, hec.style, hec.props.history)
 
     // TODO: this is why a server side error resets the form...
     // How to split the "store" logic from the form updating logic...?
     hec.color = ''
-    hec.size = 0
+    hec.size = ''
     hec.style = 'UNKNOWN_STYLE'
   }
 
   cancel(hec, hatStore) {
     hec.color = ''
-    hec.size = 0
+    hec.size = ''
     hec.style = 'UNKNOWN_STYLE'
     hatStore.error = null
 
@@ -167,10 +167,16 @@ const HatSizes = observer((props) => {
 })
 HatSizes.defaultProps = {
   sizes: [
-    {value: 0, text: 'Please select a size'},
-    {value: 6, text: '6 inches'},
-    {value: 7, text: '7 inches'},
-    {value: 8, text: '8 inches'},
+    {value: "", text: 'Please select a size'},
+    {value: "06000", text: '6 inches'},
+    {value: "06125", text: '6 1/8 inches'},
+    {value: "06250", text: '6 1/4 inches'},
+    {value: "06375", text: '6 3/8 inches'},
+    {value: "06500", text: '6 1/2 inches'},
+    {value: "06625", text: '6 5/8 inches'},
+    {value: "06750", text: '6 3/4 inches'},
+    {value: "06875", text: '6 7/8 inches'},
+    {value: "07000", text: '7 inches'},
   ],
 }
 

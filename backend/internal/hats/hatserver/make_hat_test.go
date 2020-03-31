@@ -1,7 +1,6 @@
 package hatserver_test
 
 import (
-	"backend/internal/hats/config"
 	"backend/internal/hats/hatserver"
 	"backend/internal/hats/repo"
 	"backend/internal/hats/repo/inmem"
@@ -14,9 +13,9 @@ import (
 )
 
 const (
-	DefaultColor  = "RED"
-	DefaultStyle  = hatspb.Style_FEDORA
-	DefaultInches = int32(10)
+	DefaultColor = "RED"
+	DefaultStyle = hatspb.Style_FEDORA
+	DefaultSize  = "06000"
 )
 
 func startHat() (context.Context, *hatserver.Server, *hatspb.MakeHatRequest) {
@@ -26,9 +25,9 @@ func startHat() (context.Context, *hatserver.Server, *hatspb.MakeHatRequest) {
 	hs := hatserver.NewServer()
 
 	req := &hatspb.MakeHatRequest{
-		Inches: DefaultInches,
-		Style:  DefaultStyle,
-		Color:  DefaultColor,
+		Size:  DefaultSize,
+		Style: DefaultStyle,
+		Color: DefaultColor,
 	}
 
 	return ctx, hs, req
@@ -49,8 +48,8 @@ func TestHatSuccess(t *testing.T) {
 	if res.GetHat() == nil {
 		t.Fatalf(GOT, res.GetHat(), WANTED, NOT_NIL)
 	}
-	if res.GetHat().GetInches() != DefaultInches {
-		t.Fatalf(GOT, res.GetHat().GetInches(), WANTED, DefaultInches)
+	if res.GetHat().GetSize() != DefaultSize {
+		t.Fatalf(GOT, res.GetHat().GetSize(), WANTED, DefaultSize)
 	}
 	if res.GetHat().GetStyle() != DefaultStyle {
 		t.Fatalf(GOT, res.GetHat().GetStyle(), WANTED, DefaultStyle)
@@ -61,61 +60,13 @@ func TestHatSuccess(t *testing.T) {
 
 }
 
-func TestInchesTooSmall(t *testing.T) {
+func TestSizeRequired(t *testing.T) {
 
 	ctx, hs, req := startHat()
 
-	req.Inches = config.MinSizeInches - 1
+	req.Size = ""
 
-	res, err := hs.MakeHat(ctx, req)
-
-	if err == nil {
-		t.Fatalf(GOT, err, WANTED, NOT_NIL)
-	}
-	if res != nil {
-		t.Fatalf(GOT, res, WANTED, nil)
-	}
-
-	e := err.(twirp.Error)
-	if e.Code() != twirp.InvalidArgument {
-		t.Fatalf(GOT, e.Code(), WANTED, twirp.InvalidArgument)
-	}
-	if e.Msg() != string(hatserver.HatInchesTooSmall) {
-		t.Fatalf(GOT, e.Msg(), WANTED, hatserver.HatInchesTooSmall)
-	}
-}
-
-func TestInchesTooBig(t *testing.T) {
-
-	ctx, hs, req := startHat()
-
-	req.Inches = config.MaxSizeInches + 1
-
-	res, err := hs.MakeHat(ctx, req)
-
-	if err == nil {
-		t.Fatalf(GOT, err, WANTED, NOT_NIL)
-	}
-	if res != nil {
-		t.Fatalf(GOT, res, WANTED, nil)
-	}
-
-	e := err.(twirp.Error)
-	if e.Code() != twirp.InvalidArgument {
-		t.Fatalf(GOT, e.Code(), WANTED, twirp.InvalidArgument)
-	}
-	if e.Msg() != string(hatserver.HatInchesTooBig) {
-		t.Fatalf(GOT, e.Msg(), WANTED, hatserver.HatInchesTooSmall)
-	}
-}
-
-func TestInchesRequired(t *testing.T) {
-
-	ctx, hs, req := startHat()
-
-	req.Inches = 0
-
-	testRequired(t, ctx, hs, req, hatserver.HatInchesRequired)
+	testRequired(t, ctx, hs, req, hatserver.HatSizeRequired)
 }
 
 func TestColorRequired(t *testing.T) {

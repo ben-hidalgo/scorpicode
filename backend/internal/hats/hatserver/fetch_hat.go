@@ -34,7 +34,7 @@ func (hs *Server) FetchHat(ctx context.Context, req *hatspb.FetchHatRequest) (*h
 			Id:      mod.ID,
 			Color:   mod.Color,
 			Style:   ToStyle(mod.Style),
-			Inches:  mod.Inches,
+			Size:    mod.Size,
 			Version: int32(mod.Version),
 		},
 	}, nil

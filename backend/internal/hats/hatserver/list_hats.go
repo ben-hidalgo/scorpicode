@@ -40,7 +40,7 @@ func (hs *Server) ListHats(ctx context.Context, req *hatspb.ListHatsRequest) (*h
 			Version: int32(m.Version),
 			Color:   m.Color,
 			Style:   ToStyle(m.Style),
-			Inches:  m.Inches,
+			Size:    m.Size,
 		}
 	}
 

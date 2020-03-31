@@ -38,13 +38,13 @@ enum Style {
 message Hat {
   string id = 1;
   int32 version = 2;
-  int32 inches = 3;
+  string size = 3;
   string color = 4;
   Style style = 5;
 }
 
 message MakeHatRequest {
-  int32 inches = 1;
+  string size = 1;
   string color = 2; // one of: RED, BLUE, GREEN, YELLOW, PURPLE, BLACK, GREY, ORANGE
   Style style = 3;
 }
@@ -77,14 +77,12 @@ message DeleteHatRequest {
   string id = 1;
   int32 version = 2;
 }
-
 message DeleteHatResponse {
 }
 
 message FetchHatRequest {
   string id = 1;
 }
-
 message FetchHatResponse {
   Hat hat = 1;
 }

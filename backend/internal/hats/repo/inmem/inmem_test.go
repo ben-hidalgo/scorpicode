@@ -9,9 +9,9 @@ import (
 )
 
 const (
-	DefaultColor  = "red"
-	DefaultStyle  = hatspb.Style_BASEBALL
-	DefaultInches = int32(10)
+	DefaultColor = "red"
+	DefaultStyle = hatspb.Style_BASEBALL
+	DefaultSize  = "06000"
 
 	NOT_NIL = "not nil"
 	GOT     = "got '%v' %s '%v'"
@@ -22,7 +22,7 @@ func start() (*inmem.Repo, *repo.HatMod) {
 	hm := &repo.HatMod{
 		Color:   DefaultColor,
 		Style:   DefaultStyle.String(),
-		Inches:  DefaultInches,
+		Size:    DefaultSize,
 		Version: 0,
 	}
 	hr := inmem.NewRepo()
@@ -102,8 +102,8 @@ func TestFindAllOne(t *testing.T) {
 	if hat.ID != mod.ID {
 		t.Fatalf(GOT, hat.ID, WANTED, mod.ID)
 	}
-	if hat.Inches != DefaultInches {
-		t.Fatalf(GOT, hat.Inches, WANTED, DefaultInches)
+	if hat.Size != DefaultSize {
+		t.Fatalf(GOT, hat.Size, WANTED, DefaultSize)
 	}
 	if hat.Style != DefaultStyle.String() {
 		t.Fatalf(GOT, hat.Style, WANTED, DefaultStyle.String())
@@ -198,8 +198,8 @@ func TestSaveInsert(t *testing.T) {
 	if hat.ID != mod.ID {
 		t.Fatalf(GOT, hat.ID, WANTED, mod.ID)
 	}
-	if hat.Inches != DefaultInches {
-		t.Fatalf(GOT, hat.Inches, WANTED, DefaultInches)
+	if hat.Size != DefaultSize {
+		t.Fatalf(GOT, hat.Size, WANTED, DefaultSize)
 	}
 	if hat.Style != DefaultStyle.String() {
 		t.Fatalf(GOT, hat.Style, WANTED, DefaultStyle.String())
@@ -220,11 +220,11 @@ func TestSaveUpdate(t *testing.T) {
 
 	newColor := "blue"
 	newStyle := hatspb.Style_BOWLER.String()
-	newInches := int32(12)
+	newInches := "07000"
 
 	mod.Color = newColor
 	mod.Style = newStyle
-	mod.Inches = newInches
+	mod.Size = newInches
 
 	hat, err := hr.Save(*mod)
 	if err != nil {
@@ -237,8 +237,8 @@ func TestSaveUpdate(t *testing.T) {
 	if hat.ID != mod.ID {
 		t.Fatalf(GOT, hat.ID, WANTED, mod.ID)
 	}
-	if hat.Inches != newInches {
-		t.Fatalf(GOT, hat.Inches, WANTED, newInches)
+	if hat.Size != newInches {
+		t.Fatalf(GOT, hat.Size, WANTED, newInches)
 	}
 	if hat.Style != newStyle {
 		t.Fatalf(GOT, hat.Style, WANTED, newStyle)

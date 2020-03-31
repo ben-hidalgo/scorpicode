@@ -46,7 +46,7 @@ func (hs *Server) ListSizes(ctx context.Context, req *hatspb.ListSizesRequest) (
 			Name: "6 7/8",
 		},
 		&hatspb.Size{
-			Slug: "0700",
+			Slug: "07000",
 			Name: "7",
 		},
 	}

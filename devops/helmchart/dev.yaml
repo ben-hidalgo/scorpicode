@@ -25,8 +25,6 @@ hats:
   serviceType: ClusterIP
 
   listendAddress: :8080
-  minSizeInches: 6
-  maxSizeInches: 16
   datastoreConfig: inmemory
   redisAddress: 
 

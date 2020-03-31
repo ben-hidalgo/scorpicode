@@ -73,7 +73,7 @@ func (r *Repo) Save(hm repo.HatMod) (*repo.HatMod, error) {
 		ID:      id,
 		Color:   hm.Color,
 		Style:   hm.Style,
-		Inches:  hm.Inches,
+		Size:    hm.Size,
 		Version: hm.Version + 1,
 	}
 

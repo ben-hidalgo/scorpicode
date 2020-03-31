@@ -9,9 +9,9 @@ import (
 )
 
 const (
-	DefaultColor  = "red"
-	DefaultStyle  = hatspb.Style_BASEBALL
-	DefaultInches = int32(10)
+	DefaultColor = "red"
+	DefaultStyle = hatspb.Style_BASEBALL
+	DefaultSize  = "06000"
 
 	NOT_NIL = "not nil"
 	GOT     = "got '%v' %s '%v'"
@@ -22,7 +22,7 @@ func start(t *testing.T) (*redisrepo.Repo, *repo.HatMod) {
 	hm := &repo.HatMod{
 		Color:   DefaultColor,
 		Style:   DefaultStyle.String(),
-		Inches:  DefaultInches,
+		Size:    DefaultSize,
 		Version: 0,
 	}
 	hr := redisrepo.NewRepo()
@@ -122,8 +122,8 @@ func TestFindAllOne(t *testing.T) {
 	if hat.ID != mod.ID {
 		t.Fatalf(GOT, hat.ID, WANTED, mod.ID)
 	}
-	if hat.Inches != DefaultInches {
-		t.Fatalf(GOT, hat.Inches, WANTED, DefaultInches)
+	if hat.Size != DefaultSize {
+		t.Fatalf(GOT, hat.Size, WANTED, DefaultSize)
 	}
 	if hat.Style != DefaultStyle.String() {
 		t.Fatalf(GOT, hat.Style, WANTED, DefaultStyle.String())
@@ -231,8 +231,8 @@ func TestSaveInsert(t *testing.T) {
 	if hat.ID != mod.ID {
 		t.Fatalf(GOT, hat.ID, WANTED, mod.ID)
 	}
-	if hat.Inches != DefaultInches {
-		t.Fatalf(GOT, hat.Inches, WANTED, DefaultInches)
+	if hat.Size != DefaultSize {
+		t.Fatalf(GOT, hat.Size, WANTED, DefaultSize)
 	}
 	if hat.Style != DefaultStyle.String() {
 		t.Fatalf(GOT, hat.Style, WANTED, DefaultStyle.String())

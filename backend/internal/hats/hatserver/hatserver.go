@@ -23,15 +23,6 @@ const HatIDRequired = util.ErrMsg("hat.id.required")
 // HatVersionRequired .
 const HatVersionRequired = util.ErrMsg("hat.version.required")
 
-// HatInchesTooSmall .
-const HatInchesTooSmall = util.ErrMsg("hat.inches.toosmall")
-
-// HatInchesTooBig .
-const HatInchesTooBig = util.ErrMsg("hat.inches.toobig")
-
-// HatInchesRequired .
-const HatInchesRequired = util.ErrMsg("hat.inches.required")
-
 // HatColorRequired .
 const HatColorRequired = util.ErrMsg("hat.color.required")
 

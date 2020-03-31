@@ -57,7 +57,7 @@ class HatStore {
   } // listHats
 
   // creates a new hat
-  makeHat = (color, size, style, history) => {
+  makeHat = (size, color, style, history) => {
     
     this.isLoading = true
 
