@@ -22,8 +22,8 @@ var colors = map[string]interface{}{
 	"ORANGE": struct{}{},
 }
 
-// MakeHat makes a hat
-func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hatspb.MakeHatResponse, error) {
+// MakeHats makes a hat
+func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*hatspb.MakeHatsResponse, error) {
 
 	logrus.Debugf("MakeHat() req=%v", req)
 
@@ -65,7 +65,7 @@ func (hs *Server) MakeHat(ctx context.Context, req *hatspb.MakeHatRequest) (*hat
 		return nil, twirp.InternalErrorWith(err)
 	}
 
-	return &hatspb.MakeHatResponse{
+	return &hatspb.MakeHatsResponse{
 
 		Hat: &hatspb.Hat{
 			Id:      mod.ID,

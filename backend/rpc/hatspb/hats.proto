@@ -7,8 +7,8 @@ option go_package = "hatspb";
 // Hats service makes hats for clients.
 service Hats {
 
-  // MakeHat creates a hat with the given characteristics
-  rpc MakeHat(MakeHatRequest) returns (MakeHatResponse);
+  // MakeHats creates a quantity of hats with the given characteristics
+  rpc MakeHats(MakeHatsRequest) returns (MakeHatsResponse);
 
   // ListHats returns hats for the given query
   rpc ListHats(ListHatsRequest) returns (ListHatsResponse);
@@ -43,12 +43,14 @@ message Hat {
   Style style = 5;
 }
 
-message MakeHatRequest {
+message MakeHatsRequest {
   string size = 1;
   string color = 2; // one of: RED, BLUE, GREEN, YELLOW, PURPLE, BLACK, GREY, ORANGE
   Style style = 3;
+  int32 quantity = 4;
+  string notes = 5;
 }
-message MakeHatResponse {
+message MakeHatsResponse {
   Hat hat = 1;
 }
 

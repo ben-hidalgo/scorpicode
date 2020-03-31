@@ -18,13 +18,13 @@ const (
 	DefaultSize  = "06000"
 )
 
-func startHat() (context.Context, *hatserver.Server, *hatspb.MakeHatRequest) {
+func startHat() (context.Context, *hatserver.Server, *hatspb.MakeHatsRequest) {
 
 	ctx := context.WithValue(context.Background(), repo.RepoKey, inmem.NewRepo())
 
 	hs := hatserver.NewServer()
 
-	req := &hatspb.MakeHatRequest{
+	req := &hatspb.MakeHatsRequest{
 		Size:  DefaultSize,
 		Style: DefaultStyle,
 		Color: DefaultColor,
@@ -37,7 +37,7 @@ func TestHatSuccess(t *testing.T) {
 
 	ctx, hs, req := startHat()
 
-	res, err := hs.MakeHat(ctx, req)
+	res, err := hs.MakeHats(ctx, req)
 
 	if err != nil {
 		t.Fatalf(GOT, err, WANTED, nil)
@@ -84,7 +84,7 @@ func TestColorDomain(t *testing.T) {
 
 	req.Color = "not a color"
 
-	res, err := hs.MakeHat(ctx, req)
+	res, err := hs.MakeHats(ctx, req)
 
 	if err == nil {
 		t.Fatalf(GOT, err, WANTED, NOT_NIL)
@@ -111,9 +111,9 @@ func TestNameRequired(t *testing.T) {
 	testRequired(t, ctx, hs, req, hatserver.HatStyleRequired)
 }
 
-func testRequired(t *testing.T, ctx context.Context, hs *hatserver.Server, req *hatspb.MakeHatRequest, emsg util.ErrMsg) {
+func testRequired(t *testing.T, ctx context.Context, hs *hatserver.Server, req *hatspb.MakeHatsRequest, emsg util.ErrMsg) {
 
-	res, err := hs.MakeHat(ctx, req)
+	res, err := hs.MakeHats(ctx, req)
 
 	if err == nil {
 		t.Fatalf(GOT, err, WANTED, NOT_NIL)
