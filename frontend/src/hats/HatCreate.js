@@ -25,7 +25,7 @@ class HatCreate extends Component {
     return (
       <div className="box">
         <HatError hatStore={hatStore} languageStore={languageStore} />
-        <HatColours hec={this}/>
+        <HatColors hec={this}/>
         <HatStyles hec={this}/>
         <HatSizes hec={this}/>
         <div className="field is-grouped">
@@ -111,11 +111,11 @@ HatStyles.defaultProps = {
   ],
 }
 
-const HatColours = observer((props) => {
+const HatColors = observer((props) => {
 
   return (
     <div className="field">
-      <label className="label">Colour</label>
+      <label className="label">Color</label>
       <div className="control">
         {
           props.colors.map(color => {
@@ -130,7 +130,7 @@ const HatColours = observer((props) => {
   </div>
   )
 })
-HatColours.defaultProps = {
+HatColors.defaultProps = {
   colors: [
     {value: 'RED', text: 'Red', c: 'red'},
     {value: 'BLUE', text: 'Blue', c: 'blue'},

@@ -39,11 +39,11 @@ class LanguageStore {
       case 'hat.style.required':
         return 'Style is required (UK)'
       case 'hat.color.required':
-        return 'Colour is required'
+        return 'Color is required (UK)'
       case 'hat.inches.required':
         return 'Size is required (UK)'
       default:
-        return 'An unexpected error has occurred'
+        return 'An unexpected error has occurred (UK)'
     }
   }
 
