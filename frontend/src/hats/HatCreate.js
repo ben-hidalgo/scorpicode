@@ -1,19 +1,24 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
-import { extendObservable } from 'mobx'
+// import { extendObservable } from 'mobx'
 import { observer }  from 'mobx-react'
 
 
 class HatCreate extends Component {
 
-  constructor() {
-    super()
-    extendObservable(this, {
-      color: '',
-      size: '',
-      style: 'UNKNOWN_STYLE',
-    })
-  }
+  // constructor() {
+  //   super()
+  //   extendObservable(this, {
+  //     color: '',
+  //     size: '',
+  //     style: 'UNKNOWN_STYLE',
+  //   })
+  // }
+
+  // componentDidMount() {
+  //   this.props.stores.hatStore.initDraft()
+  // }
+
 
   render() {
 
@@ -25,12 +30,12 @@ class HatCreate extends Component {
     return (
       <div className="box">
         <HatError hatStore={hatStore} languageStore={languageStore} />
-        <HatColors hec={this}/>
-        <HatStyles hec={this}/>
-        <HatSizes hec={this}/>
+        <HatColors hatStore={hatStore} />
+        <HatStyles hatStore={hatStore} />
+        <HatSizes hatStore={hatStore} />
         <div className="field is-grouped">
           <div className="control">
-            <button onClick={() => {this.save(this, hatStore)}} className="button is-link">Save</button>
+            <button onClick={() => {hatStore.makeHat(this.props.history)}} className="button is-link">Save</button>
           </div>
           <div className="control">
             <button onClick={() => {this.cancel(this, hatStore)}} className="button is-link is-light">Cancel</button>
@@ -40,21 +45,12 @@ class HatCreate extends Component {
     )
   }
 
-  save(hec, hatStore) {
-    hatStore.makeHat(hec.size, hec.color, hec.style, hec.props.history)
-
-    // TODO: this is why a server side error resets the form...
-    // How to split the "store" logic from the form updating logic...?
-    hec.color = ''
-    hec.size = ''
-    hec.style = 'UNKNOWN_STYLE'
-  }
 
   cancel(hec, hatStore) {
-    hec.color = ''
-    hec.size = ''
-    hec.style = 'UNKNOWN_STYLE'
-    hatStore.error = null
+    // hec.color = ''
+    // hec.size = ''
+    // hec.style = 'UNKNOWN_STYLE'
+    // hatStore.error = null
 
     hec.props.history.push('/hats')
   }
@@ -89,7 +85,7 @@ const HatStyles = observer((props) => {
           props.styles.map(style => {
             return (
               <label className="radio" key={style.value}>
-                <input type="radio" name="style" value={style.value} onChange={(ce) => {props.hec.style = ce.target.value}}/>
+                <input type="radio" name="style" value={style.value} onChange={(ce) => {props.hatStore.draft.style = ce.target.value}}/>
                 {style.text}
             </label>
             )
@@ -121,7 +117,7 @@ const HatColors = observer((props) => {
           props.colors.map(color => {
             return (
               <label className="radio" key={color.value}>
-                <span onClick={(ce) => {props.hec.color = color.value}} className={`bd-color-${color.value === props.hec.color} has-background-${color.c}`} ></span>
+                <span onClick={(ce) => {props.hatStore.draft.color = color.value}} className={`bd-color-${color.value === props.hatStore.draft.color} has-background-${color.c}`} ></span>
               </label>
             )
           })              
@@ -151,7 +147,7 @@ const HatSizes = observer((props) => {
       <label className="label">Size</label>
       <div className="control">
         <div className="select">
-          <select onChange={(ce) => {props.hec.size = ce.target.value}} value={props.hec.size}>
+          <select onChange={(ce) => {props.hatStore.draft.size = ce.target.value}} value={props.hatStore.draft.size}>
             {
               props.sizes.map(size => {
                 return (

@@ -3,13 +3,17 @@ import agent from '../agent'
 
 class HatStore {
 
+  // {size: '', color: '', style: '', quantity: 0, notes: ''}
+
   constructor() {
     extendObservable(this, {
       isLoading: false,
-      hats: [],
       current: null,
+      draft: null,
+      list: [],
       error: null,
     })
+    this.initDraft()
   } // constructor
 
   handleCatch(err) {
@@ -17,6 +21,16 @@ class HatStore {
     this.error = {code: err.response.statusCode, msg: '', status: err.response.status}
     if (err.response.body) {
       this.error.msg = err.response.body.msg
+    }
+  }
+
+  initDraft = () => {
+    this.draft = {
+      color: '',
+      size: '',
+      style: 'UNKNOWN_STYLE',
+      notes: '',
+      quantity: 0,
     }
   }
 
@@ -46,7 +60,7 @@ class HatStore {
     this.isLoading = true
     agent.Hats.listHats()
       .then(({ hats }) => {
-        this.hats = hats
+        this.list = hats
       })
       .catch(err => {
         this.handleCatch(err)
@@ -57,12 +71,12 @@ class HatStore {
   } // listHats
 
   // creates a new hat
-  makeHat = (size, color, style, history) => {
+  makeHat = (history) => {
     
     this.isLoading = true
 
     // size is inches
-    agent.Hats.makeHat(size, color, style)
+    agent.Hats.makeHat(this.draft)
       .then(({ hat }) => {        
         this.error = null
         this.current = hat

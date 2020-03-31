@@ -50,7 +50,7 @@ const requests = {
 
 const Hats = {
   listHats: () => requests.post('/hats/ListHats', {}),
-  makeHat: (size, color, style) => requests.post('/hats/MakeHats', {size: size, color: color, style: style}),
+  makeHat: (body) => requests.post('/hats/MakeHats', body),
   deleteHat: (id, version) => requests.post('/hats/DeleteHat', {id: id, version: version}),
   fetchHat: (id) => requests.post('/hats/FetchHat', {id: id}),
 }

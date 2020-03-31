@@ -32,7 +32,7 @@ class HatList extends Component {
         </thead>
         <tbody>
         {
-          hatStore.hats.map(h => {
+          hatStore.list.map(h => {
             return (
               <tr key={h.id}>
                 <td><Link to={`/hatsview/${h.id}`}>{h.id}</Link></td>
