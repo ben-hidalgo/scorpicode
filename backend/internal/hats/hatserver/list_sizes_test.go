@@ -34,13 +34,6 @@ func TestSizeSuccess(t *testing.T) {
 		if s.GetName() == "" {
 			t.Fatalf(GOT, s.GetName(), WANTED, NOT_EMPTY)
 		}
-		if s.GetUnits() == hatspb.Units_UNKNOWN_UNITS {
-			t.Fatalf(GOT, s.GetUnits(), WANTED, NOT_EMPTY)
-		}
-		if s.GetDimension() == 0.0 {
-			t.Fatalf(GOT, s.GetDimension(), WANTED, NOT_EMPTY)
-		}
-
 	}
 
 }

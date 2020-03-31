@@ -62,17 +62,9 @@ message ListHatsResponse {
   int32 offset = 3;
 }
 
-enum Units {
-  UNKNOWN_UNITS = 0;
-  INCHES = 1;
-  CENTIMETERS = 2;
-}
-
 message Size {
   string slug = 1;
   string name = 2;
-  float dimension = 3;
-  Units units = 4;
 }
 
 message ListSizesRequest {
