@@ -38,7 +38,7 @@ if (authStore.isLoggedIn()) {
       <Route path='/' render={() => <Hero />}/>
       <br/>
       <Route path='/hats' render={() => <HatList />}/>
-      <Route path='/hatsview/:id' render={() => <Hat stores={stores}/>}/>
+      <Route path='/hatsview/:id' render={() => <Hat />}/>
       <Route path='/hatsnew' render={() => <HatCreate stores={stores}/>}/>
       <br/>
       <Footer stores={stores} />

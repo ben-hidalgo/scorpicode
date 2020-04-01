@@ -1,49 +1,49 @@
-import React, { Component } from 'react'
+import React, { useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
 import { observer }  from 'mobx-react'
 
-// import StoreContext from '../storeContext';
+import StoreContext from '../storeContext';
 
 
 
-class HatCreate extends Component {
+const HatCreate = (props) => {
 
-  componentDidMount() {
-    this.props.stores.hatStore.initDraft()
-  }
+  const {
+    hatStore,
+    languageStore,
+  } = React.useContext(StoreContext)
 
-  render() {
+  // similar to componentDidMount and componentDidUpdate
+  useEffect(() => {
+    if (hatStore.list.length === 0) {
+      hatStore.initDraft()
+    }
+  })
 
-    const {
-      hatStore,
-      languageStore,
-    } = this.props.stores
-
-    return (
-      <div className="box">
-        <HatError hatStore={hatStore} languageStore={languageStore} />
-        <HatColors hatStore={hatStore} />
-        <HatStyles hatStore={hatStore} />
-        <HatSizes hatStore={hatStore} />
-        <div className="field is-grouped">
-          <div className="control">
-            <button onClick={() => {hatStore.makeHat(this.props.history)}} className="button is-link">Save</button>
-          </div>
-          <div className="control">
-            <button onClick={() => {hatStore.cancelMakeHat(this.props.history)}} className="button is-link is-light">Cancel</button>
-          </div>
+  return (
+    <div className="box">
+      <HatError hatStore={hatStore} languageStore={languageStore} />
+      <HatColors hatStore={hatStore} />
+      <HatStyles hatStore={hatStore} />
+      <HatSizes hatStore={hatStore} />
+      <div className="field is-grouped">
+        <div className="control">
+          <button onClick={() => {hatStore.makeHat(props.history)}} className="button is-link">Save</button>
+        </div>
+        <div className="control">
+          <button onClick={() => {hatStore.cancelMakeHat(props.history)}} className="button is-link is-light">Cancel</button>
         </div>
       </div>
-    )
-  }
-
-
+    </div>
+  )
 }
 
 const HatError = observer((props) => {
 
-  // const stores = React.useContext(StoreContext);
-  // console.log(stores)
+  const {
+    hatStore,
+    languageStore,
+  } = React.useContext(StoreContext)
 
   return (
     <div>
@@ -52,7 +52,7 @@ const HatError = observer((props) => {
         && 
         <article className="message is-warning">
           <div className="message-body">
-            {props.languageStore.decode(props.hatStore.error.msg)}
+            {languageStore.decode(hatStore.error.msg)}
           </div>
         </article>
       }

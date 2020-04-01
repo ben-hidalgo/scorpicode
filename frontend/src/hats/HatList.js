@@ -8,14 +8,14 @@ const HatList = () => {
 
   const {
     hatStore,
-  } = React.useContext(StoreContext);
+  } = React.useContext(StoreContext)
 
-  // Similar to componentDidMount and componentDidUpdate
+  // similar to componentDidMount and componentDidUpdate
   useEffect(() => {
     if (hatStore.list.length === 0) {
       hatStore.listHats()
     }
-  });  
+  })
   
   return (
     <div className="container is-white">

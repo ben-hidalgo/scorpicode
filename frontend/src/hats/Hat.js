@@ -1,15 +1,15 @@
 import React from 'react'
-import {
-  useParams
-} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { observer }  from 'mobx-react'
 
+import StoreContext from '../storeContext';
 
-const Hat = (props) => {
+// TODO: rename HatView
+const Hat = () => {
 
   let {
     hatStore,
-  } = props.stores
+  } = React.useContext(StoreContext)
 
   let { id } = useParams()
 

@@ -61,7 +61,8 @@ class HatStore {
   } // fetchHat
 
 
-  // returns all hats
+  // TODO: rename to fetchHatList()
+  // retrieves hats from the server
   listHats = () => {
     this.isLoading = true
     agent.Hats.listHats()
