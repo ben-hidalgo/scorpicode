@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { observer }  from 'mobx-react'
 
+// import StoreContext from '../storeContext';
+
+
 
 class HatCreate extends Component {
 
@@ -38,6 +41,9 @@ class HatCreate extends Component {
 }
 
 const HatError = observer((props) => {
+
+  // const stores = React.useContext(StoreContext);
+  // console.log(stores)
 
   return (
     <div>
