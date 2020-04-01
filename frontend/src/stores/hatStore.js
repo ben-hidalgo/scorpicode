@@ -71,9 +71,10 @@ class HatStore {
       .catch(err => {
         this.handleCatch(err)
       })
-      .finally(() => { this.isLoading = false })
+      .finally(() => { 
+        this.isLoading = false 
+      })
     
-    this.isLoading = false
   } // listHats
 
   // creates a new hat

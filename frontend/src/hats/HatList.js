@@ -1,21 +1,23 @@
-import React, { Component } from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { observer }  from 'mobx-react'
 
+import StoreContext from '../storeContext';
 
-class HatList extends Component {
+const HatList = () => {
 
-  componentDidMount() {
-    this.props.stores.hatStore.listHats()
-  }
+  const {
+    hatStore,
+  } = React.useContext(StoreContext);
 
-  render() {
-
-    const {
-      hatStore,
-    } = this.props.stores
-
-    return (
+  // Similar to componentDidMount and componentDidUpdate
+  useEffect(() => {
+    if (hatStore.list.length === 0) {
+      hatStore.listHats()
+    }
+  });  
+  
+  return (
     <div className="container is-white">
       <br/>
       <button onClick={hatStore.listHats} className="button is-primary">Refresh</button>
@@ -45,12 +47,10 @@ class HatList extends Component {
             )
           })
         }
-
         </tbody>
       </table>
     </div>
-    )
-  }
-
+  )
 }
+
 export default observer(HatList)

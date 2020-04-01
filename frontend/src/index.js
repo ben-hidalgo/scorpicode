@@ -34,11 +34,10 @@ if (authStore.isLoggedIn()) {
   <StoreContext.Provider value={stores}>
     <HashRouter>
       {/*<Helmet />  disabled due to componentWillMount usage warning */}
-      <NavBar stores={stores} />
-      
-      <Route path='/' render={() => <Hero stores={stores}/>}/>
+      <NavBar />
+      <Route path='/' render={() => <Hero />}/>
       <br/>
-      <Route path='/hats' render={() => <HatList stores={stores}/>}/>
+      <Route path='/hats' render={() => <HatList />}/>
       <Route path='/hatsview/:id' render={() => <Hat stores={stores}/>}/>
       <Route path='/hatsnew' render={() => <HatCreate stores={stores}/>}/>
       <br/>

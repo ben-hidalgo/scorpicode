@@ -1,12 +1,10 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { observer }  from 'mobx-react'
 import '../style.scss';
 
-class Hero extends Component {
+const Hero = () => {
 
-  render() {
-
-    return (
+  return (
     <section className="hero is-primary">
       <div className="hero-body">
         <div className="container">
@@ -18,7 +16,8 @@ class Hero extends Component {
           </h2>
         </div>
       </div>
-    </section>)
-  }
+    </section>
+  )
 }
+
 export default observer(Hero)
