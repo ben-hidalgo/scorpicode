@@ -32,6 +32,12 @@ class HatStore {
       notes: '',
       quantity: 0,
     }
+    this.error = null
+  }
+
+  cancelMakeHat = (history) => {
+    this.initDraft()
+    history.goBack()
   }
 
   fetchHat = (id) => {

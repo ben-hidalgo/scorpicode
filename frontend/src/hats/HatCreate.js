@@ -6,15 +6,6 @@ import { observer }  from 'mobx-react'
 
 class HatCreate extends Component {
 
-  // constructor() {
-  //   super()
-  //   extendObservable(this, {
-  //     color: '',
-  //     size: '',
-  //     style: 'UNKNOWN_STYLE',
-  //   })
-  // }
-
   // componentDidMount() {
   //   this.props.stores.hatStore.initDraft()
   // }
@@ -38,21 +29,11 @@ class HatCreate extends Component {
             <button onClick={() => {hatStore.makeHat(this.props.history)}} className="button is-link">Save</button>
           </div>
           <div className="control">
-            <button onClick={() => {this.cancel(this, hatStore)}} className="button is-link is-light">Cancel</button>
+            <button onClick={() => {hatStore.cancelMakeHat(this.props.history)}} className="button is-link is-light">Cancel</button>
           </div>
         </div>
       </div>
     )
-  }
-
-
-  cancel(hec, hatStore) {
-    // hec.color = ''
-    // hec.size = ''
-    // hec.style = 'UNKNOWN_STYLE'
-    // hatStore.error = null
-
-    hec.props.history.push('/hats')
   }
 
 
