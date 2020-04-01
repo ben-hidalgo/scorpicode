@@ -1,8 +1,8 @@
 import React from 'react'
-import { useParams } from "react-router-dom";
+import { useParams } from 'react-router-dom'
 import { observer }  from 'mobx-react'
 
-import StoreContext from '../storeContext';
+import StoreContext from '../storeContext'
 
 // TODO: rename HatView
 const Hat = () => {

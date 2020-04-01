@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { Route } from 'react-router'
 import { HashRouter } from 'react-router-dom'
 
-import StoreContext from './storeContext';
+import StoreContext from './storeContext'
 
 import Hero from './globals/Hero'
 // import Helmet from './globals/Helmet'

@@ -1,6 +1,6 @@
 import superagentPromise from 'superagent-promise'
 import _superagent from 'superagent'
-import authStore from './stores/authStore';
+import authStore from './stores/authStore'
 
 
 const superagent = superagentPromise(_superagent, global.Promise)

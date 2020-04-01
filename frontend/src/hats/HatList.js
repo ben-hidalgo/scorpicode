@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { observer }  from 'mobx-react'
 
-import StoreContext from '../storeContext';
+import StoreContext from '../storeContext'
 
 const HatList = () => {
 

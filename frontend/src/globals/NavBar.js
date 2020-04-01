@@ -2,14 +2,14 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { observer }  from 'mobx-react'
 
-import StoreContext from '../storeContext';
-import logo from '../images/scorpicode210.png';
+import StoreContext from '../storeContext'
+import logo from '../images/scorpicode210.png'
 
 const NavBar = () => {
 
   const {
     authStore,
-  } = React.useContext(StoreContext);
+  } = React.useContext(StoreContext)
 
   return (
     <nav className="navbar is-light" role="navigation" aria-label="main navigation">

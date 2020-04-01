@@ -15,7 +15,7 @@ class AuthStore {
     })
     this.token = getCookie(TokenCookieName)
     if (this.token) {
-      this.decoded = jwt.decode(this.token, {complete: true});
+      this.decoded = jwt.decode(this.token, {complete: true})
     }
     if (this.decoded) {
       this.payload = this.decoded.payload
