@@ -1,15 +1,13 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
-// import { extendObservable } from 'mobx'
 import { observer }  from 'mobx-react'
 
 
 class HatCreate extends Component {
 
-  // componentDidMount() {
-  //   this.props.stores.hatStore.initDraft()
-  // }
-
+  componentDidMount() {
+    this.props.stores.hatStore.initDraft()
+  }
 
   render() {
 
