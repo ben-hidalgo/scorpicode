@@ -4,8 +4,7 @@ import { observer }  from 'mobx-react'
 
 import StoreContext from '../storeContext'
 
-// TODO: rename HatView
-const Hat = () => {
+const HatView = () => {
 
   let {
     hatStore,
@@ -77,4 +76,4 @@ const NotFound = (props) => {
   )
 } // NotFound
 
-export default observer(Hat)
+export default observer(HatView)

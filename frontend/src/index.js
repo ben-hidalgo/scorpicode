@@ -9,7 +9,7 @@ import Hero from './globals/Hero'
 // import Helmet from './globals/Helmet'
 import NavBar from './globals/NavBar'
 import Footer from './globals/Footer'
-import Hat from './hats/Hat'
+import HatView from './hats/HatView'
 import HatList from './hats/HatList'
 import HatCreate from './hats/HatCreate'
 
@@ -38,7 +38,7 @@ if (authStore.isLoggedIn()) {
       <Route path='/' render={() => <Hero />}/>
       <br/>
       <Route path='/hats' render={() => <HatList />}/>
-      <Route path='/hatsview/:id' render={() => <Hat />}/>
+      <Route path='/hatsview/:id' render={() => <HatView />}/>
       <Route path='/hatsnew' render={() => <HatCreate stores={stores}/>}/>
       <br/>
       <Footer stores={stores} />
