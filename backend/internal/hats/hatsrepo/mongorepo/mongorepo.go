@@ -12,7 +12,7 @@ import (
 var DatabaseName = "hats"
 
 // MongoURI . TODO: use env var
-var MongoURI = "mongodb://hats:hats@localhost:27017"
+var MongoURI = "mongodb://hats:hats@localhost:27017/hats"
 
 func init() {
 	envconfig.SetString("DATABASE_NAME", &DatabaseName)

@@ -12,15 +12,15 @@ type Book struct {
 	Pages            int    `json:"pages" bson:"pages"`
 }
 
+// HatsRepo .
+type HatsRepo interface {
+	Save(b *Book) (*mgm.IDField, error)
+}
+
 // NewBook .
 func NewBook(name string, pages int) *Book {
 	return &Book{
 		Name:  name,
 		Pages: pages,
 	}
-}
-
-// HatsRepo .
-type HatsRepo interface {
-	Save(b *Book) (*mgm.IDField, error)
 }
