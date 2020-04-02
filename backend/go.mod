@@ -12,6 +12,7 @@ require (
 	github.com/rs/xid v1.2.1
 	github.com/sirupsen/logrus v1.4.2
 	github.com/twitchtv/twirp v5.10.0+incompatible
+	go.mongodb.org/mongo-driver v1.1.3
 	golang.org/x/crypto v0.0.0-20200317142112-1b76d66859c6 // indirect
 	golang.org/x/sys v0.0.0-20200113162924-86b910548bc1 // indirect
 	gopkg.in/square/go-jose.v2 v2.4.1

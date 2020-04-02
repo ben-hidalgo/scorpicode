@@ -22,24 +22,5 @@ func NewBook(name string, pages int) *Book {
 
 // HatsRepo .
 type HatsRepo interface {
-
-	// Save performs an upsert, returns the ID
-	// Input parameter is not mutated
-	// Assigns an ID if not provided (insert)
-	// Increments Version
-	// Returns NotFound if missing by ID
-	// Returns VersionMismatch if version isn't equal
 	Save(b *Book) (*mgm.IDField, error)
-}
-
-//RepoImpl implements HatsRepo
-type RepoImpl struct {
-}
-
-// enforces the interface is implemented
-var _ HatsRepo = (*RepoImpl)(nil)
-
-// Save .
-func (r *RepoImpl) Save(b *Book) (*mgm.IDField, error) {
-	return nil, nil
 }

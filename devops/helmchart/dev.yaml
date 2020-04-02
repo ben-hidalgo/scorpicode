@@ -8,58 +8,15 @@ common:
 
 frontend:
   enabled: false
-  name: frontend
-  replicaCount: 1
-  limitsMemory: 1028Mi
-  limitsCpu: 1000m
-  port: 80
-  serviceType: ClusterIP
 
 hats:
   enabled: false
-  name: hats
-  replicaCount: 1
-  limitsMemory: 128Mi
-  limitsCpu: 50m
-  port: 8080
-  serviceType: ClusterIP
-
-  listendAddress: :8080
-  datastoreConfig: inmemory
-  redisAddress: 
-
 
 website:
   enabled: false
-  name: website
-  replicaCount: 1
-  limitsMemory: 128Mi
-  limitsCpu: 50m
-  port: 8080
-  serviceType: ClusterIP
-
-  listendAddress: :8080
-  staticPath: ./cmd/website/static
 
 roxie:
   enabled: false
-  name: roxie
-  replicaCount: 1
-  limitsMemory: 128Mi
-  limitsCpu: 50m
-  port: 8080
-  serviceType: LoadBalancer
-
-  listendAddress: :8080
-  hatsPrefix: http://hats:8080
-  websitePrefix: http://website:8080
-  frontendPrefix: http://frontend
-  enableCors: false
-
-  loginSuccessTarget: ./sc
-  auth0ClientId: TODO use SOPS secret
-  auth0ClientSecret: TODO use SOPS secret
-  auth0RedirectUri: unused in dev
 
 ingress:
   enabled: false
@@ -67,13 +24,13 @@ ingress:
 nginx:
   enabled: false
 
-mongo:
+mongodb:
   enabled: true
+  mongodbUsername: hats
+  mongodbPassword: hats
+  mongodbDatabase: hats
+  service:
+    type: LoadBalancer
 
 redis:
-  enabled: true
-  password: redispassword
-  master:
-    disableCommands:
-    service:
-      type: LoadBalancer
+  enabled: false
