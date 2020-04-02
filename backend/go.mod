@@ -3,6 +3,7 @@ module backend
 go 1.13
 
 require (
+	github.com/Kamva/mgm/v2 v2.0.0
 	github.com/auth0-community/go-auth0 v1.0.0
 	github.com/golang/protobuf v1.3.5
 	github.com/gomodule/redigo v2.0.0+incompatible
