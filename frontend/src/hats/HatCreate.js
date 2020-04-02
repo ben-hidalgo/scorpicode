@@ -8,10 +8,7 @@ import StoreContext from '../storeContext'
 
 const HatCreate = (props) => {
 
-  const {
-    hatStore,
-    languageStore,
-  } = React.useContext(StoreContext)
+  const { hatStore } = React.useContext(StoreContext)
 
   // similar to componentDidMount and componentDidUpdate
   useEffect(() => {
@@ -22,10 +19,13 @@ const HatCreate = (props) => {
 
   return (
     <div className="box">
-      <HatError hatStore={hatStore} languageStore={languageStore} />
-      <HatColors hatStore={hatStore} />
-      <HatStyles hatStore={hatStore} />
-      <HatSizes hatStore={hatStore} />
+      <h1 className="title">Bulk Create Hats</h1>
+      <HatError />
+      <HatQuantity />
+      <HatNotes />
+      <HatColors />
+      <HatStyles />
+      <HatSizes />
       <div className="field is-grouped">
         <div className="control">
           <button onClick={() => {hatStore.makeHat(props.history)}} className="button is-link">Save</button>
@@ -38,6 +38,30 @@ const HatCreate = (props) => {
   )
 }
 
+const HatQuantity = observer(() => {
+
+  const { hatStore } = React.useContext(StoreContext)
+
+  return (
+    <div className="field">
+      <label className="label">Quantity</label>
+      <input type="text" value={hatStore.draft.quantity} onChange={(ce) => {hatStore.draft.quantity = ce.target.value}}/>
+    </div>
+  )
+})
+
+const HatNotes = observer(() => {
+
+  const { hatStore } = React.useContext(StoreContext)
+
+  return (
+    <div className="field">
+      <label className="label">Notes</label>
+      <textarea className="textarea" value={hatStore.draft.notes} onChange={(ce) => {hatStore.draft.notes = ce.target.value}}/>
+    </div>
+  )
+})
+
 const HatError = observer((props) => {
 
   const {
@@ -48,7 +72,7 @@ const HatError = observer((props) => {
   return (
     <div>
       {
-        props.hatStore.error
+        hatStore.error
         && 
         <article className="message is-warning">
           <div className="message-body">
@@ -62,6 +86,8 @@ const HatError = observer((props) => {
 
 const HatStyles = observer((props) => {
 
+  const { hatStore } = React.useContext(StoreContext)
+
   return (
     <div className="field">
       <label className="label">Style</label>
@@ -70,7 +96,7 @@ const HatStyles = observer((props) => {
           props.styles.map(style => {
             return (
               <label className="radio" key={style.value}>
-                <input type="radio" name="style" value={style.value} onChange={(ce) => {props.hatStore.draft.style = ce.target.value}}/>
+                <input type="radio" name="style" value={style.value} onChange={(ce) => {hatStore.draft.style = ce.target.value}}/>
                 {style.text}
             </label>
             )
@@ -94,6 +120,8 @@ HatStyles.defaultProps = {
 
 const HatColors = observer((props) => {
 
+  const { hatStore } = React.useContext(StoreContext)
+
   return (
     <div className="field">
       <label className="label">Color</label>
@@ -102,7 +130,7 @@ const HatColors = observer((props) => {
           props.colors.map(color => {
             return (
               <label className="radio" key={color.value}>
-                <span onClick={(ce) => {props.hatStore.draft.color = color.value}} className={`bd-color-${color.value === props.hatStore.draft.color} has-background-${color.c}`} ></span>
+                <span onClick={(ce) => {hatStore.draft.color = color.value}} className={`bd-color-${color.value === hatStore.draft.color} has-background-${color.c}`} ></span>
               </label>
             )
           })              
@@ -127,12 +155,14 @@ HatColors.defaultProps = {
 
 const HatSizes = observer((props) => {
 
+  const { hatStore } = React.useContext(StoreContext)
+
   return (
     <div className="field">
       <label className="label">Size</label>
       <div className="control">
         <div className="select">
-          <select onChange={(ce) => {props.hatStore.draft.size = ce.target.value}} value={props.hatStore.draft.size}>
+          <select onChange={(ce) => {hatStore.draft.size = ce.target.value}} value={hatStore.draft.size}>
             {
               props.sizes.map(size => {
                 return (
