@@ -19,12 +19,15 @@ const NavBar = () => {
         </a>
       </div>
 
-      <div className="navbar-menu">
+      <div className="navbar-menu is-active">
         <div className="navbar-start">
           <Link to="/hatsnew" className="navbar-item">Create Bulk Hats</Link>
           <Link to="/hats" className="navbar-item">List Bulk Hats</Link>
         </div>
 
+        {/* TODO: include the hamburger and dynamic 'is-active' for mobile UX */}
+        {/* TODO: https://bulma.io/documentation/components/navbar/           */}
+        
         <div className="navbar-end">
         <div className="navbar-item">
             <figure className="image is-48x48px">
@@ -44,7 +47,5 @@ const NavBar = () => {
     </nav>
   )
 }
-
-
 
 export default observer(NavBar)
