@@ -32,14 +32,18 @@ const HatView = () => {
           <div className="content">
             <div className="columns">
 
-              <div className="column">              
-                <div className="field">
-                  <label className="label">Inches:</label>
-                  {hat.inches}
+              <div className="column">
+              <div className="field">
+                  <label className="label">Size:</label>
+                  {hat.size}
                 </div>
                 <div className="field">
-                  <label className="label">Version:</label>
-                  {hat.version}
+                  <label className="label">Quantity:</label>
+                  {hat.quantity}
+                </div>
+                <div className="field">
+                  <label className="label">Notes:</label>
+                  {hat.notes}
                 </div>
               </div>
 
@@ -51,6 +55,10 @@ const HatView = () => {
                 <div className="field">
                   <label className="label">Style:</label>
                   {hat.style}
+                </div>
+                <div className="field">
+                  <label className="label">Version:</label>
+                  {hat.version}
                 </div>
               </div>
 
