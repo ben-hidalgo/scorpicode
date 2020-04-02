@@ -36,11 +36,13 @@ func (hs *Server) ListHats(ctx context.Context, req *hatspb.ListHatsRequest) (*h
 
 	for i, m := range mods {
 		hats[i] = &hatspb.Hat{
-			Id:      m.ID,
-			Version: int32(m.Version),
-			Color:   m.Color,
-			Style:   ToStyle(m.Style),
-			Size:    m.Size,
+			Id:       m.ID,
+			Version:  int32(m.Version),
+			Color:    m.Color,
+			Style:    ToStyle(m.Style),
+			Size:     m.Size,
+			Quantity: m.Quantity,
+			Notes:    m.Notes,
 		}
 	}
 

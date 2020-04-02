@@ -3,7 +3,7 @@ import agent from '../agent'
 
 class HatStore {
 
-  // {size: '', color: '', style: '', quantity: 0, notes: ''}
+  // {id: '', size: '', color: '', style: '', quantity: 0, notes: '', version: 0}
 
   constructor() {
     extendObservable(this, {
@@ -28,7 +28,7 @@ class HatStore {
     this.draft = {
       color: '',
       size: '',
-      style: 'UNKNOWN_STYLE',
+      style: 'UNKNOWN_STYLE', // protobuf enum
       notes: '',
       quantity: 0,
     }

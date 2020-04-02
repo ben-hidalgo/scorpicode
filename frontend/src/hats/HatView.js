@@ -23,9 +23,9 @@ const HatView = () => {
   return (
     <div className="container">
       <div className="card">
-        <header className="card-header is-danger">
+        <header className="card-header">
           <p className="card-header-title">
-            Hat: {hat.id}
+            Bulk Hat: {hat.id}
           </p>
         </header>
         <div className="card-content">

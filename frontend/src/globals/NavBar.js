@@ -21,8 +21,8 @@ const NavBar = () => {
 
       <div className="navbar-menu">
         <div className="navbar-start">
-          <Link to="/hatsnew" className="navbar-item">Create Hat</Link>
-          <Link to="/hats" className="navbar-item">List Hats</Link>
+          <Link to="/hatsnew" className="navbar-item">Create Bulk Hats</Link>
+          <Link to="/hats" className="navbar-item">List Bulk Hats</Link>
         </div>
 
         <div className="navbar-end">

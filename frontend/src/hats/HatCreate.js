@@ -21,11 +21,19 @@ const HatCreate = (props) => {
     <div className="box">
       <h1 className="title">Bulk Create Hats</h1>
       <HatError />
-      <HatQuantity />
-      <HatNotes />
-      <HatColors />
-      <HatStyles />
-      <HatSizes />
+      <div className="columns">
+        <div className="column">
+          <HatQuantity />
+          <HatStyles />
+          
+          <HatNotes />
+        </div>
+        <div className="column">
+          <HatColors />
+          <HatSizes />
+        </div>
+      </div>
+      
       <div className="field is-grouped">
         <div className="control">
           <button onClick={() => {hatStore.makeHat(props.history)}} className="button is-link">Save</button>
