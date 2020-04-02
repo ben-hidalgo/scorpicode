@@ -70,11 +70,13 @@ func (r *Repo) Save(hm repo.HatMod) (*repo.HatMod, error) {
 	id, key := idkey(hm.ID)
 
 	mod := &repo.HatMod{
-		ID:      id,
-		Color:   hm.Color,
-		Style:   hm.Style,
-		Size:    hm.Size,
-		Version: hm.Version + 1,
+		ID:       id,
+		Color:    hm.Color,
+		Style:    hm.Style,
+		Size:     hm.Size,
+		Quantity: hm.Quantity,
+		Notes:    hm.Notes,
+		Version:  hm.Version + 1,
 	}
 
 	//TODO: if id is not populated, insert; populated created_at, updated_at and add a version for optimistic locking

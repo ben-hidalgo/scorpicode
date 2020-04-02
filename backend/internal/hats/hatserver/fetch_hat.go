@@ -31,11 +31,13 @@ func (hs *Server) FetchHat(ctx context.Context, req *hatspb.FetchHatRequest) (*h
 	return &hatspb.FetchHatResponse{
 
 		Hat: &hatspb.Hat{
-			Id:      mod.ID,
-			Color:   mod.Color,
-			Style:   ToStyle(mod.Style),
-			Size:    mod.Size,
-			Version: int32(mod.Version),
+			Id:       mod.ID,
+			Color:    mod.Color,
+			Style:    ToStyle(mod.Style),
+			Size:     mod.Size,
+			Quantity: mod.Quantity,
+			Notes:    mod.Notes,
+			Version:  int32(mod.Version),
 		},
 	}, nil
 }

@@ -41,6 +41,8 @@ message Hat {
   string size = 3;
   string color = 4;
   Style style = 5;
+  int32 quantity = 6;
+  string notes = 7;
 }
 
 message MakeHatsRequest {

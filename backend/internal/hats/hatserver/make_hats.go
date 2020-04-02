@@ -43,7 +43,7 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 		return nil, util.InvalidArgumentError(HatStyleRequired)
 	}
 
-	// TODO: validate size slug
+	// TODO: validate size slug, quantity and notes
 
 	hr := repo.GetRepo(ctx)
 	if err := hr.Multi(); err != nil {
@@ -53,9 +53,11 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 
 	// a different instance is returned
 	mod, err := hr.Save(repo.HatMod{
-		Color: req.GetColor(),
-		Style: req.GetStyle().String(),
-		Size:  req.GetSize(),
+		Color:    req.GetColor(),
+		Style:    req.GetStyle().String(),
+		Size:     req.GetSize(),
+		Quantity: req.GetQuantity(),
+		Notes:    req.GetNotes(),
 	})
 	if err != nil {
 		return nil, err
@@ -68,11 +70,13 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 	return &hatspb.MakeHatsResponse{
 
 		Hat: &hatspb.Hat{
-			Id:      mod.ID,
-			Color:   mod.Color,
-			Style:   ToStyle(mod.Style),
-			Size:    mod.Size,
-			Version: int32(mod.Version),
+			Id:       mod.ID,
+			Color:    mod.Color,
+			Style:    ToStyle(mod.Style),
+			Size:     mod.Size,
+			Quantity: int32(mod.Quantity),
+			Version:  int32(mod.Version),
+			Notes:    mod.Notes,
 		},
 	}, nil
 }
