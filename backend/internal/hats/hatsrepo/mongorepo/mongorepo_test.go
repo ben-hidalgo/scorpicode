@@ -4,8 +4,6 @@ import (
 	"backend/internal/hats/hatsrepo"
 	"backend/internal/hats/hatsrepo/mongorepo"
 	"testing"
-
-	"github.com/Kamva/mgm/v2"
 )
 
 func TestPlaceholderExample(t *testing.T) {
@@ -14,17 +12,20 @@ func TestPlaceholderExample(t *testing.T) {
 		t.Skip()
 	}
 
-	err := mongorepo.Init()
-	if err != nil {
-		t.Fatalf("%s", err)
+	r := mongorepo.NewRepo()
+
+	hat := &hatsrepo.Hat{
+		Color:   "RED",
+		Size:    "06000",
+		Style:   "DERBY",
+		Version: 1,
 	}
 
-	book := hatsrepo.NewBook("my book", 5)
-
-	// Make sure pass the model by reference.
-	err = mgm.Coll(book).Create(book)
+	err := r.SaveHat(hat)
 	if err != nil {
-		t.Fatalf("%s", err)
+		t.Fatalf("%#v", err)
 	}
+
+	// t.Fatalf("%#v", hat)
 
 }

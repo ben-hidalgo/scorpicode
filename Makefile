@@ -47,11 +47,11 @@ dev:
 	# kubectl wait pods -l app=redis --for=condition=Ready -n dev
 
 go-happy:
-	(cd backend             && \
-	go vet ./...            && \
-	golint ./...            && \
+	(cd backend && \
+	go vet ./... && \
+	golint -set_exit_status ./... && \
 	go test ./... -short -v && \
-	go fmt ./...            && \
+	go fmt ./... && \
 	go mod tidy)
 
 TEST_ARGS=\

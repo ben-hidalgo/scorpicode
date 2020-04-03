@@ -3,6 +3,7 @@ package mongorepo
 import (
 	"backend/internal/hats/hatsrepo"
 	"backend/pkg/envconfig"
+	"fmt"
 
 	"github.com/Kamva/mgm/v2"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -19,13 +20,6 @@ func init() {
 	envconfig.SetString("MONGO_URI", &MongoURI)
 }
 
-// Init .
-func Init() error {
-	// Setup mgm default config
-	err := mgm.SetDefaultConfig(nil, DatabaseName, options.Client().ApplyURI(MongoURI))
-	return err
-}
-
 //MongoRepo implements HatsRepo
 type MongoRepo struct {
 }
@@ -33,7 +27,26 @@ type MongoRepo struct {
 // enforces the interface is implemented
 var _ hatsrepo.HatsRepo = (*MongoRepo)(nil)
 
-// Save .
-func (r *MongoRepo) Save(b *hatsrepo.Book) (*mgm.IDField, error) {
-	return nil, nil
+var initialized = false
+
+// NewRepo .
+func NewRepo() *MongoRepo {
+	if !initialized {
+		if err := mgm.SetDefaultConfig(nil, DatabaseName, options.Client().ApplyURI(MongoURI)); err != nil {
+			panic(fmt.Sprintf("%#v", err))
+		}
+		initialized = true
+	}
+	return &MongoRepo{}
+}
+
+// SaveHat .
+func (r *MongoRepo) SaveHat(h *hatsrepo.Hat) error {
+
+	err := mgm.Coll(h).Create(h)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
