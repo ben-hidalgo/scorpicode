@@ -3,9 +3,11 @@ package mongorepo
 import (
 	"backend/internal/hats/hatsrepo"
 	"backend/pkg/envconfig"
+	"context"
 	"fmt"
 
 	"github.com/Kamva/mgm/v2"
+	"github.com/twitchtv/twirp"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -16,7 +18,7 @@ var DatabaseName = "hats"
 var MongoURI = "mongodb://hats:hats@localhost:27017/hats"
 
 func init() {
-	envconfig.SetString("DATABASE_NAME", &DatabaseName)
+	envconfig.SetString("MONGO_DB", &DatabaseName)
 	envconfig.SetString("MONGO_URI", &MongoURI)
 }
 
@@ -27,26 +29,32 @@ type MongoRepo struct {
 // enforces the interface is implemented
 var _ hatsrepo.HatsRepo = (*MongoRepo)(nil)
 
-var initialized = false
+func init() {
+	if err := mgm.SetDefaultConfig(nil, DatabaseName, options.Client().ApplyURI(MongoURI)); err != nil {
+		panic(fmt.Sprintf("%#v", err))
+	}
+}
 
 // NewRepo .
 func NewRepo() *MongoRepo {
-	if !initialized {
-		if err := mgm.SetDefaultConfig(nil, DatabaseName, options.Client().ApplyURI(MongoURI)); err != nil {
-			panic(fmt.Sprintf("%#v", err))
-		}
-		initialized = true
-	}
 	return &MongoRepo{}
+}
+
+// ServerHooks is a Twirp middleware
+func ServerHooks() *twirp.ServerHooks {
+	return &twirp.ServerHooks{
+		RequestReceived: func(ctx context.Context) (context.Context, error) {
+			return context.WithValue(ctx, hatsrepo.RepoKey, NewRepo()), nil
+		},
+	}
 }
 
 // SaveHat .
 func (r *MongoRepo) SaveHat(h *hatsrepo.Hat) error {
+	return mgm.Coll(h).Create(h)
+}
 
-	err := mgm.Coll(h).Create(h)
-	if err != nil {
-		return err
-	}
-
-	return nil
+// SaveMakeHatsCmd .
+func (r *MongoRepo) SaveMakeHatsCmd(mhc *hatsrepo.MakeHatsCmd) error {
+	return mgm.Coll(mhc).Create(mhc)
 }

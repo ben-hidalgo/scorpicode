@@ -1,6 +1,8 @@
 package hatsrepo
 
 import (
+	"context"
+
 	"github.com/Kamva/mgm/v2"
 )
 
@@ -30,4 +32,22 @@ type MakeHatsCmd struct {
 // HatsRepo .
 type HatsRepo interface {
 	SaveHat(h *Hat) error
+	SaveMakeHatsCmd(mhc *MakeHatsCmd) error
+}
+
+// used to store the Repo in Context
+type key int
+
+// RepoKey is the key for the repo in context; public for mock injection
+var RepoKey key
+
+// FromContext returns the repo and panics if not found
+func FromContext(ctx context.Context) HatsRepo {
+
+	switch v := ctx.Value(RepoKey).(type) {
+	case HatsRepo:
+		return v
+	default:
+		panic("FromContext() no value found")
+	}
 }

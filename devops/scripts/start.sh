@@ -15,9 +15,7 @@ killall() {
 go run main.go) &
 
 (cd backend/cmd/hats/ && \
-DATASTORE_CONFIG=redis \
-REDIS_PASSWORD=redispassword \
-REDIS_ADDRESS=`minikube ip`:`kubectl get svc scorpicode-redis-master -n dev -o json | jq '.spec.ports[0].nodePort'`     \
+MONGO_URI=mongodb://hats:hats@`minikube ip`:`kubectl get svc scorpicode-mongodb -n dev -o json | jq '.spec.ports[0].nodePort'`/hats \
 go run main.go) &
 
 cat

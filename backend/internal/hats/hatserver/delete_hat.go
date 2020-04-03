@@ -1,7 +1,6 @@
 package hatserver
 
 import (
-	"backend/internal/hats/repo"
 	"backend/pkg/util"
 	"backend/rpc/hatspb"
 	"context"
@@ -22,20 +21,21 @@ func (hs *Server) DeleteHat(ctx context.Context, req *hatspb.DeleteHatRequest) (
 		return nil, util.InvalidArgumentError(HatVersionRequired)
 	}
 
-	hr := repo.GetRepo(ctx)
-	// if err := hr.Multi(); err != nil {
-	// 	return nil, util.InternalErrorWith(err)
-	// }
-	// defer hr.Discard()
+	/*
+		hr := repo.GetRepo(ctx)
+		// if err := hr.Multi(); err != nil {
+		// 	return nil, util.InternalErrorWith(err)
+		// }
+		// defer hr.Discard()
 
-	err := hr.Delete(req.GetId(), int(req.GetVersion()))
-	if err != nil {
-		return nil, err
-	}
+		err := hr.Delete(req.GetId(), int(req.GetVersion()))
+		if err != nil {
+			return nil, err
+		}
 
-	// if err := hr.Exec(); err != nil {
-	// 	return nil, twirp.InternalErrorWith(err)
-	// }
-
+		// if err := hr.Exec(); err != nil {
+		// 	return nil, twirp.InternalErrorWith(err)
+		// }
+	*/
 	return &hatspb.DeleteHatResponse{}, nil
 }

@@ -1,12 +1,9 @@
 package hatserver
 
 import (
-	"backend/internal/hats/repo"
 	"backend/pkg/util"
 	"backend/rpc/hatspb"
 	"context"
-
-	"github.com/twitchtv/twirp"
 
 	"github.com/sirupsen/logrus"
 )
@@ -45,38 +42,41 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 
 	// TODO: validate size slug, quantity and notes
 
-	hr := repo.GetRepo(ctx)
-	if err := hr.Multi(); err != nil {
-		return nil, util.InternalErrorWith(err)
-	}
-	defer hr.Discard()
+	/*
+		hr := repo.GetRepo(ctx)
+		if err := hr.Multi(); err != nil {
+			return nil, util.InternalErrorWith(err)
+		}
+		defer hr.Discard()
 
-	// a different instance is returned
-	mod, err := hr.Save(repo.HatMod{
-		Color:    req.GetColor(),
-		Style:    req.GetStyle().String(),
-		Size:     req.GetSize(),
-		Quantity: req.GetQuantity(),
-		Notes:    req.GetNotes(),
-	})
-	if err != nil {
-		return nil, err
-	}
+		// a different instance is returned
+		mod, err := hr.Save(repo.HatMod{
+			Color:    req.GetColor(),
+			Style:    req.GetStyle().String(),
+			Size:     req.GetSize(),
+			Quantity: req.GetQuantity(),
+			Notes:    req.GetNotes(),
+		})
+		if err != nil {
+			return nil, err
+		}
 
-	if err := hr.Exec(); err != nil {
-		return nil, twirp.InternalErrorWith(err)
-	}
+		if err := hr.Exec(); err != nil {
+			return nil, twirp.InternalErrorWith(err)
+		}
 
-	return &hatspb.MakeHatsResponse{
+		return &hatspb.MakeHatsResponse{
 
-		Hat: &hatspb.Hat{
-			Id:       mod.ID,
-			Color:    mod.Color,
-			Style:    ToStyle(mod.Style),
-			Size:     mod.Size,
-			Quantity: int32(mod.Quantity),
-			Version:  int32(mod.Version),
-			Notes:    mod.Notes,
-		},
-	}, nil
+			Hat: &hatspb.Hat{
+				Id:       mod.ID,
+				Color:    mod.Color,
+				Style:    ToStyle(mod.Style),
+				Size:     mod.Size,
+				Quantity: int32(mod.Quantity),
+				Version:  int32(mod.Version),
+				Notes:    mod.Notes,
+			},
+		}, nil
+	*/
+	return nil, nil
 }

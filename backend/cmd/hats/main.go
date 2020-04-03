@@ -3,9 +3,7 @@ package main
 import (
 	"backend/internal/hats/config"
 	"backend/internal/hats/hatserver"
-	"backend/internal/hats/repo"
-	"backend/internal/hats/repo/inmem"
-	"backend/internal/hats/repo/redisrepo"
+	"backend/internal/hats/hatsrepo/mongorepo"
 	"backend/pkg/httpwrap"
 	_ "backend/pkg/logging" // init logrus
 	"backend/rpc/hatspb"
@@ -23,11 +21,8 @@ import (
 // hats
 func main() {
 
-	hatRepo := initRepo()
-	defer hatRepo.Close()
-
 	// middleware filter chain
-	hooks := twirp.ChainHooks(repo.Hook(hatRepo))
+	hooks := twirp.ChainHooks(mongorepo.ServerHooks())
 
 	twirpHandler := hatspb.NewHatsServer(hatserver.NewServer(), hooks)
 
@@ -64,17 +59,4 @@ func main() {
 	<-idleConnsClosed
 
 	logrus.Infof("main() %s shut down", config.AppName)
-}
-
-func initRepo() repo.HatRepo {
-
-	switch config.DatastoreConfig {
-	case "inmem":
-		return inmem.NewRepo()
-	case "redis":
-		return redisrepo.NewRepo()
-	default:
-		logrus.Panicf("unexpected config.DatastoreConfig=%s", config.DatastoreConfig)
-		return nil
-	}
 }
