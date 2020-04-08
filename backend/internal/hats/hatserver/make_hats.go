@@ -1,6 +1,7 @@
 package hatserver
 
 import (
+	"backend/internal/hats/hatsrepo"
 	"backend/pkg/util"
 	"backend/rpc/hatspb"
 	"context"
@@ -42,41 +43,35 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 
 	// TODO: validate size slug, quantity and notes
 
-	/*
-		hr := repo.GetRepo(ctx)
-		if err := hr.Multi(); err != nil {
-			return nil, util.InternalErrorWith(err)
-		}
-		defer hr.Discard()
+	// TODO: transaction func
+	hr := hatsrepo.FromContext(ctx)
 
-		// a different instance is returned
-		mod, err := hr.Save(repo.HatMod{
-			Color:    req.GetColor(),
-			Style:    req.GetStyle().String(),
-			Size:     req.GetSize(),
-			Quantity: req.GetQuantity(),
-			Notes:    req.GetNotes(),
-		})
-		if err != nil {
-			return nil, err
-		}
+	cmd := &hatsrepo.MakeHatsCmd{
+		Color:    req.GetColor(),
+		Style:    req.GetStyle().String(),
+		Size:     req.GetSize(),
+		Quantity: req.GetQuantity(),
+		Notes:    req.GetNotes(),
+	}
 
-		if err := hr.Exec(); err != nil {
-			return nil, twirp.InternalErrorWith(err)
-		}
+	// the passed-in cmd will be mutated
+	err := hr.CreateMakeHatsCmd(cmd)
+	if err != nil {
+		return nil, err
+	}
 
-		return &hatspb.MakeHatsResponse{
+	// TODO: save a hat for each quantity with foreign key to the cmd
 
-			Hat: &hatspb.Hat{
-				Id:       mod.ID,
-				Color:    mod.Color,
-				Style:    ToStyle(mod.Style),
-				Size:     mod.Size,
-				Quantity: int32(mod.Quantity),
-				Version:  int32(mod.Version),
-				Notes:    mod.Notes,
-			},
-		}, nil
-	*/
-	return nil, nil
+	return &hatspb.MakeHatsResponse{
+
+		Hat: &hatspb.Hat{
+			Id:       cmd.ID.Hex(),
+			Color:    cmd.Color,
+			Style:    ToStyle(cmd.Style),
+			Size:     cmd.Size,
+			Quantity: int32(cmd.Quantity),
+			Version:  int32(cmd.Version),
+			Notes:    cmd.Notes,
+		},
+	}, nil
 }

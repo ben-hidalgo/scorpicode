@@ -31,8 +31,8 @@ type MakeHatsCmd struct {
 
 // HatsRepo .
 type HatsRepo interface {
-	SaveHat(h *Hat) error
-	SaveMakeHatsCmd(mhc *MakeHatsCmd) error
+	CreateHat(h *Hat) error
+	CreateMakeHatsCmd(mhc *MakeHatsCmd) error
 }
 
 // used to store the Repo in Context

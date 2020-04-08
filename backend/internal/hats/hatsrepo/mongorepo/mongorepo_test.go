@@ -4,9 +4,17 @@ import (
 	"backend/internal/hats/hatsrepo"
 	"backend/internal/hats/hatsrepo/mongorepo"
 	"testing"
+	"time"
 )
 
-func TestPlaceholderExample(t *testing.T) {
+const (
+	NOT_NIL   = "not nil"
+	NOT_EMPTY = "not empty"
+	GOT       = "got '%v' %s '%v'"
+	WANTED    = "but wanted"
+)
+
+func TestSaveHat(t *testing.T) {
 
 	if testing.Short() {
 		t.Skip()
@@ -14,18 +22,41 @@ func TestPlaceholderExample(t *testing.T) {
 
 	r := mongorepo.NewRepo()
 
+	color := "RED"
+	size := "06000"
+	style := "DERBY"
+
 	hat := &hatsrepo.Hat{
-		Color:   "RED",
-		Size:    "06000",
-		Style:   "DERBY",
-		Version: 1,
+		Color: color,
+		Size:  size,
+		Style: style,
 	}
 
-	err := r.SaveHat(hat)
+	err := r.CreateHat(hat)
 	if err != nil {
-		t.Fatalf("%#v", err)
+		t.Fatalf(GOT, err, WANTED, nil)
 	}
 
-	// t.Fatalf("%#v", hat)
+	if hat.GetID() == nil {
+		t.Fatalf(GOT, hat.GetID(), WANTED, NOT_NIL)
+	}
+	if hat.CreatedAt == (time.Time{}) {
+		t.Fatalf(GOT, hat.CreatedAt, WANTED, NOT_EMPTY)
+	}
+	if hat.UpdatedAt == (time.Time{}) {
+		t.Fatalf(GOT, hat.UpdatedAt, WANTED, NOT_EMPTY)
+	}
+	if hat.Version != 0 {
+		t.Fatalf(GOT, hat.Version, WANTED, 0)
+	}
+	if hat.Color != color {
+		t.Fatalf(GOT, hat.Color, WANTED, color)
+	}
+	if hat.Size != size {
+		t.Fatalf(GOT, hat.Size, WANTED, size)
+	}
+	if hat.Style != style {
+		t.Fatalf(GOT, hat.Style, WANTED, style)
+	}
 
 }

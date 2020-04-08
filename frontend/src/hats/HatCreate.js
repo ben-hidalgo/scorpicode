@@ -53,7 +53,12 @@ const HatQuantity = observer(() => {
   return (
     <div className="field">
       <label className="label">Quantity</label>
-      <input type="text" value={hatStore.draft.quantity} onChange={(ce) => {hatStore.draft.quantity = ce.target.value}}/>
+      <input type="text" value={hatStore.draft.quantity} onChange={(ce) => {
+        console.log(ce.target.value)
+        
+        hatStore.draft.quantity = ce.target.value
+        console.log(hatStore.draft.quantity)
+      }}/>
     </div>
   )
 })

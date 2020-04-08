@@ -58,12 +58,14 @@ func ServerHooks() *twirp.ServerHooks {
 	}
 }
 
-// SaveHat .
-func (r *MongoRepo) SaveHat(h *hatsrepo.Hat) error {
+// CreateHat .
+func (r *MongoRepo) CreateHat(h *hatsrepo.Hat) error {
+	h.Version = 0
 	return mgm.Coll(h).Create(h)
 }
 
-// SaveMakeHatsCmd .
-func (r *MongoRepo) SaveMakeHatsCmd(mhc *hatsrepo.MakeHatsCmd) error {
-	return mgm.Coll(mhc).Create(mhc)
+// CreateMakeHatsCmd .
+func (r *MongoRepo) CreateMakeHatsCmd(m *hatsrepo.MakeHatsCmd) error {
+	m.Version = 0
+	return mgm.Coll(m).Create(m)
 }
