@@ -102,7 +102,7 @@ func ValidateRequest(r *http.Request) (Bearer, error) {
 		return nil, errors.New("validateRequest() Auth0PemfilePath is required")
 	}
 
-	// debug(r)
+	traceRequest(r)
 
 	// read the pem file and parse the certificate
 	publicKey, err := loadPublicKey()
@@ -165,44 +165,41 @@ func loadPublicKey() (interface{}, error) {
 	return cert.PublicKey, nil
 }
 
-func debug(r *http.Request) {
+func traceRequest(r *http.Request) {
 
 	auth := r.Header.Get("Authorization")
 	if len(auth) == 0 {
-		logrus.Debugf("debug() len(auth) == 0")
+		logrus.Tracef("debug() len(auth) == 0")
 		return
 	}
 
 	split := strings.Split(auth, " ")
 	if len(split) != 2 {
-		logrus.Debugf("debug() len(split) != 2")
+		logrus.Tracef("debug() len(split) != 2")
 		return
 	}
-
-	// logrus.Debugf("debug() split[1]=%s", split[1])
 
 	tokenSplit := strings.Split(split[1], ".")
 	if len(tokenSplit) != 3 {
-		logrus.Debugf("debug() len(tokenSplit) != 3")
+		logrus.Tracef("debug() len(tokenSplit) != 3")
 		return
 	}
-	// logrus.Debugf("debug() tokenSplit=%s", tokenSplit)
 
 	decoded, err := base64.RawStdEncoding.DecodeString(tokenSplit[1])
 	if err != nil {
-		logrus.Debugf("debug() decoded err=%s     %s", err, tokenSplit[1])
+		logrus.Tracef("debug() decoded err=%s     %s", err, tokenSplit[1])
 		return
 	}
 
 	var dat map[string]interface{}
 
 	if err := json.Unmarshal(decoded, &dat); err != nil {
-		logrus.Debugf("debug() unmarshal err=%s", err)
+		logrus.Tracef("debug() unmarshal err=%s", err)
 		return
 	}
 
 	for k, v := range dat {
-		logrus.Debugf("debug() %s: %s", k, v)
+		logrus.Tracef("debug() %s: %s", k, v)
 	}
 
 }

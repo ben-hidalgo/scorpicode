@@ -46,8 +46,8 @@ func TestSaveHat(t *testing.T) {
 	if hat.UpdatedAt == (time.Time{}) {
 		t.Fatalf(GOT, hat.UpdatedAt, WANTED, NOT_EMPTY)
 	}
-	if hat.Version != 0 {
-		t.Fatalf(GOT, hat.Version, WANTED, 0)
+	if hat.Version != 1 {
+		t.Fatalf(GOT, hat.Version, WANTED, 1)
 	}
 	if hat.Color != color {
 		t.Fatalf(GOT, hat.Color, WANTED, color)

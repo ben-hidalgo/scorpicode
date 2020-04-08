@@ -23,7 +23,7 @@ var colors = map[string]interface{}{
 // MakeHats makes a hat
 func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*hatspb.MakeHatsResponse, error) {
 
-	logrus.Debugf("MakeHat() req=%v", req)
+	logrus.Debugf("MakeHats() req=%#v", req)
 
 	if req.GetColor() == "" {
 		return nil, util.InvalidArgumentError(HatColorRequired)
@@ -60,9 +60,11 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 		return nil, err
 	}
 
+	logrus.Debugf("MakeHats() cmd=%#v", cmd)
+
 	// TODO: save a hat for each quantity with foreign key to the cmd
 
-	return &hatspb.MakeHatsResponse{
+	res := &hatspb.MakeHatsResponse{
 
 		Hat: &hatspb.Hat{
 			Id:       cmd.ID.Hex(),
@@ -73,5 +75,9 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 			Version:  int32(cmd.Version),
 			Notes:    cmd.Notes,
 		},
-	}, nil
+	}
+
+	logrus.Debugf("MakeHats() res=%#v", res)
+
+	return res, nil
 }

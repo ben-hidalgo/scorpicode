@@ -60,12 +60,12 @@ func ServerHooks() *twirp.ServerHooks {
 
 // CreateHat .
 func (r *MongoRepo) CreateHat(h *hatsrepo.Hat) error {
-	h.Version = 0
+	h.Version = 1
 	return mgm.Coll(h).Create(h)
 }
 
 // CreateMakeHatsCmd .
 func (r *MongoRepo) CreateMakeHatsCmd(m *hatsrepo.MakeHatsCmd) error {
-	m.Version = 0
+	m.Version = 1
 	return mgm.Coll(m).Create(m)
 }
