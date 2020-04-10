@@ -60,8 +60,6 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 		return nil, err
 	}
 
-	logrus.Debugf("MakeHats() cmd=%#v", cmd)
-
 	// TODO: save a hat for each quantity with foreign key to the cmd
 
 	res := &hatspb.MakeHatsResponse{

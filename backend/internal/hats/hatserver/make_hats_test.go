@@ -2,31 +2,38 @@ package hatserver_test
 
 import (
 	"backend/internal/hats/hatserver"
+	"backend/internal/hats/hatsrepo"
+	"backend/internal/hats/hatsrepo/mockrepo"
 	"backend/pkg/util"
 	"backend/rpc/hatspb"
 	"context"
 	"testing"
 
 	"github.com/twitchtv/twirp"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
-	DefaultColor = "RED"
-	DefaultStyle = hatspb.Style_FEDORA
-	DefaultSize  = "06000"
+	DefaultColor    = "RED"
+	DefaultStyle    = hatspb.Style_FEDORA
+	DefaultSize     = "06000"
+	DefaultQuantity = 10
+	DefaultNotes    = "Lorem ipsum"
+	DefaultHexID    = "5e8e20bbe6b38b8cb0870808"
 )
 
-func startHat() (context.Context, *hatserver.Server, *hatspb.MakeHatsRequest) {
+func startHat(mr *mockrepo.FuncRepo) (context.Context, *hatserver.Server, *hatspb.MakeHatsRequest) {
 
-	//ctx := context.WithValue(context.Background(), repo.RepoKey, inmem.NewRepo())
-	ctx := context.Background()
+	ctx := context.WithValue(context.Background(), hatsrepo.RepoKey, mr)
 
 	hs := hatserver.NewServer()
 
 	req := &hatspb.MakeHatsRequest{
-		Size:  DefaultSize,
-		Style: DefaultStyle,
-		Color: DefaultColor,
+		Size:     DefaultSize,
+		Style:    DefaultStyle,
+		Color:    DefaultColor,
+		Quantity: DefaultQuantity,
+		Notes:    DefaultNotes,
 	}
 
 	return ctx, hs, req
@@ -34,19 +41,35 @@ func startHat() (context.Context, *hatserver.Server, *hatspb.MakeHatsRequest) {
 
 func TestHatSuccess(t *testing.T) {
 
-	// ctx, hs, req := startHat()
+	mr := &mockrepo.FuncRepo{
+		CreateMakeHatsCmdF: func(mhc *hatsrepo.MakeHatsCmd) error {
+			id, err := primitive.ObjectIDFromHex(DefaultHexID)
+			if err != nil {
+				t.Fatal(err)
+			}
+			mhc.SetID(id)
+			return nil
+		},
+	}
 
-	// res, err := hs.MakeHats(ctx, req)
+	ctx, hs, req := startHat(mr)
 
-	// if err != nil {
-	// 	t.Fatalf(GOT, err, WANTED, nil)
-	// }
-	// if res == nil {
-	// 	t.Fatalf(GOT, res, WANTED, NOT_NIL)
-	// }
-	// if res.GetHat() == nil {
-	// 	t.Fatalf(GOT, res.GetHat(), WANTED, NOT_NIL)
-	// }
+	res, err := hs.MakeHats(ctx, req)
+
+	if err != nil {
+		t.Fatalf(GOT, err, WANTED, nil)
+	}
+
+	if res == nil {
+		t.Fatalf(GOT, res, WANTED, NOT_NIL)
+	}
+	if res.GetHat() == nil {
+		t.Fatalf(GOT, res.GetHat(), WANTED, NOT_NIL)
+	}
+	if res.GetHat().GetId() != DefaultHexID {
+		t.Fatalf(GOT, res.GetHat().GetId(), WANTED, DefaultHexID)
+	}
+
 	// if res.GetHat().GetSize() != DefaultSize {
 	// 	t.Fatalf(GOT, res.GetHat().GetSize(), WANTED, DefaultSize)
 	// }
@@ -61,7 +84,7 @@ func TestHatSuccess(t *testing.T) {
 
 func TestSizeRequired(t *testing.T) {
 
-	ctx, hs, req := startHat()
+	ctx, hs, req := startHat(mockrepo.NewRepo())
 
 	req.Size = ""
 
@@ -70,7 +93,7 @@ func TestSizeRequired(t *testing.T) {
 
 func TestColorRequired(t *testing.T) {
 
-	ctx, hs, req := startHat()
+	ctx, hs, req := startHat(mockrepo.NewRepo())
 
 	req.Color = ""
 
@@ -79,7 +102,7 @@ func TestColorRequired(t *testing.T) {
 
 func TestColorDomain(t *testing.T) {
 
-	ctx, hs, req := startHat()
+	ctx, hs, req := startHat(mockrepo.NewRepo())
 
 	req.Color = "not a color"
 
@@ -103,7 +126,7 @@ func TestColorDomain(t *testing.T) {
 
 func TestNameRequired(t *testing.T) {
 
-	ctx, hs, req := startHat()
+	ctx, hs, req := startHat(mockrepo.NewRepo())
 
 	req.Style = hatspb.Style_UNKNOWN_STYLE
 

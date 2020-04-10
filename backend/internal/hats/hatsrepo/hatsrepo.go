@@ -39,7 +39,7 @@ type HatsRepo interface {
 type key int
 
 // RepoKey is the key for the repo in context; public for mock injection
-var RepoKey key
+const RepoKey key = 0
 
 // FromContext returns the repo and panics if not found
 func FromContext(ctx context.Context) HatsRepo {

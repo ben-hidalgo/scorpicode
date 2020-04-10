@@ -13,6 +13,11 @@ type FuncRepo struct {
 // enforces the interface is implemented
 var _ hatsrepo.HatsRepo = (*FuncRepo)(nil)
 
+// NewRepo .
+func NewRepo() *FuncRepo {
+	return &FuncRepo{}
+}
+
 // CreateHat calls the injected function
 func (r *FuncRepo) CreateHat(h *hatsrepo.Hat) error {
 	return r.CreateHatF(h)
@@ -20,5 +25,5 @@ func (r *FuncRepo) CreateHat(h *hatsrepo.Hat) error {
 
 // CreateMakeHatsCmd calls the injected function
 func (r *FuncRepo) CreateMakeHatsCmd(mhc *hatsrepo.MakeHatsCmd) error {
-	return r.CreateMakeHatsCmd(mhc)
+	return r.CreateMakeHatsCmdF(mhc)
 }
