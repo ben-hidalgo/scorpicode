@@ -16,15 +16,15 @@ func (hs *Server) FetchHat(ctx context.Context, req *hatspb.FetchHatRequest) (*h
 
 	hr := hatsrepo.FromContext(ctx)
 
-	mod, err := hr.FindOneMakeHatsCmd(req.GetId())
+	mhc, err := hr.FindOneMakeHatsCmd(req.GetId())
 	if err != nil {
 		return nil, util.InternalErrorWith(err)
 	}
-	if mod == nil {
+	if mhc == nil {
 		return nil, util.NotFoundError(req.GetId())
 	}
 
 	return &hatspb.FetchHatResponse{
-		Hat: MakeHatsCmdToHat(mod),
+		Hat: MakeHatsCmdToHat(mhc),
 	}, nil
 }

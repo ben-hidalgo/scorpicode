@@ -34,7 +34,7 @@ type HatsRepo interface {
 	// TODO: all funcs should accept Context
 	CreateHat(h *Hat) error
 	CreateMakeHatsCmd(mhc *MakeHatsCmd) error
-	DeleteMakeHatsCmd(id string, version int32) error
+	DeleteMakeHatsCmd(mhc *MakeHatsCmd) error
 	// not found returns nil, nil
 	FindOneMakeHatsCmd(id string) (*MakeHatsCmd, error)
 	FindAllMakeHatsCmd() ([]*MakeHatsCmd, error)

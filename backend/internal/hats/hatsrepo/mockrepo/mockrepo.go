@@ -8,7 +8,7 @@ import (
 type FuncRepo struct {
 	CreateHatF          func(h *hatsrepo.Hat) error
 	CreateMakeHatsCmdF  func(mhc *hatsrepo.MakeHatsCmd) error
-	DeleteMakeHatsCmdF  func(id string, version int32) error
+	DeleteMakeHatsCmdF  func(mhc *hatsrepo.MakeHatsCmd) error
 	FindAllMakeHatsCmdF func() ([]*hatsrepo.MakeHatsCmd, error)
 	FindOneMakeHatsCmdF func(id string) (*hatsrepo.MakeHatsCmd, error)
 }
@@ -32,8 +32,8 @@ func (r *FuncRepo) CreateMakeHatsCmd(mhc *hatsrepo.MakeHatsCmd) error {
 }
 
 // DeleteMakeHatsCmd calls the injected function
-func (r *FuncRepo) DeleteMakeHatsCmd(id string, version int32) error {
-	return r.DeleteMakeHatsCmdF(id, version)
+func (r *FuncRepo) DeleteMakeHatsCmd(mhc *hatsrepo.MakeHatsCmd) error {
+	return r.DeleteMakeHatsCmdF(mhc)
 }
 
 // FindOneMakeHatsCmd calls the injected function

@@ -22,6 +22,6 @@ func InternalErrorWith(e error) twirp.Error {
 
 // NotFoundError wraps twirp.NotFoundError
 func NotFoundError(msg string) twirp.Error {
-	logrus.Errorf("NotFoundError msg=%s", msg)
+	logrus.Warnf("NotFoundError msg=%s", msg)
 	return twirp.NotFoundError(msg)
 }

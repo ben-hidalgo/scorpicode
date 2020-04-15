@@ -11,6 +11,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/twitchtv/twirp"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -73,19 +74,8 @@ func (r *MongoRepo) CreateMakeHatsCmd(m *hatsrepo.MakeHatsCmd) error {
 }
 
 // DeleteMakeHatsCmd .
-func (r *MongoRepo) DeleteMakeHatsCmd(id string, version int32) error {
-
-	mhc := &hatsrepo.MakeHatsCmd{}
-
-	coll := mgm.Coll(mhc)
-
-	// TODO: validate not found behavior
-	err := coll.FindByID(id, mhc)
-	if err != nil {
-		return err
-	}
-
-	return coll.Delete(mhc)
+func (r *MongoRepo) DeleteMakeHatsCmd(mhc *hatsrepo.MakeHatsCmd) error {
+	return mgm.Coll(mhc).Delete(mhc)
 }
 
 // FindOneMakeHatsCmd not found returns nil, nil
@@ -95,9 +85,8 @@ func (r *MongoRepo) FindOneMakeHatsCmd(id string) (*hatsrepo.MakeHatsCmd, error)
 
 	coll := mgm.Coll(mhc)
 
-	// TODO: validate not found behavior
 	err := coll.FindByID(id, mhc)
-	if err == hex.ErrLength {
+	if err == hex.ErrLength || err == mongo.ErrNoDocuments {
 		// malformed id means not found
 		return nil, nil
 	}

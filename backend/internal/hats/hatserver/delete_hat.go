@@ -5,7 +5,7 @@ import (
 	"backend/pkg/util"
 	"backend/rpc/hatspb"
 	"context"
-	"encoding/hex"
+	"fmt"
 
 	"github.com/sirupsen/logrus"
 )
@@ -25,14 +25,19 @@ func (hs *Server) DeleteHat(ctx context.Context, req *hatspb.DeleteHatRequest) (
 
 	hr := hatsrepo.FromContext(ctx)
 
-	// TODO: fetch mhc by id and version, return 404 if necessary
-
-	// modify the signature to accept the found mhc
-	err := hr.DeleteMakeHatsCmd(req.GetId(), req.GetVersion())
-	if err == hex.ErrLength {
-		return nil, util.NotFoundError(err.Error())
+	mhc, err := hr.FindOneMakeHatsCmd(req.GetId())
+	if err != nil {
+		return nil, util.InternalErrorWith(err)
+	}
+	if mhc == nil {
+		return nil, util.NotFoundError(fmt.Sprintf("id: '%s', version: %d", req.GetId(), req.GetVersion()))
+	}
+	if mhc.Version != req.GetVersion() {
+		return nil, util.NotFoundError(fmt.Sprintf("id: '%s' version mismatch", req.GetId()))
 	}
 
+	// modify the signature to accept the found mhc
+	err = hr.DeleteMakeHatsCmd(mhc)
 	if err != nil {
 		return nil, err
 	}
