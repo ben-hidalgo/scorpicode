@@ -9,6 +9,7 @@ import (
 	"github.com/Kamva/mgm/v2"
 	"github.com/sirupsen/logrus"
 	"github.com/twitchtv/twirp"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -68,4 +69,21 @@ func (r *MongoRepo) CreateHat(h *hatsrepo.Hat) error {
 func (r *MongoRepo) CreateMakeHatsCmd(m *hatsrepo.MakeHatsCmd) error {
 	m.Version = 1
 	return mgm.Coll(m).Create(m)
+}
+
+// FindAllMakeHatsCmd .
+func (r *MongoRepo) FindAllMakeHatsCmd() ([]*hatsrepo.MakeHatsCmd, error) {
+
+	// result := []Book{}
+	// err := mgm.Coll(&Book{}).SimpleFind(&result, bson.M{"age": bson.M{operator.Gt: 24}})
+
+	results := []*hatsrepo.MakeHatsCmd{}
+
+	err := mgm.Coll(&hatsrepo.MakeHatsCmd{}).SimpleFind(&results, bson.M{})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return results, nil
 }

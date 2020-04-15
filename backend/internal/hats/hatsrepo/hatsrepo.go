@@ -31,8 +31,10 @@ type MakeHatsCmd struct {
 
 // HatsRepo .
 type HatsRepo interface {
+	// TODO: all funcs should accept Context
 	CreateHat(h *Hat) error
 	CreateMakeHatsCmd(mhc *MakeHatsCmd) error
+	FindAllMakeHatsCmd() ([]*MakeHatsCmd, error)
 }
 
 // used to store the Repo in Context

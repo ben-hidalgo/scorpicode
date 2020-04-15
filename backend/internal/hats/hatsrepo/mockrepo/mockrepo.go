@@ -6,8 +6,9 @@ import (
 
 //FuncRepo mock implementing HatsRepo with all methods injectable
 type FuncRepo struct {
-	CreateHatF         func(h *hatsrepo.Hat) error
-	CreateMakeHatsCmdF func(mhc *hatsrepo.MakeHatsCmd) error
+	CreateHatF          func(h *hatsrepo.Hat) error
+	CreateMakeHatsCmdF  func(mhc *hatsrepo.MakeHatsCmd) error
+	FindAllMakeHatsCmdF func() ([]*hatsrepo.MakeHatsCmd, error)
 }
 
 // enforces the interface is implemented
@@ -26,4 +27,9 @@ func (r *FuncRepo) CreateHat(h *hatsrepo.Hat) error {
 // CreateMakeHatsCmd calls the injected function
 func (r *FuncRepo) CreateMakeHatsCmd(mhc *hatsrepo.MakeHatsCmd) error {
 	return r.CreateMakeHatsCmdF(mhc)
+}
+
+// FindAllMakeHatsCmd calls the injected function
+func (r *FuncRepo) FindAllMakeHatsCmd() ([]*hatsrepo.MakeHatsCmd, error) {
+	return r.FindAllMakeHatsCmdF()
 }

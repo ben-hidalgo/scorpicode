@@ -1,6 +1,7 @@
 package hatserver
 
 import (
+	"backend/internal/hats/hatsrepo"
 	"backend/pkg/authnz"
 	"backend/rpc/hatspb"
 	"context"
@@ -24,31 +25,20 @@ func (hs *Server) ListHats(ctx context.Context, req *hatspb.ListHatsRequest) (*h
 	logrus.Debugf("ListHats() b.GetEmail()=%s", b.GetEmail())
 	logrus.Debugf("ListHats() b.GetRoles()=%s", b.GetRoles())
 
-	/*
-		hr := repo.GetRepo(ctx)
+	hr := hatsrepo.FromContext(ctx)
 
-		mods, err := hr.FindAll(repo.Limit(10), repo.Offset(0))
-		if err != nil {
-			return nil, err
-		}
+	mods, err := hr.FindAllMakeHatsCmd()
+	if err != nil {
+		return nil, err
+	}
 
-		hats := make([]*hatspb.Hat, len(mods))
+	hats := make([]*hatspb.Hat, len(mods))
 
-		for i, m := range mods {
-			hats[i] = &hatspb.Hat{
-				Id:       m.ID,
-				Version:  int32(m.Version),
-				Color:    m.Color,
-				Style:    ToStyle(m.Style),
-				Size:     m.Size,
-				Quantity: m.Quantity,
-				Notes:    m.Notes,
-			}
-		}
+	for i, m := range mods {
+		hats[i] = MakeHatsCmdToHat(m)
+	}
 
-		return &hatspb.ListHatsResponse{
-			Hats: hats,
-		}, nil
-	*/
-	return nil, nil
+	return &hatspb.ListHatsResponse{
+		Hats: hats,
+	}, nil
 }

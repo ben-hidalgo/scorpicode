@@ -25,6 +25,9 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 
 	logrus.Debugf("MakeHats() req=%#v", req)
 
+	// TODO: validate bearer has role HABERDASHER
+	// b := authnz.GetBearer(ctx)
+
 	if req.GetColor() == "" {
 		return nil, util.InvalidArgumentError(HatColorRequired)
 	}
@@ -46,6 +49,7 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 	// TODO: transaction func
 	hr := hatsrepo.FromContext(ctx)
 
+	// TODO: save the created by user id
 	cmd := &hatsrepo.MakeHatsCmd{
 		Color:    req.GetColor(),
 		Style:    req.GetStyle().String(),
@@ -62,8 +66,10 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 
 	// TODO: save a hat for each quantity with foreign key to the cmd
 
-	// TODO: factor the mod-to-rep code for re-use in list hats
-	res := MakeHatsCmdToMakeHatsResponse(cmd)
+	// reusable for list hats
+	res := &hatspb.MakeHatsResponse{
+		Hat: MakeHatsCmdToHat(cmd),
+	}
 
 	logrus.Debugf("MakeHats() res=%#v", res)
 
