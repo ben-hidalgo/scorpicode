@@ -15,6 +15,7 @@ killall() {
 go run main.go) &
 
 (cd backend/cmd/hats/ && \
+LOG_LEVEL=trace \
 MONGO_URI=mongodb://hats:hats@`minikube ip`:`kubectl get svc scorpicode-mongodb -n dev -o json | jq '.spec.ports[0].nodePort'`/hats \
 go run main.go) &
 

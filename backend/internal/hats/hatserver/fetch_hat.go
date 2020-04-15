@@ -1,6 +1,8 @@
 package hatserver
 
 import (
+	"backend/internal/hats/hatsrepo"
+	"backend/pkg/util"
 	"backend/rpc/hatspb"
 	"context"
 
@@ -12,32 +14,17 @@ func (hs *Server) FetchHat(ctx context.Context, req *hatspb.FetchHatRequest) (*h
 
 	logrus.Debugf("FetchHat() req=%v", req)
 
-	/*
-		hr := repo.GetRepo(ctx)
-		defer hr.Discard()
+	hr := hatsrepo.FromContext(ctx)
 
-		mod, err := hr.Find(req.GetId())
-		if err == repo.ErrNotFound {
-			// TODO: should this be wrapped in util?
-			// TODO: should find() return nil, nil rather than an err?
-			return nil, twirp.NotFoundError(req.GetId())
-		}
-		if err != nil {
-			return nil, util.InternalErrorWith(err)
-		}
+	mod, err := hr.FindOneMakeHatsCmd(req.GetId())
+	if err != nil {
+		return nil, util.InternalErrorWith(err)
+	}
+	if mod == nil {
+		return nil, util.NotFoundError(req.GetId())
+	}
 
-		return &hatspb.FetchHatResponse{
-
-			Hat: &hatspb.Hat{
-				Id:       mod.ID,
-				Color:    mod.Color,
-				Style:    ToStyle(mod.Style),
-				Size:     mod.Size,
-				Quantity: mod.Quantity,
-				Notes:    mod.Notes,
-				Version:  int32(mod.Version),
-			},
-		}, nil
-	*/
-	return nil, nil
+	return &hatspb.FetchHatResponse{
+		Hat: MakeHatsCmdToHat(mod),
+	}, nil
 }

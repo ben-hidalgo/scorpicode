@@ -4,6 +4,7 @@ import (
 	"backend/internal/hats/hatsrepo"
 	"backend/pkg/envconfig"
 	"context"
+	"encoding/hex"
 	"fmt"
 
 	"github.com/Kamva/mgm/v2"
@@ -71,7 +72,7 @@ func (r *MongoRepo) CreateMakeHatsCmd(m *hatsrepo.MakeHatsCmd) error {
 	return mgm.Coll(m).Create(m)
 }
 
-// DeleteMakeHatsCmd calls the injected function
+// DeleteMakeHatsCmd .
 func (r *MongoRepo) DeleteMakeHatsCmd(id string, version int32) error {
 
 	mhc := &hatsrepo.MakeHatsCmd{}
@@ -84,11 +85,26 @@ func (r *MongoRepo) DeleteMakeHatsCmd(id string, version int32) error {
 		return err
 	}
 
-	if mhc.Version != version {
-		return hatsrepo.ErrVersionMismatch
-	}
-
 	return coll.Delete(mhc)
+}
+
+// FindOneMakeHatsCmd not found returns nil, nil
+func (r *MongoRepo) FindOneMakeHatsCmd(id string) (*hatsrepo.MakeHatsCmd, error) {
+
+	mhc := &hatsrepo.MakeHatsCmd{}
+
+	coll := mgm.Coll(mhc)
+
+	// TODO: validate not found behavior
+	err := coll.FindByID(id, mhc)
+	if err == hex.ErrLength {
+		// malformed id means not found
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return mhc, nil
 }
 
 // FindAllMakeHatsCmd .

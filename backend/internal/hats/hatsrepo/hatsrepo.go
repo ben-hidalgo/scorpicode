@@ -2,13 +2,9 @@ package hatsrepo
 
 import (
 	"context"
-	"errors"
 
 	"github.com/Kamva/mgm/v2"
 )
-
-// ErrVersionMismatch is for optimistic locking version mismatch on update and delete
-var ErrVersionMismatch = errors.New("err.version.mismatch")
 
 // Hat .
 type Hat struct {
@@ -39,6 +35,8 @@ type HatsRepo interface {
 	CreateHat(h *Hat) error
 	CreateMakeHatsCmd(mhc *MakeHatsCmd) error
 	DeleteMakeHatsCmd(id string, version int32) error
+	// not found returns nil, nil
+	FindOneMakeHatsCmd(id string) (*MakeHatsCmd, error)
 	FindAllMakeHatsCmd() ([]*MakeHatsCmd, error)
 }
 

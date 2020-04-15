@@ -169,37 +169,37 @@ func traceRequest(r *http.Request) {
 
 	auth := r.Header.Get("Authorization")
 	if len(auth) == 0 {
-		logrus.Tracef("debug() len(auth) == 0")
+		logrus.Tracef("authnz.traceRequest() len(auth) == 0")
 		return
 	}
 
 	split := strings.Split(auth, " ")
 	if len(split) != 2 {
-		logrus.Tracef("debug() len(split) != 2")
+		logrus.Tracef("authnz.traceRequest() len(split) != 2")
 		return
 	}
 
 	tokenSplit := strings.Split(split[1], ".")
 	if len(tokenSplit) != 3 {
-		logrus.Tracef("debug() len(tokenSplit) != 3")
+		logrus.Tracef("authnz.traceRequest() len(tokenSplit) != 3")
 		return
 	}
 
 	decoded, err := base64.RawStdEncoding.DecodeString(tokenSplit[1])
 	if err != nil {
-		logrus.Tracef("debug() decoded err=%s     %s", err, tokenSplit[1])
+		logrus.Tracef("authnz.traceRequest() decoded err=%s     %s", err, tokenSplit[1])
 		return
 	}
 
 	var dat map[string]interface{}
 
 	if err := json.Unmarshal(decoded, &dat); err != nil {
-		logrus.Tracef("debug() unmarshal err=%s", err)
+		logrus.Tracef("authnz.traceRequest() unmarshal err=%s", err)
 		return
 	}
 
 	for k, v := range dat {
-		logrus.Tracef("debug() %s: %s", k, v)
+		logrus.Tracef("authnz.traceRequest() %s: %s", k, v)
 	}
 
 }
