@@ -25,6 +25,9 @@ const HatIDRequired = util.ErrMsg("hat.id.required")
 // HatVersionRequired .
 const HatVersionRequired = util.ErrMsg("hat.version.required")
 
+// HatVersionMismatch .
+const HatVersionMismatch = util.ErrMsg("hat.version.mismatch")
+
 // HatColorRequired .
 const HatColorRequired = util.ErrMsg("hat.color.required")
 

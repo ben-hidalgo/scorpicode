@@ -12,7 +12,7 @@ const HatCreate = (props) => {
 
   // similar to componentDidMount and componentDidUpdate
   useEffect(() => {
-    if (hatStore.list.length === 0) {
+    if (!hatStore.draft) {
       hatStore.initDraft()
     }
   })

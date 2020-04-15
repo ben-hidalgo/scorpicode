@@ -54,6 +54,7 @@ func TestHatSuccess(t *testing.T) {
 			mhc.SetID(id)
 			mhc.CreatedAt = DefaultCreatedAt
 			mhc.UpdatedAt = DefaultUpdatedAt
+			mhc.Version = 1
 			return nil
 		},
 	}
@@ -80,6 +81,9 @@ func TestHatSuccess(t *testing.T) {
 	}
 	if res.GetHat().GetUpdatedAt() != DefaultUpdatedAt.Format(time.RFC3339) {
 		t.Fatalf(GOT, res.GetHat().GetUpdatedAt(), WANTED, DefaultUpdatedAt.Format(time.RFC3339))
+	}
+	if res.GetHat().GetVersion() != 1 {
+		t.Fatalf(GOT, res.GetHat().GetVersion(), WANTED, 1)
 	}
 	if res.GetHat().GetSize() != DefaultSize {
 		t.Fatalf(GOT, res.GetHat().GetSize(), WANTED, DefaultSize)

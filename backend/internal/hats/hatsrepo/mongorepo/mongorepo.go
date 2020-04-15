@@ -71,6 +71,26 @@ func (r *MongoRepo) CreateMakeHatsCmd(m *hatsrepo.MakeHatsCmd) error {
 	return mgm.Coll(m).Create(m)
 }
 
+// DeleteMakeHatsCmd calls the injected function
+func (r *MongoRepo) DeleteMakeHatsCmd(id string, version int32) error {
+
+	mhc := &hatsrepo.MakeHatsCmd{}
+
+	coll := mgm.Coll(mhc)
+
+	// TODO: validate not found behavior
+	err := coll.FindByID(id, mhc)
+	if err != nil {
+		return err
+	}
+
+	if mhc.Version != version {
+		return hatsrepo.ErrVersionMismatch
+	}
+
+	return coll.Delete(mhc)
+}
+
 // FindAllMakeHatsCmd .
 func (r *MongoRepo) FindAllMakeHatsCmd() ([]*hatsrepo.MakeHatsCmd, error) {
 

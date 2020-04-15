@@ -11,6 +11,7 @@ class HatStore {
       current: null,
       draft: null,
       list: [],
+      listInit: false,
       error: null,
     })
     this.initDraft()
@@ -68,6 +69,7 @@ class HatStore {
     agent.Hats.listHats()
       .then(({ hats }) => {
         this.list = hats
+        this.listInit = true
       })
       .catch(err => {
         this.handleCatch(err)
@@ -104,10 +106,11 @@ class HatStore {
     this.isLoading = true
     agent.Hats.deleteHat(id, version)
       .then(() => {
-        this.hats = this.hats.filter((v, i, a) => {return v.id !== id})
+        this.list = this.list.filter((v, i, a) => {return v.id !== id})
       })
       .catch(err => {
-        this.handleCatch(err)
+        console.log(err)
+        // this.handleCatch(err)
       })
       .finally(() => { this.isLoading = false })
 

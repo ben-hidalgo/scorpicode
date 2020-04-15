@@ -12,7 +12,7 @@ const HatList = () => {
 
   // similar to componentDidMount and componentDidUpdate
   useEffect(() => {
-    if (hatStore.list.length === 0) {
+    if (!hatStore.listInit) {
       hatStore.listHats()
     }
   })
@@ -30,12 +30,12 @@ const HatList = () => {
             <th>Style</th>
             <th>Quantity</th>
             <th>Notes</th>
+            <th>Version</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-        {
-          hatStore.list.map(h => {
+        { hatStore.list.map(h => {
             return (
               <tr key={h.id}>
                 <td><Link to={`/hatsview/${h.id}`}>{h.id}</Link></td>
@@ -44,6 +44,7 @@ const HatList = () => {
                 <td>{h.style}</td>
                 <td>{h.quantity}</td>
                 <td>{h.notes}</td>
+                <td>{h.version}</td>
                 <td><button onClick={() => {hatStore.deleteHat(h.id, h.version)}} className="delete"/></td>
               </tr>
             )
