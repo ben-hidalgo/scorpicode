@@ -24,7 +24,7 @@ const (
 )
 
 var DefaultCreatedAt = time.Date(2020, time.January, 0, 0, 0, 0, 0, time.UTC)
-var DefaultUpdatedAt = time.Date(2020, time.January, 0, 0, 0, 0, 1, time.UTC)
+var DefaultUpdatedAt = time.Date(2020, time.January, 1, 1, 1, 1, 1, time.UTC)
 
 func startHat(mr *mockrepo.FuncRepo) (context.Context, *hatserver.Server, *hatspb.MakeHatsRequest) {
 

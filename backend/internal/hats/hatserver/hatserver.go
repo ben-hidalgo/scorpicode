@@ -1,8 +1,10 @@
 package hatserver
 
 import (
+	"backend/internal/hats/hatsrepo"
 	"backend/pkg/util"
 	"backend/rpc/hatspb"
+	"time"
 )
 
 // Server implements the Hats interface
@@ -38,4 +40,24 @@ const HatStyleRequired = util.ErrMsg("hat.style.required")
 // ToStyle converts a string to a Style type
 func ToStyle(s string) hatspb.Style {
 	return hatspb.Style(hatspb.Style_value[s])
+}
+
+// MakeHatsCmdToMakeHatsResponse .
+func MakeHatsCmdToMakeHatsResponse(cmd *hatsrepo.MakeHatsCmd) *hatspb.MakeHatsResponse {
+	return &hatspb.MakeHatsResponse{
+
+		Hat: &hatspb.Hat{
+			Id:        cmd.ID.Hex(),
+			CreatedAt: cmd.CreatedAt.Format(time.RFC3339),
+			UpdatedAt: cmd.UpdatedAt.Format(time.RFC3339),
+			Version:   int32(cmd.Version),
+			Color:     cmd.Color,
+			Style:     ToStyle(cmd.Style),
+			Size:      cmd.Size,
+			Quantity:  int32(cmd.Quantity),
+
+			Notes: cmd.Notes,
+		},
+	}
+
 }
