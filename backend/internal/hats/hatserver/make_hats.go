@@ -5,6 +5,7 @@ import (
 	"backend/pkg/util"
 	"backend/rpc/hatspb"
 	"context"
+	"time"
 
 	"github.com/sirupsen/logrus"
 )
@@ -62,16 +63,20 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 
 	// TODO: save a hat for each quantity with foreign key to the cmd
 
+	// TODO: factor the mod-to-rep code for re-use in list hats
 	res := &hatspb.MakeHatsResponse{
 
 		Hat: &hatspb.Hat{
-			Id:       cmd.ID.Hex(),
-			Color:    cmd.Color,
-			Style:    ToStyle(cmd.Style),
-			Size:     cmd.Size,
-			Quantity: int32(cmd.Quantity),
-			Version:  int32(cmd.Version),
-			Notes:    cmd.Notes,
+			Id:        cmd.ID.Hex(),
+			CreatedAt: cmd.CreatedAt.Format(time.RFC3339),
+			UpdatedAt: cmd.UpdatedAt.Format(time.RFC3339),
+			Version:   int32(cmd.Version),
+			Color:     cmd.Color,
+			Style:     ToStyle(cmd.Style),
+			Size:      cmd.Size,
+			Quantity:  int32(cmd.Quantity),
+
+			Notes: cmd.Notes,
 		},
 	}
 

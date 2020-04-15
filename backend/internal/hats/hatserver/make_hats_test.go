@@ -8,6 +8,7 @@ import (
 	"backend/rpc/hatspb"
 	"context"
 	"testing"
+	"time"
 
 	"github.com/twitchtv/twirp"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -21,6 +22,9 @@ const (
 	DefaultNotes    = "Lorem ipsum"
 	DefaultHexID    = "5e8e20bbe6b38b8cb0870808"
 )
+
+var DefaultCreatedAt = time.Date(2020, time.January, 0, 0, 0, 0, 0, time.UTC)
+var DefaultUpdatedAt = time.Date(2020, time.January, 0, 0, 0, 0, 1, time.UTC)
 
 func startHat(mr *mockrepo.FuncRepo) (context.Context, *hatserver.Server, *hatspb.MakeHatsRequest) {
 
@@ -48,6 +52,8 @@ func TestHatSuccess(t *testing.T) {
 				t.Fatal(err)
 			}
 			mhc.SetID(id)
+			mhc.CreatedAt = DefaultCreatedAt
+			mhc.UpdatedAt = DefaultUpdatedAt
 			return nil
 		},
 	}
@@ -69,16 +75,21 @@ func TestHatSuccess(t *testing.T) {
 	if res.GetHat().GetId() != DefaultHexID {
 		t.Fatalf(GOT, res.GetHat().GetId(), WANTED, DefaultHexID)
 	}
-
-	// if res.GetHat().GetSize() != DefaultSize {
-	// 	t.Fatalf(GOT, res.GetHat().GetSize(), WANTED, DefaultSize)
-	// }
-	// if res.GetHat().GetStyle() != DefaultStyle {
-	// 	t.Fatalf(GOT, res.GetHat().GetStyle(), WANTED, DefaultStyle)
-	// }
-	// if res.GetHat().GetColor() != DefaultColor {
-	// 	t.Fatalf(GOT, res.GetHat().GetColor(), WANTED, DefaultColor)
-	// }
+	if res.GetHat().GetCreatedAt() != DefaultCreatedAt.Format(time.RFC3339) {
+		t.Fatalf(GOT, res.GetHat().GetCreatedAt(), WANTED, DefaultCreatedAt.Format(time.RFC3339))
+	}
+	if res.GetHat().GetUpdatedAt() != DefaultUpdatedAt.Format(time.RFC3339) {
+		t.Fatalf(GOT, res.GetHat().GetUpdatedAt(), WANTED, DefaultUpdatedAt.Format(time.RFC3339))
+	}
+	if res.GetHat().GetSize() != DefaultSize {
+		t.Fatalf(GOT, res.GetHat().GetSize(), WANTED, DefaultSize)
+	}
+	if res.GetHat().GetStyle() != DefaultStyle {
+		t.Fatalf(GOT, res.GetHat().GetStyle(), WANTED, DefaultStyle)
+	}
+	if res.GetHat().GetColor() != DefaultColor {
+		t.Fatalf(GOT, res.GetHat().GetColor(), WANTED, DefaultColor)
+	}
 
 }
 

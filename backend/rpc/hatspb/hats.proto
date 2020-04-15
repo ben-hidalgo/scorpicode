@@ -37,12 +37,14 @@ enum Style {
 // A Hat is a piece of headwear
 message Hat {
   string id = 1;
-  int32 version = 2;
-  string size = 3;
-  string color = 4;
-  Style style = 5;
-  int32 quantity = 6;
-  string notes = 7;
+  string created_at = 2;
+  string updated_at = 3;
+  int32 version = 4;
+  string size = 5;
+  string color = 6;
+  Style style = 7;
+  int32 quantity = 8;
+  string notes = 9;
 }
 
 message MakeHatsRequest {

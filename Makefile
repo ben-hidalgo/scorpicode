@@ -61,13 +61,16 @@ REDIS_PASSWORD=redispassword
 test:
 	(cd backend && ${TEST_ARGS} go test ./... -v -count=1)
 
-start-backend: go-happy
+start-backend: #go-happy
 	./devops/scripts/start.sh
 
 start-frontend:
 	(cd frontend  && \
 	npm install   && \
 	npm start)
+
+login:
+	open http://localhost:8080/login
 
 protobufs:
 	(cd backend &&             \
