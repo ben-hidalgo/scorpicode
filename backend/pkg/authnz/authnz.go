@@ -160,20 +160,19 @@ func ValidateRequest(r *http.Request) (Bearer, error) {
 	}, nil
 }
 
-// TODO: load on startup with init
 // cache in memory
 var pemFile []byte
 
-func loadCert() (*x509.Certificate, error) {
-
+func init() {
 	// forward declare the error so as to not shadow the package level pemFile contents
 	var err error
-	if len(pemFile) == 0 {
-		pemFile, err = ioutil.ReadFile(Auth0PemfilePath)
-	}
+	pemFile, err = ioutil.ReadFile(Auth0PemfilePath)
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
+}
+
+func loadCert() (*x509.Certificate, error) {
 
 	p, rest := pem.Decode(pemFile)
 	if len(rest) != 0 {
