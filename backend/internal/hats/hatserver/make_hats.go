@@ -2,6 +2,7 @@ package hatserver
 
 import (
 	"backend/internal/hats/hatsrepo"
+	"backend/pkg/authnz"
 	"backend/pkg/util"
 	"backend/rpc/hatspb"
 	"context"
@@ -25,8 +26,11 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 
 	logrus.Debugf("MakeHats() req=%#v", req)
 
-	// TODO: validate bearer has role HABERDASHER
-	// b := authnz.GetBearer(ctx)
+	bearer := authnz.GetBearer(ctx)
+	// currently, all authenticated users are allowed to make hats
+	if !bearer.HasRole(authnz.AUTHENTICATED, authnz.HABERDASHER) {
+		return nil, util.PermissionDeniedError(MakeHatsForbidden)
+	}
 
 	if req.GetColor() == "" {
 		return nil, util.InvalidArgumentError(HatColorRequired)

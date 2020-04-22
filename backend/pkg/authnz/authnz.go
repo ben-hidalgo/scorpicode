@@ -25,12 +25,21 @@ type Role string
 // CSR is customer service representative
 const CSR = Role("CSR")
 
+// HABERDASHER is a mock role for PoC purposes
+const HABERDASHER = Role("HABERDASHER")
+
+// AUTHENTICATED means the user is logged in
+const AUTHENTICATED = Role("AUTHENTICATED")
+
+// VERIFIED means the user has verified their email address
+const VERIFIED = Role("VERIFIED")
+
 // Bearer interface for token abstraction
 type Bearer interface {
 	// has any role provided
 	HasRole(r ...Role) bool
 	GetEmail() string
-	GetRoles() []string
+	GetRoles() []Role
 }
 
 // used to store the Bearer in Context
@@ -59,9 +68,17 @@ type BearerToken struct {
 // enforces the interface is implemented
 var _ Bearer = (*BearerToken)(nil)
 
-// HasRole .
-func (bt *BearerToken) HasRole(r ...Role) bool {
-	return true
+// HasRole returns true if any of the given roles are present
+func (bt *BearerToken) HasRole(roles ...Role) bool {
+
+	for _, br := range bt.GetRoles() {
+		for _, r := range roles {
+			if br == r {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 // GetEmail .
@@ -73,11 +90,24 @@ func (bt *BearerToken) GetEmail() string {
 }
 
 // GetRoles .
-func (bt *BearerToken) GetRoles() []string {
+func (bt *BearerToken) GetRoles() []Role {
+
+	// no custom claims means anonymous i.e. not authenticated / no roles
 	if bt.CC == nil {
-		return []string{}
+		return []Role{}
 	}
-	return bt.CC.Roles
+
+	var roles []Role
+
+	roles = append(roles, AUTHENTICATED)
+
+	// TODO: if claims include VERIFIED, append it
+
+	for _, r := range bt.CC.Roles {
+		roles = append(roles, Role(r))
+	}
+
+	return roles
 }
 
 // CustomClaims .

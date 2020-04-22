@@ -4,6 +4,7 @@ import (
 	"backend/internal/hats/hatserver"
 	"backend/internal/hats/hatsrepo"
 	"backend/internal/hats/hatsrepo/mockrepo"
+	"backend/pkg/authnz"
 	"backend/pkg/util"
 	"backend/rpc/hatspb"
 	"context"
@@ -28,7 +29,16 @@ var DefaultUpdatedAt = time.Date(2020, time.January, 1, 1, 1, 1, 1, time.UTC)
 
 func startHat(mr *mockrepo.FuncRepo) (context.Context, *hatserver.Server, *hatspb.MakeHatsRequest) {
 
-	ctx := context.WithValue(context.Background(), hatsrepo.RepoKey, mr)
+	ctx := context.Background()
+
+	ctx = context.WithValue(ctx, hatsrepo.RepoKey, mr)
+
+	ctx = context.WithValue(ctx, authnz.Key, &authnz.BearerToken{
+		CC: &authnz.CustomClaims{
+			// empty role array is AUTHENTICATED
+			Roles: []string{},
+		},
+	})
 
 	hs := hatserver.NewServer()
 
@@ -93,6 +103,34 @@ func TestHatSuccess(t *testing.T) {
 	}
 	if res.GetHat().GetColor() != DefaultColor {
 		t.Fatalf(GOT, res.GetHat().GetColor(), WANTED, DefaultColor)
+	}
+
+}
+
+func TestMissingRole(t *testing.T) {
+
+	ctx, hs, req := startHat(mockrepo.NewRepo())
+
+	// overwrite the default bearer with nil custom claims
+	ctx = context.WithValue(ctx, authnz.Key, &authnz.BearerToken{
+		CC: nil,
+	})
+
+	res, err := hs.MakeHats(ctx, req)
+
+	if err == nil {
+		t.Fatalf(GOT, err, WANTED, NOT_NIL)
+	}
+	if res != nil {
+		t.Fatalf(GOT, res, WANTED, nil)
+	}
+
+	e := err.(twirp.Error)
+	if e.Code() != twirp.PermissionDenied {
+		t.Fatalf(GOT, e.Code(), WANTED, twirp.PermissionDenied)
+	}
+	if e.Msg() != string(hatserver.MakeHatsForbidden) {
+		t.Fatalf(GOT, e.Msg(), WANTED, hatserver.MakeHatsForbidden)
 	}
 
 }

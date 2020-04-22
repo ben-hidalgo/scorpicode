@@ -25,3 +25,9 @@ func NotFoundError(msg string) twirp.Error {
 	logrus.Warnf("NotFoundError msg=%s", msg)
 	return twirp.NotFoundError(msg)
 }
+
+// PermissionDeniedError wraps twirp.PermissionDeniedError
+func PermissionDeniedError(emsg ErrMsg) twirp.Error {
+	logrus.Warnf("PermissionDeniedError emsg=%s", emsg)
+	return twirp.NewError(twirp.PermissionDenied, string(emsg))
+}
