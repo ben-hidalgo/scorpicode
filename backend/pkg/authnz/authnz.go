@@ -128,13 +128,13 @@ func ValidateRequest(r *http.Request) (Bearer, error) {
 	traceRequest(r)
 
 	// read the pem file and parse the certificate
-	publicKey, err := loadPublicKey()
+	cert, err := loadCert()
 	if err != nil {
 		return nil, err
 	}
 
 	// the key provider holds the public key value
-	secretProvider := auth0.NewKeyProvider(publicKey)
+	secretProvider := auth0.NewKeyProvider(cert.PublicKey)
 
 	// audience is the client ID
 	configuration := auth0.NewConfiguration(secretProvider, []string{Auth0ClientID}, Auth0Issuer, jose.RS256)
@@ -149,7 +149,7 @@ func ValidateRequest(r *http.Request) (Bearer, error) {
 
 	cc := &CustomClaims{}
 
-	err = jt.Claims(publicKey, cc)
+	err = jt.Claims(cert.PublicKey, cc)
 	if err != nil {
 		return nil, err
 	}
@@ -160,33 +160,9 @@ func ValidateRequest(r *http.Request) (Bearer, error) {
 	}, nil
 }
 
+// TODO: load on startup with init
 // cache in memory
 var pemFile []byte
-
-func loadPublicKey() (interface{}, error) {
-
-	// forward declare the error so as to not shadow the package level pemFile contents
-	var err error
-	if len(pemFile) == 0 {
-		pemFile, err = ioutil.ReadFile(Auth0PemfilePath)
-	}
-	if err != nil {
-		return nil, err
-	}
-
-	p, rest := pem.Decode(pemFile)
-	if len(rest) != 0 {
-		return nil, fmt.Errorf("loadPublicKey() unexpected len(rest)=%d", len(rest))
-	}
-
-	cert, err := x509.ParseCertificate(p.Bytes)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return cert.PublicKey, nil
-}
 
 func loadCert() (*x509.Certificate, error) {
 
