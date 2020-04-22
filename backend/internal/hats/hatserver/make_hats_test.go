@@ -35,8 +35,7 @@ func startHat(mr *mockrepo.FuncRepo) (context.Context, *hatserver.Server, *hatsp
 
 	ctx = context.WithValue(ctx, authnz.Key, &authnz.BearerToken{
 		CC: &authnz.CustomClaims{
-			// empty role array is AUTHENTICATED
-			Roles: []string{},
+			Roles: []string{"HABERDASHER"},
 		},
 	})
 
@@ -111,7 +110,7 @@ func TestMissingRole(t *testing.T) {
 
 	ctx, hs, req := startHat(mockrepo.NewRepo())
 
-	// overwrite the default bearer with nil custom claims
+	// overwrite the default bearer with no roles
 	ctx = context.WithValue(ctx, authnz.Key, &authnz.BearerToken{
 		CC: nil,
 	})

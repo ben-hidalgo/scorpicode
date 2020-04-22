@@ -27,8 +27,8 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 	logrus.Debugf("MakeHats() req=%#v", req)
 
 	bearer := authnz.GetBearer(ctx)
-	// currently, all authenticated users are allowed to make hats
-	if !bearer.HasRole(authnz.AUTHENTICATED, authnz.HABERDASHER) {
+	// only haberdasher role is allowed to make hats
+	if !bearer.HasRole(authnz.HABERDASHER) {
 		return nil, util.PermissionDeniedError(MakeHatsForbidden)
 	}
 

@@ -28,9 +28,6 @@ const CSR = Role("CSR")
 // HABERDASHER is a mock role for PoC purposes
 const HABERDASHER = Role("HABERDASHER")
 
-// AUTHENTICATED means the user is logged in
-const AUTHENTICATED = Role("AUTHENTICATED")
-
 // VERIFIED means the user has verified their email address
 const VERIFIED = Role("VERIFIED")
 
@@ -98,8 +95,6 @@ func (bt *BearerToken) GetRoles() []Role {
 	}
 
 	var roles []Role
-
-	roles = append(roles, AUTHENTICATED)
 
 	// TODO: if claims include VERIFIED, append it
 
