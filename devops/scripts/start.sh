@@ -12,6 +12,8 @@ killall() {
 }
 
 (cd backend/cmd/roxie/ && \
+LOG_LEVEL=trace \
+LOCAL_HEADERS_PATH=../../../ignored/.headers \
 go run main.go) &
 
 (cd backend/cmd/hats/ && \

@@ -22,6 +22,9 @@ var HatsPrefix = "http://localhost:8083"
 // EnableCors .
 var EnableCors = true
 
+// LocalHeadersPath is used to capture the JWT on login locally for use by curl command line
+var LocalHeadersPath = ""
+
 // LoginSuccessTarget .
 var LoginSuccessTarget = "http://localhost:3000"
 
@@ -56,6 +59,7 @@ func init() {
 	envconfig.SetString("FRONTEND_PREFIX", &FrontendPrefix)
 	envconfig.SetString("HATS_PREFIX", &HatsPrefix)
 	envconfig.SetBool("ENABLE_CORS", &EnableCors)
+	envconfig.SetString("LOCAL_HEADERS_PATH", &LocalHeadersPath)
 
 	envconfig.SetString("LOGIN_SUCCESS_TARGET", &LoginSuccessTarget)
 	envconfig.SetString("AUTH0_CLIENT_ID", &Auth0ClientID)

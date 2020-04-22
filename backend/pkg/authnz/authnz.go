@@ -11,7 +11,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
-	"time"
 
 	// jose "gopkg.in/square/go-jose.v2"
 	auth0 "github.com/auth0-community/go-auth0"
@@ -113,8 +112,6 @@ type CustomClaims struct {
 	Roles []Role `json:"https://scorpicode.com/roles"`
 }
 
-// DEBU[0622] debug() https://scorpicode.com/roles: [CSR]
-
 // ValidateRequest .
 func ValidateRequest(r *http.Request) (Bearer, error) {
 
@@ -191,6 +188,31 @@ func loadPublicKey() (interface{}, error) {
 	return cert.PublicKey, nil
 }
 
+func loadCert() (*x509.Certificate, error) {
+
+	// forward declare the error so as to not shadow the package level pemFile contents
+	var err error
+	if len(pemFile) == 0 {
+		pemFile, err = ioutil.ReadFile(Auth0PemfilePath)
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	p, rest := pem.Decode(pemFile)
+	if len(rest) != 0 {
+		return nil, fmt.Errorf("loadPublicKey() unexpected len(rest)=%d", len(rest))
+	}
+
+	cert, err := x509.ParseCertificate(p.Bytes)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return cert, nil
+}
+
 func traceRequest(r *http.Request) {
 
 	auth := r.Header.Get("Authorization")
@@ -229,55 +251,4 @@ func traceRequest(r *http.Request) {
 		logrus.Tracef("authnz.traceRequest() %s: %s", k, v)
 	}
 
-}
-
-// CreateSignedJWT .
-func CreateSignedJWT(subject string, roles ...Role) (string, error) {
-
-	//TODO: to consider... we're currently signing this with the private key...
-	// I believe that we could use the private key to create a different public key
-	// for each environment and sign with the public key.
-	// This would be in anticipation of using different public keys for different 3rd party
-	// integrations with enterprise business partners.
-	// Also, by adding the checksum of the public key to the claims, and storing a map in a database table,
-	// we could support key rotation for ourselves, (verifying with the private key)
-	// and enable/disable third parties by marking the db column disabled.
-	// This could extend to using different public keys in different data centers but
-	// they would still be cross-compatible with endpoints at other data centers.
-
-	sig := jose.SigningKey{
-		Algorithm: jose.HS256,
-		// Key:       privateKeyBytes,
-	}
-
-	opts := (&jose.SignerOptions{}).WithType("JWT")
-
-	signer, err := jose.NewSigner(sig, opts)
-	if err != nil {
-		return "", err
-	}
-
-	now := time.Now()
-	expiry := now.Add(time.Duration(JWTExpirationHours) * time.Hour)
-
-	claims := jwt.Claims{
-		Subject:   subject,
-		Issuer:    Auth0Issuer,
-		Audience:  strings.Split(Auth0Audience, ","),
-		NotBefore: jwt.NewNumericDate(now),
-		Expiry:    jwt.NewNumericDate(expiry),
-		IssuedAt:  jwt.NewNumericDate(now),
-	}
-
-	custom := CustomClaims{
-		Claims: claims,
-		// Roles:  rolez,
-	}
-
-	compact, err := jwt.Signed(signer).Claims(custom).CompactSerialize()
-	if err != nil {
-		return "", err
-	}
-
-	return compact, nil
 }
