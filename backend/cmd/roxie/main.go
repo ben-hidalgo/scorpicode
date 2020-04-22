@@ -21,19 +21,19 @@ func main() {
 
 	proxies := []*server.Proxy{
 		// website
-		&server.Proxy{
+		{
 			HostPrefix: config.WebsitePrefix,
 			FromPath:   "/",
 			ToPath:     "/",
 		},
 		// frontend
-		&server.Proxy{
+		{
 			HostPrefix: config.FrontendPrefix,
 			FromPath:   "/sc/",
 			ToPath:     "/",
 		},
 		// hats
-		&server.Proxy{
+		{
 			HostPrefix: config.HatsPrefix,
 			FromPath:   "/hats/",
 			ToPath:     "/twirp/hats.Hats/",
@@ -102,7 +102,7 @@ func callback(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// TODO: conditionally on env var, use secure cookie document.cookie = "name = value;secure";
-	// TODO: make the cookie name environment specific
+	// TODO: make the cookie name environment specific or switch to local storage
 	tmpl := `
 	<!DOCTYPE html> 
 	<html>
