@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"time"
 
 	// jose "gopkg.in/square/go-jose.v2"
 	auth0 "github.com/auth0-community/go-auth0"
@@ -29,7 +30,7 @@ const CSR = Role("CSR")
 const HABERDASHER = Role("HABERDASHER")
 
 // VERIFIED means the user has verified their email address
-const VERIFIED = Role("VERIFIED")
+const VERIFIED = Role("VERIFIED") // probably not a role
 
 // Bearer interface for token abstraction
 type Bearer interface {
@@ -108,8 +109,8 @@ func (bt *BearerToken) GetRoles() []Role {
 // CustomClaims .
 type CustomClaims struct {
 	jwt.Claims
-	Email string   `json:"email"`
-	Roles []string `json:"https://scorpicode.com/roles"`
+	Email string `json:"email"`
+	Roles []Role `json:"https://scorpicode.com/roles"`
 }
 
 // DEBU[0622] debug() https://scorpicode.com/roles: [CSR]
@@ -223,8 +224,60 @@ func traceRequest(r *http.Request) {
 		return
 	}
 
+	// key "email_verified" is the email verified from Auth0
 	for k, v := range dat {
 		logrus.Tracef("authnz.traceRequest() %s: %s", k, v)
 	}
 
+}
+
+// CreateSignedJWT .
+func CreateSignedJWT(subject string, roles ...Role) (string, error) {
+
+	//TODO: to consider... we're currently signing this with the private key...
+	// I believe that we could use the private key to create a different public key
+	// for each environment and sign with the public key.
+	// This would be in anticipation of using different public keys for different 3rd party
+	// integrations with enterprise business partners.
+	// Also, by adding the checksum of the public key to the claims, and storing a map in a database table,
+	// we could support key rotation for ourselves, (verifying with the private key)
+	// and enable/disable third parties by marking the db column disabled.
+	// This could extend to using different public keys in different data centers but
+	// they would still be cross-compatible with endpoints at other data centers.
+
+	sig := jose.SigningKey{
+		Algorithm: jose.HS256,
+		// Key:       privateKeyBytes,
+	}
+
+	opts := (&jose.SignerOptions{}).WithType("JWT")
+
+	signer, err := jose.NewSigner(sig, opts)
+	if err != nil {
+		return "", err
+	}
+
+	now := time.Now()
+	expiry := now.Add(time.Duration(JWTExpirationHours) * time.Hour)
+
+	claims := jwt.Claims{
+		Subject:   subject,
+		Issuer:    Auth0Issuer,
+		Audience:  strings.Split(Auth0Audience, ","),
+		NotBefore: jwt.NewNumericDate(now),
+		Expiry:    jwt.NewNumericDate(expiry),
+		IssuedAt:  jwt.NewNumericDate(now),
+	}
+
+	custom := CustomClaims{
+		Claims: claims,
+		// Roles:  rolez,
+	}
+
+	compact, err := jwt.Signed(signer).Claims(custom).CompactSerialize()
+	if err != nil {
+		return "", err
+	}
+
+	return compact, nil
 }

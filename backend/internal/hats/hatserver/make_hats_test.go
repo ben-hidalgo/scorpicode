@@ -35,7 +35,9 @@ func startHat(mr *mockrepo.FuncRepo) (context.Context, *hatserver.Server, *hatsp
 
 	ctx = context.WithValue(ctx, authnz.Key, &authnz.BearerToken{
 		CC: &authnz.CustomClaims{
-			Roles: []string{"HABERDASHER"},
+			Roles: []authnz.Role{
+				authnz.Role("HABERDASHER"),
+			},
 		},
 	})
 

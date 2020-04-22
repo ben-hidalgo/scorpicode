@@ -21,6 +21,8 @@ import (
 // hats
 func main() {
 
+	logrus.Infof("main() %s starting", config.AppName)
+
 	// middleware filter chain
 	hooks := twirp.ChainHooks(mongorepo.ServerHooks())
 

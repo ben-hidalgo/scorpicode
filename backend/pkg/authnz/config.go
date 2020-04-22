@@ -31,6 +31,9 @@ var Auth0RedirectURI = "http://localhost:8080/callback"
 // Auth0PemfilePath local default but injected on Kubernetes
 var Auth0PemfilePath = "../../scorpicode-local.pem"
 
+// JWTExpirationHours hours generated tokens are valid; dev only, atm
+var JWTExpirationHours = 24 * 365
+
 func init() {
 	envconfig.SetString("AUTH0_CLIENT_ID", &Auth0ClientID)
 	envconfig.SetString("AUTH0_CLIENT_SECRET", &Auth0ClientSecret)
