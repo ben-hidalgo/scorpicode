@@ -73,8 +73,7 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 			return err
 		}
 
-		// TODO: save a hat for each quantity with foreign key to the cmd
-
+		// save a hat per quantity
 		for i := int32(0); i < cmd.Quantity; i++ {
 			h := &hatsrepo.Hat{
 				// TODO: correct datatype for MakeHatsCmdID?
@@ -93,11 +92,15 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 		return nil
 	}
 
-	hr.VisitTxn(ctx, tf)
+	// TODO: add test to ensure the internal error is returned
+	err := hr.VisitTxn(ctx, tf)
+	if err != nil {
+		return nil, util.InternalErrorWith(err)
+	}
 
-	// reusable for list hats
 	res := &hatspb.MakeHatsResponse{
 		// TODO: rename "Hat" in the response
+		// reusable for list hats
 		Hat: MakeHatsCmdToHat(cmd),
 	}
 

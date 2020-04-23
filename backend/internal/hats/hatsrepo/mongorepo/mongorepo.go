@@ -118,9 +118,6 @@ func (r *MongoRepo) VisitTxn(ctx context.Context, tf func() error) error {
 
 	return mgm.TransactionWithCtx(ctx, func(session mongo.Session, sc mongo.SessionContext) error {
 
-		// TODO: pass the session's context to the collection methods.
-		// err := mgm.Coll(d).CreateWithCtx(sc, d)
-
 		err := tf()
 		if err != nil {
 			return err
