@@ -2,6 +2,7 @@ package mockrepo
 
 import (
 	"backend/internal/hats/hatsrepo"
+	"context"
 )
 
 //FuncRepo mock implementing HatsRepo with all methods injectable
@@ -11,6 +12,7 @@ type FuncRepo struct {
 	DeleteMakeHatsCmdF  func(mhc *hatsrepo.MakeHatsCmd) error
 	FindAllMakeHatsCmdF func() ([]*hatsrepo.MakeHatsCmd, error)
 	FindOneMakeHatsCmdF func(id string) (*hatsrepo.MakeHatsCmd, error)
+	VisitTxnF           func(ctx context.Context, tf func() error) error
 }
 
 // enforces the interface is implemented
@@ -44,4 +46,9 @@ func (r *FuncRepo) FindOneMakeHatsCmd(id string) (*hatsrepo.MakeHatsCmd, error) 
 // FindAllMakeHatsCmd calls the injected function
 func (r *FuncRepo) FindAllMakeHatsCmd() ([]*hatsrepo.MakeHatsCmd, error) {
 	return r.FindAllMakeHatsCmdF()
+}
+
+// VisitTxn .
+func (r *FuncRepo) VisitTxn(ctx context.Context, tf func() error) error {
+	return r.VisitTxnF(ctx, tf)
 }

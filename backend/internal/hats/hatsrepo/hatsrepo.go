@@ -38,6 +38,8 @@ type HatsRepo interface {
 	// not found returns nil, nil
 	FindOneMakeHatsCmd(id string) (*MakeHatsCmd, error)
 	FindAllMakeHatsCmd() ([]*MakeHatsCmd, error)
+
+	VisitTxn(ctx context.Context, tf func() error) error
 }
 
 // used to store the Repo in Context
