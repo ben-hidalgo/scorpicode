@@ -66,28 +66,34 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 		Notes:    req.GetNotes(),
 	}
 
-	// the passed-in cmd will be mutated
-	err := hr.CreateMakeHatsCmd(cmd)
-	if err != nil {
-		return nil, err
-	}
-
-	// TODO: save a hat for each quantity with foreign key to the cmd
-
-	for i := int32(0); i < cmd.Quantity; i++ {
-		h := &hatsrepo.Hat{
-			// TODO: correct datatype for MakeHatsCmdID?
-			MakeHatsCmdID: cmd.ID.Hex(),
-			Color:         cmd.Color,
-			Style:         cmd.Style,
-			Size:          cmd.Size,
-			// quantity and notes are MakeHatsCmd level only
-		}
-		err := hr.CreateHat(h)
+	tf := func() error {
+		// the passed-in cmd will be mutated
+		err := hr.CreateMakeHatsCmd(cmd)
 		if err != nil {
-			return nil, err
+			return err
 		}
+
+		// TODO: save a hat for each quantity with foreign key to the cmd
+
+		for i := int32(0); i < cmd.Quantity; i++ {
+			h := &hatsrepo.Hat{
+				// TODO: correct datatype for MakeHatsCmdID?
+				MakeHatsCmdID: cmd.ID.Hex(),
+				Color:         cmd.Color,
+				Style:         cmd.Style,
+				Size:          cmd.Size,
+				// quantity and notes are MakeHatsCmd level only
+			}
+			err := hr.CreateHat(h)
+			if err != nil {
+				return err
+			}
+		}
+
+		return nil
 	}
+
+	hr.VisitTxn(ctx, tf)
 
 	// reusable for list hats
 	res := &hatspb.MakeHatsResponse{

@@ -79,6 +79,9 @@ func TestHatSuccess(t *testing.T) {
 			h.Version = 1
 			return nil
 		},
+		VisitTxnF: func(ctx context.Context, tf func() error) error {
+			return tf()
+		},
 	}
 
 	ctx, hs, req := startHat(mr)
