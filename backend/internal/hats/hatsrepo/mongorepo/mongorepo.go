@@ -112,3 +112,23 @@ func (r *MongoRepo) FindAllMakeHatsCmd() ([]*hatsrepo.MakeHatsCmd, error) {
 
 	return results, nil
 }
+
+/*
+	err := mgm.Transaction(func(session mongo.Session, sc mongo.SessionContext) error {
+
+		// do not forget to pass the session's context to the collection methods.
+	 err := mgm.Coll(d).CreateWithCtx(sc, d)
+
+	 if err != nil {
+		 return err
+	 }
+
+	 return session.CommitTransaction(sc)
+ })
+*/
+
+// VisitTxn .
+func (r *MongoRepo) VisitTxn(tf func() error) error {
+
+	return nil
+}

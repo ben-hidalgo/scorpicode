@@ -68,6 +68,17 @@ func TestHatSuccess(t *testing.T) {
 			mhc.Version = 1
 			return nil
 		},
+		CreateHatF: func(h *hatsrepo.Hat) error {
+			id, err := primitive.ObjectIDFromHex(DefaultHexID)
+			if err != nil {
+				t.Fatal(err)
+			}
+			h.SetID(id)
+			h.CreatedAt = DefaultCreatedAt
+			h.UpdatedAt = DefaultUpdatedAt
+			h.Version = 1
+			return nil
+		},
 	}
 
 	ctx, hs, req := startHat(mr)

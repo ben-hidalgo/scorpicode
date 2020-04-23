@@ -163,16 +163,17 @@ func ValidateRequest(r *http.Request) (Bearer, error) {
 // cache in memory
 var pemFile []byte
 
-func init() {
+func loadCert() (*x509.Certificate, error) {
+
 	// forward declare the error so as to not shadow the package level pemFile contents
 	var err error
-	pemFile, err = ioutil.ReadFile(Auth0PemfilePath)
-	if err != nil {
-		panic(err)
+	if len(pemFile) == 0 {
+		// can't use init func because unit tests have a different relative path
+		pemFile, err = ioutil.ReadFile(Auth0PemfilePath)
 	}
-}
-
-func loadCert() (*x509.Certificate, error) {
+	if err != nil {
+		return nil, err
+	}
 
 	p, rest := pem.Decode(pemFile)
 	if len(rest) != 0 {
