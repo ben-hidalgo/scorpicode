@@ -221,7 +221,7 @@ func traceRequest(r *http.Request) {
 		return
 	}
 
-	// key "email_verified" is the email verified from Auth0
+	// key "email_verified" is the email verified boolean flag from Auth0
 	for k, v := range dat {
 		logrus.Tracef("authnz.traceRequest() %s: %s", k, v)
 	}

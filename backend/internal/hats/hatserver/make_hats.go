@@ -48,6 +48,10 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 		return nil, util.InvalidArgumentError(HatStyleRequired)
 	}
 
+	if req.GetQuantity() <= 0 {
+		return nil, util.InvalidArgumentError(HatQuantityInvalid)
+	}
+
 	// TODO: validate size slug, quantity and notes
 
 	// TODO: transaction func
@@ -70,8 +74,19 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 
 	// TODO: save a hat for each quantity with foreign key to the cmd
 
+	for i := int32(0); i < cmd.Quantity; i++ {
+		h := &hatsrepo.Hat{
+			Color: cmd.Color,
+		}
+		err := hr.CreateHat(h)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	// reusable for list hats
 	res := &hatspb.MakeHatsResponse{
+		// TODO: rename "Hat" in the response
 		Hat: MakeHatsCmdToHat(cmd),
 	}
 

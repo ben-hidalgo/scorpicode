@@ -40,6 +40,9 @@ const HatSizeRequired = util.ErrMsg("hat.size.required")
 // HatStyleRequired .
 const HatStyleRequired = util.ErrMsg("hat.style.required")
 
+// HatQuantityInvalid .
+const HatQuantityInvalid = util.ErrMsg("hat.quantity.invalid")
+
 // MakeHatsForbidden .
 const MakeHatsForbidden = util.ErrMsg("makehats.forbidden")
 
