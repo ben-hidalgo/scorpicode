@@ -32,14 +32,14 @@ type MakeHatsCmd struct {
 // HatsRepo .
 type HatsRepo interface {
 	// TODO: all funcs should accept Context
-	CreateHat(h *Hat) error
-	CreateMakeHatsCmd(mhc *MakeHatsCmd) error
-	DeleteMakeHatsCmd(mhc *MakeHatsCmd) error
+	CreateHat(context.Context, *Hat) error
+	CreateMakeHatsCmd(context.Context, *MakeHatsCmd) error
+	DeleteMakeHatsCmd(context.Context, *MakeHatsCmd) error
 	// not found returns nil, nil
-	FindOneMakeHatsCmd(id string) (*MakeHatsCmd, error)
-	FindAllMakeHatsCmd() ([]*MakeHatsCmd, error)
+	FindOneMakeHatsCmd(context.Context, string) (*MakeHatsCmd, error)
+	FindAllMakeHatsCmd(context.Context) ([]*MakeHatsCmd, error)
 
-	VisitTxn(ctx context.Context, tf func() error) error
+	VisitTxn(context.Context, func() error) error
 }
 
 // used to store the Repo in Context

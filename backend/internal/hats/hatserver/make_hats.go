@@ -68,7 +68,7 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 
 	tf := func() error {
 		// the passed-in cmd will be mutated
-		err := hr.CreateMakeHatsCmd(cmd)
+		err := hr.CreateMakeHatsCmd(ctx, cmd)
 		if err != nil {
 			return err
 		}
@@ -84,7 +84,7 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 				Size:          cmd.Size,
 				// quantity and notes are MakeHatsCmd level only
 			}
-			err := hr.CreateHat(h)
+			err := hr.CreateHat(ctx, h)
 			if err != nil {
 				return err
 			}

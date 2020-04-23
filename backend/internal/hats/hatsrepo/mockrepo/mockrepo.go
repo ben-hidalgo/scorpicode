@@ -7,12 +7,12 @@ import (
 
 //FuncRepo mock implementing HatsRepo with all methods injectable
 type FuncRepo struct {
-	CreateHatF          func(h *hatsrepo.Hat) error
-	CreateMakeHatsCmdF  func(mhc *hatsrepo.MakeHatsCmd) error
-	DeleteMakeHatsCmdF  func(mhc *hatsrepo.MakeHatsCmd) error
-	FindAllMakeHatsCmdF func() ([]*hatsrepo.MakeHatsCmd, error)
-	FindOneMakeHatsCmdF func(id string) (*hatsrepo.MakeHatsCmd, error)
-	VisitTxnF           func(ctx context.Context, tf func() error) error
+	CreateHatF          func(context.Context, *hatsrepo.Hat) error
+	CreateMakeHatsCmdF  func(context.Context, *hatsrepo.MakeHatsCmd) error
+	DeleteMakeHatsCmdF  func(context.Context, *hatsrepo.MakeHatsCmd) error
+	FindAllMakeHatsCmdF func(context.Context) ([]*hatsrepo.MakeHatsCmd, error)
+	FindOneMakeHatsCmdF func(context.Context, string) (*hatsrepo.MakeHatsCmd, error)
+	VisitTxnF           func(context.Context, func() error) error
 }
 
 // enforces the interface is implemented
@@ -24,28 +24,28 @@ func NewRepo() *FuncRepo {
 }
 
 // CreateHat calls the injected function
-func (r *FuncRepo) CreateHat(h *hatsrepo.Hat) error {
-	return r.CreateHatF(h)
+func (r *FuncRepo) CreateHat(ctx context.Context, h *hatsrepo.Hat) error {
+	return r.CreateHatF(ctx, h)
 }
 
 // CreateMakeHatsCmd calls the injected function
-func (r *FuncRepo) CreateMakeHatsCmd(mhc *hatsrepo.MakeHatsCmd) error {
-	return r.CreateMakeHatsCmdF(mhc)
+func (r *FuncRepo) CreateMakeHatsCmd(ctx context.Context, mhc *hatsrepo.MakeHatsCmd) error {
+	return r.CreateMakeHatsCmdF(ctx, mhc)
 }
 
 // DeleteMakeHatsCmd calls the injected function
-func (r *FuncRepo) DeleteMakeHatsCmd(mhc *hatsrepo.MakeHatsCmd) error {
-	return r.DeleteMakeHatsCmdF(mhc)
+func (r *FuncRepo) DeleteMakeHatsCmd(ctx context.Context, mhc *hatsrepo.MakeHatsCmd) error {
+	return r.DeleteMakeHatsCmdF(ctx, mhc)
 }
 
 // FindOneMakeHatsCmd calls the injected function
-func (r *FuncRepo) FindOneMakeHatsCmd(id string) (*hatsrepo.MakeHatsCmd, error) {
-	return r.FindOneMakeHatsCmdF(id)
+func (r *FuncRepo) FindOneMakeHatsCmd(ctx context.Context, id string) (*hatsrepo.MakeHatsCmd, error) {
+	return r.FindOneMakeHatsCmdF(ctx, id)
 }
 
 // FindAllMakeHatsCmd calls the injected function
-func (r *FuncRepo) FindAllMakeHatsCmd() ([]*hatsrepo.MakeHatsCmd, error) {
-	return r.FindAllMakeHatsCmdF()
+func (r *FuncRepo) FindAllMakeHatsCmd(ctx context.Context) ([]*hatsrepo.MakeHatsCmd, error) {
+	return r.FindAllMakeHatsCmdF(ctx)
 }
 
 // VisitTxn .

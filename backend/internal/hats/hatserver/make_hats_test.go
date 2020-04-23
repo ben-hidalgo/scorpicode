@@ -57,7 +57,7 @@ func startHat(mr *mockrepo.FuncRepo) (context.Context, *hatserver.Server, *hatsp
 func TestHatSuccess(t *testing.T) {
 
 	mr := &mockrepo.FuncRepo{
-		CreateMakeHatsCmdF: func(mhc *hatsrepo.MakeHatsCmd) error {
+		CreateMakeHatsCmdF: func(ctx context.Context, mhc *hatsrepo.MakeHatsCmd) error {
 			id, err := primitive.ObjectIDFromHex(DefaultHexID)
 			if err != nil {
 				t.Fatal(err)
@@ -68,7 +68,7 @@ func TestHatSuccess(t *testing.T) {
 			mhc.Version = 1
 			return nil
 		},
-		CreateHatF: func(h *hatsrepo.Hat) error {
+		CreateHatF: func(ctx context.Context, h *hatsrepo.Hat) error {
 			id, err := primitive.ObjectIDFromHex(DefaultHexID)
 			if err != nil {
 				t.Fatal(err)

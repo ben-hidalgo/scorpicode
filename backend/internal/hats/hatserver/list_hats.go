@@ -27,7 +27,7 @@ func (hs *Server) ListHats(ctx context.Context, req *hatspb.ListHatsRequest) (*h
 
 	hr := hatsrepo.FromContext(ctx)
 
-	mods, err := hr.FindAllMakeHatsCmd()
+	mods, err := hr.FindAllMakeHatsCmd(ctx)
 	if err != nil {
 		return nil, err
 	}

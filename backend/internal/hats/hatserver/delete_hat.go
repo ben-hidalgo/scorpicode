@@ -25,7 +25,7 @@ func (hs *Server) DeleteHat(ctx context.Context, req *hatspb.DeleteHatRequest) (
 
 	hr := hatsrepo.FromContext(ctx)
 
-	mhc, err := hr.FindOneMakeHatsCmd(req.GetId())
+	mhc, err := hr.FindOneMakeHatsCmd(ctx, req.GetId())
 	if err != nil {
 		return nil, util.InternalErrorWith(err)
 	}
@@ -37,7 +37,7 @@ func (hs *Server) DeleteHat(ctx context.Context, req *hatspb.DeleteHatRequest) (
 	}
 
 	// modify the signature to accept the found mhc
-	err = hr.DeleteMakeHatsCmd(mhc)
+	err = hr.DeleteMakeHatsCmd(ctx, mhc)
 	if err != nil {
 		return nil, err
 	}

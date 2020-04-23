@@ -16,7 +16,7 @@ func (hs *Server) FetchHat(ctx context.Context, req *hatspb.FetchHatRequest) (*h
 
 	hr := hatsrepo.FromContext(ctx)
 
-	mhc, err := hr.FindOneMakeHatsCmd(req.GetId())
+	mhc, err := hr.FindOneMakeHatsCmd(ctx, req.GetId())
 	if err != nil {
 		return nil, util.InternalErrorWith(err)
 	}

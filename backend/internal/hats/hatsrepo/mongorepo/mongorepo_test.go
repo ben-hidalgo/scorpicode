@@ -3,6 +3,7 @@ package mongorepo_test
 import (
 	"backend/internal/hats/hatsrepo"
 	"backend/internal/hats/hatsrepo/mongorepo"
+	"context"
 	"testing"
 	"time"
 )
@@ -31,8 +32,8 @@ func TestSaveHat(t *testing.T) {
 		Size:  size,
 		Style: style,
 	}
-
-	err := r.CreateHat(hat)
+	ctx := context.Background()
+	err := r.CreateHat(ctx, hat)
 	if err != nil {
 		t.Fatalf(GOT, err, WANTED, nil)
 	}

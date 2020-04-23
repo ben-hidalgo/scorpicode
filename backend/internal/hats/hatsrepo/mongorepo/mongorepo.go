@@ -62,30 +62,30 @@ func ServerHooks() *twirp.ServerHooks {
 }
 
 // CreateHat .
-func (r *MongoRepo) CreateHat(h *hatsrepo.Hat) error {
+func (r *MongoRepo) CreateHat(ctx context.Context, h *hatsrepo.Hat) error {
 	h.Version = 1
-	return mgm.Coll(h).Create(h)
+	return mgm.Coll(h).CreateWithCtx(ctx, h)
 }
 
 // CreateMakeHatsCmd .
-func (r *MongoRepo) CreateMakeHatsCmd(m *hatsrepo.MakeHatsCmd) error {
+func (r *MongoRepo) CreateMakeHatsCmd(ctx context.Context, m *hatsrepo.MakeHatsCmd) error {
 	m.Version = 1
-	return mgm.Coll(m).Create(m)
+	return mgm.Coll(m).CreateWithCtx(ctx, m)
 }
 
 // DeleteMakeHatsCmd .
-func (r *MongoRepo) DeleteMakeHatsCmd(mhc *hatsrepo.MakeHatsCmd) error {
-	return mgm.Coll(mhc).Delete(mhc)
+func (r *MongoRepo) DeleteMakeHatsCmd(ctx context.Context, mhc *hatsrepo.MakeHatsCmd) error {
+	return mgm.Coll(mhc).DeleteWithCtx(ctx, mhc)
 }
 
 // FindOneMakeHatsCmd not found returns nil, nil
-func (r *MongoRepo) FindOneMakeHatsCmd(id string) (*hatsrepo.MakeHatsCmd, error) {
+func (r *MongoRepo) FindOneMakeHatsCmd(ctx context.Context, id string) (*hatsrepo.MakeHatsCmd, error) {
 
 	mhc := &hatsrepo.MakeHatsCmd{}
 
 	coll := mgm.Coll(mhc)
 
-	err := coll.FindByID(id, mhc)
+	err := coll.FindByIDWithCtx(ctx, id, mhc)
 	if err == hex.ErrLength || err == mongo.ErrNoDocuments {
 		// malformed id means not found
 		return nil, nil
@@ -97,14 +97,14 @@ func (r *MongoRepo) FindOneMakeHatsCmd(id string) (*hatsrepo.MakeHatsCmd, error)
 }
 
 // FindAllMakeHatsCmd .
-func (r *MongoRepo) FindAllMakeHatsCmd() ([]*hatsrepo.MakeHatsCmd, error) {
+func (r *MongoRepo) FindAllMakeHatsCmd(ctx context.Context) ([]*hatsrepo.MakeHatsCmd, error) {
 
 	// result := []Book{}
 	// err := mgm.Coll(&Book{}).SimpleFind(&result, bson.M{"age": bson.M{operator.Gt: 24}})
 
 	results := []*hatsrepo.MakeHatsCmd{}
 
-	err := mgm.Coll(&hatsrepo.MakeHatsCmd{}).SimpleFind(&results, bson.M{})
+	err := mgm.Coll(&hatsrepo.MakeHatsCmd{}).SimpleFindWithCtx(ctx, &results, bson.M{})
 
 	if err != nil {
 		return nil, err
