@@ -76,7 +76,12 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 
 	for i := int32(0); i < cmd.Quantity; i++ {
 		h := &hatsrepo.Hat{
-			Color: cmd.Color,
+			// TODO: correct datatype for MakeHatsCmdID?
+			MakeHatsCmdID: cmd.ID.Hex(),
+			Color:         cmd.Color,
+			Style:         cmd.Style,
+			Size:          cmd.Size,
+			// quantity and notes are MakeHatsCmd level only
 		}
 		err := hr.CreateHat(h)
 		if err != nil {
