@@ -1,7 +1,7 @@
 package hatserver
 
 import (
-	"backend/internal/hats/hatsrepo"
+	"backend/internal/hats/hatdao"
 	"backend/pkg/util"
 	"backend/rpc/hatspb"
 	"context"
@@ -23,21 +23,21 @@ func (hs *Server) DeleteHat(ctx context.Context, req *hatspb.DeleteHatRequest) (
 		return nil, util.InvalidArgumentError(HatVersionRequired)
 	}
 
-	hr := hatsrepo.FromContext(ctx)
+	hd := hatdao.From(ctx)
 
-	mhc, err := hr.FindOneMakeHatsCmd(ctx, req.GetId())
+	hat, err := hd.Find(ctx, req.GetId())
 	if err != nil {
 		return nil, util.InternalErrorWith(err)
 	}
-	if mhc == nil {
+	if hat == nil {
 		return nil, util.NotFoundError(fmt.Sprintf("id: '%s', version: %d", req.GetId(), req.GetVersion()))
 	}
-	if mhc.Version != req.GetVersion() {
+	if hat.Version != req.GetVersion() {
 		return nil, util.NotFoundError(fmt.Sprintf("id: '%s' version mismatch", req.GetId()))
 	}
 
 	// modify the signature to accept the found mhc
-	err = hr.DeleteMakeHatsCmd(ctx, mhc)
+	err = hd.Delete(ctx, hat)
 	if err != nil {
 		return nil, err
 	}

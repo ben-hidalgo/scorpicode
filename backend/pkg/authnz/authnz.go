@@ -22,14 +22,12 @@ import (
 // Role is user role
 type Role string
 
-// CSR is customer service representative
-const CSR = Role("CSR")
-
-// HABERDASHER is a mock role for PoC purposes
-const HABERDASHER = Role("HABERDASHER")
-
-// VERIFIED means the user has verified their email address
-const VERIFIED = Role("VERIFIED") // probably not a role
+const (
+	// HABERDASHER is a mock role for PoC purposes
+	HABERDASHER = Role("HABERDASHER")
+	// CSR is customer service representative
+	CSR = Role("CSR")
+)
 
 // Bearer interface for token abstraction
 type Bearer interface {

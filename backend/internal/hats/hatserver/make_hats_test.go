@@ -1,9 +1,9 @@
 package hatserver_test
 
 import (
+	"backend/internal/hats/hatdao"
+	"backend/internal/hats/hatdao/hatdaomock"
 	"backend/internal/hats/hatserver"
-	"backend/internal/hats/hatsrepo"
-	"backend/internal/hats/hatsrepo/mockrepo"
 	"backend/pkg/authnz"
 	"backend/pkg/util"
 	"backend/rpc/hatspb"
@@ -27,16 +27,16 @@ const (
 var DefaultCreatedAt = time.Date(2020, time.January, 0, 0, 0, 0, 0, time.UTC)
 var DefaultUpdatedAt = time.Date(2020, time.January, 1, 1, 1, 1, 1, time.UTC)
 
-func startHat(mr *mockrepo.FuncRepo) (context.Context, *hatserver.Server, *hatspb.MakeHatsRequest) {
+func startHat(mr *hatdaomock.Mock) (context.Context, *hatserver.Server, *hatspb.MakeHatsRequest) {
 
 	ctx := context.Background()
 
-	ctx = context.WithValue(ctx, hatsrepo.RepoKey, mr)
+	ctx = context.WithValue(ctx, hatdao.Key, mr)
 
 	ctx = context.WithValue(ctx, authnz.Key, &authnz.BearerToken{
 		CC: &authnz.CustomClaims{
 			Roles: []authnz.Role{
-				authnz.Role("HABERDASHER"),
+				authnz.HABERDASHER,
 			},
 		},
 	})
@@ -56,8 +56,8 @@ func startHat(mr *mockrepo.FuncRepo) (context.Context, *hatserver.Server, *hatsp
 
 func TestHatSuccess(t *testing.T) {
 
-	mr := &mockrepo.FuncRepo{
-		CreateMakeHatsCmdF: func(ctx context.Context, mhc *hatsrepo.MakeHatsCmd) error {
+	mr := &hatdaomock.Mock{
+		CreateF: func(ctx context.Context, mhc *hatdao.Hat) error {
 			id, err := primitive.ObjectIDFromHex(DefaultHexID)
 			if err != nil {
 				t.Fatal(err)
@@ -66,17 +66,6 @@ func TestHatSuccess(t *testing.T) {
 			mhc.CreatedAt = DefaultCreatedAt
 			mhc.UpdatedAt = DefaultUpdatedAt
 			mhc.Version = 1
-			return nil
-		},
-		CreateHatF: func(ctx context.Context, h *hatsrepo.Hat) error {
-			id, err := primitive.ObjectIDFromHex(DefaultHexID)
-			if err != nil {
-				t.Fatal(err)
-			}
-			h.SetID(id)
-			h.CreatedAt = DefaultCreatedAt
-			h.UpdatedAt = DefaultUpdatedAt
-			h.Version = 1
 			return nil
 		},
 		VisitTxnF: func(ctx context.Context, tf func() error) error {
@@ -124,7 +113,7 @@ func TestHatSuccess(t *testing.T) {
 
 func TestMissingRole(t *testing.T) {
 
-	ctx, hs, req := startHat(mockrepo.NewRepo())
+	ctx, hs, req := startHat(hatdaomock.NewRepo())
 
 	// overwrite the default bearer with no roles
 	ctx = context.WithValue(ctx, authnz.Key, &authnz.BearerToken{
@@ -152,7 +141,7 @@ func TestMissingRole(t *testing.T) {
 
 func TestSizeRequired(t *testing.T) {
 
-	ctx, hs, req := startHat(mockrepo.NewRepo())
+	ctx, hs, req := startHat(hatdaomock.NewRepo())
 
 	req.Size = ""
 
@@ -161,7 +150,7 @@ func TestSizeRequired(t *testing.T) {
 
 func TestColorRequired(t *testing.T) {
 
-	ctx, hs, req := startHat(mockrepo.NewRepo())
+	ctx, hs, req := startHat(hatdaomock.NewRepo())
 
 	req.Color = ""
 
@@ -170,7 +159,7 @@ func TestColorRequired(t *testing.T) {
 
 func TestColorDomain(t *testing.T) {
 
-	ctx, hs, req := startHat(mockrepo.NewRepo())
+	ctx, hs, req := startHat(hatdaomock.NewRepo())
 
 	req.Color = "not a color"
 
@@ -194,7 +183,7 @@ func TestColorDomain(t *testing.T) {
 
 func TestNameRequired(t *testing.T) {
 
-	ctx, hs, req := startHat(mockrepo.NewRepo())
+	ctx, hs, req := startHat(hatdaomock.NewRepo())
 
 	req.Style = hatspb.Style_UNKNOWN_STYLE
 

@@ -1,11 +1,12 @@
 package hatserver
 
 import (
-	"backend/internal/hats/hatsrepo"
+	"backend/internal/hats/hatdao"
 	"backend/pkg/authnz"
 	"backend/pkg/util"
 	"backend/rpc/hatspb"
 	"context"
+	"time"
 
 	"github.com/sirupsen/logrus"
 )
@@ -52,59 +53,62 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 		return nil, util.InvalidArgumentError(HatQuantityInvalid)
 	}
 
-	// TODO: validate size slug, quantity and notes
-
-	// TODO: transaction func
-	hr := hatsrepo.FromContext(ctx)
+	hd := hatdao.From(ctx)
 
 	// TODO: save the created by user id
-	cmd := &hatsrepo.MakeHatsCmd{
-		Color:    req.GetColor(),
-		Style:    req.GetStyle().String(),
-		Size:     req.GetSize(),
-		Quantity: req.GetQuantity(),
-		Notes:    req.GetNotes(),
-	}
 
+	// TODO: used for publishing RMQ message
+	var docs []*hatdao.Hat
+
+	// use a transaction so all hats or none are committed
 	tf := func() error {
-		// the passed-in cmd will be mutated
-		err := hr.CreateMakeHatsCmd(ctx, cmd)
-		if err != nil {
-			return err
-		}
 
 		// save a hat per quantity
-		for i := int32(0); i < cmd.Quantity; i++ {
-			h := &hatsrepo.Hat{
-				// TODO: correct datatype for MakeHatsCmdID?
-				MakeHatsCmdID: cmd.ID.Hex(),
-				Color:         cmd.Color,
-				Style:         cmd.Style,
-				Size:          cmd.Size,
-				// quantity and notes are MakeHatsCmd level only
+		for i := int32(0); i < req.GetQuantity(); i++ {
+			hat := &hatdao.Hat{
+				Color: req.GetColor(),
+				Style: req.GetStyle().String(),
+				Size:  req.GetSize(),
+				// TODO: add notes
 			}
-			err := hr.CreateHat(ctx, h)
+			err := hd.Create(ctx, hat)
 			if err != nil {
 				return err
 			}
+			docs = append(docs, hat)
 		}
 
 		return nil
 	}
 
 	// TODO: add test to ensure the internal error is returned
-	err := hr.VisitTxn(ctx, tf)
+	err := hd.VisitTxn(ctx, tf)
 	if err != nil {
 		return nil, util.InternalErrorWith(err)
 	}
 
 	res := &hatspb.MakeHatsResponse{
-		// TODO: rename "Hat" in the response
-		// reusable for list hats
-		Hat: MakeHatsCmdToHat(cmd),
+		// TODO: modify response structure?
+		Hat: HatDocToRep(docs[0]),
 	}
 
 	logrus.Debugf("MakeHats() res=%#v", res)
 
 	return res, nil
+}
+
+// HatDocToRep convert Hat document (Mongo) to Hat representation (gRPC)
+func HatDocToRep(hat *hatdao.Hat) *hatspb.Hat {
+	return &hatspb.Hat{
+		Id:        hat.ID.Hex(),
+		CreatedAt: hat.CreatedAt.Format(time.RFC3339),
+		UpdatedAt: hat.UpdatedAt.Format(time.RFC3339),
+		Version:   int32(hat.Version),
+		Color:     hat.Color,
+		Style:     ToStyle(hat.Style),
+		Size:      hat.Size,
+		// Quantity:  int32(hat.Quantity),
+		// TODO: add notes to mod
+		// Notes:     hat.Notes,
+	}
 }

@@ -1,7 +1,7 @@
 package hatserver
 
 import (
-	"backend/internal/hats/hatsrepo"
+	"backend/internal/hats/hatdao"
 	"backend/pkg/authnz"
 	"backend/rpc/hatspb"
 	"context"
@@ -14,31 +14,24 @@ func (hs *Server) ListHats(ctx context.Context, req *hatspb.ListHatsRequest) (*h
 
 	logrus.Debugf("ListHats() req=%#v", req)
 
-	// headers := httpwrap.GetHeaders(ctx)
-
-	// logrus.Debugf("headers=%#v", headers)
-
 	b := authnz.GetBearer(ctx)
 
 	logrus.Debugf("ListHats() bearer=%#v", b)
 
-	logrus.Debugf("ListHats() b.GetEmail()=%s", b.GetEmail())
-	logrus.Debugf("ListHats() b.GetRoles()=%s", b.GetRoles())
+	hd := hatdao.From(ctx)
 
-	hr := hatsrepo.FromContext(ctx)
-
-	mods, err := hr.FindAllMakeHatsCmd(ctx)
+	docs, err := hd.Query(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	hats := make([]*hatspb.Hat, len(mods))
+	reps := make([]*hatspb.Hat, len(docs))
 
-	for i, m := range mods {
-		hats[i] = MakeHatsCmdToHat(m)
+	for i, m := range docs {
+		reps[i] = HatDocToRep(m)
 	}
 
 	return &hatspb.ListHatsResponse{
-		Hats: hats,
+		Hats: reps,
 	}, nil
 }
