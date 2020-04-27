@@ -21,8 +21,8 @@ const NavBar = () => {
 
       <div className="navbar-menu is-active">
         <div className="navbar-start">
-          <Link to="/hatsnew" className="navbar-item">Create Bulk Hats</Link>
-          <Link to="/hats" className="navbar-item">List Bulk Hats</Link>
+          <Link to="/hatsnew" className="navbar-item">Make Hats</Link>
+          <Link to="/hats" className="navbar-item">View Hats</Link>
         </div>
 
         {/* TODO: include the hamburger and dynamic 'is-active' for mobile UX */}

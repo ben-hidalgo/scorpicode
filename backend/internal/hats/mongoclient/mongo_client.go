@@ -42,6 +42,7 @@ func ServerHooks() *twirp.ServerHooks {
 	return &twirp.ServerHooks{
 		RequestReceived: func(ctx context.Context) (context.Context, error) {
 
+			// each Dao will be added to the context separately
 			ctx = context.WithValue(ctx, hatdao.Key, hatdao.New())
 
 			return ctx, nil

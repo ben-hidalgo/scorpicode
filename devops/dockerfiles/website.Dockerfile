@@ -1,20 +1,20 @@
-FROM golang:1.13.6-alpine3.11
+# build environment
+FROM node:12.2.0-alpine as build
 
-# setup
 WORKDIR /app
-RUN apk add curl
-RUN apk add jq
+ENV PATH /app/node_modules/.bin:$PATH
 
-# cache
-COPY ./backend/go.mod ./
-COPY ./backend/go.sum ./
-RUN go mod download
+COPY ./website/package.json ./
+COPY ./website/package-lock.json ./
 
-# build
-ADD ./backend/ /app/
-RUN go build cmd/website/main.go
+#RUN npm install --silent
+RUN npm install
+# RUN npm install react-scripts@3.0.1 -g --silent
+COPY ./website/ ./
+RUN npm run build
 
-# run
-RUN adduser -S -D -H -h /app mainapp
-USER mainapp
-CMD ["./main"]
+# production environment
+FROM nginx:1.16.0-alpine
+COPY --from=build /app/public /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
