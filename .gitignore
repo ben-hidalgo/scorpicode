@@ -17,3 +17,5 @@
 *.pem
 ignored
 
+*.plain.yaml
+
