@@ -42,7 +42,7 @@ class AuthStore {
     this.token = null
     this.decoded = null
     this.payload = null
-    window.location.href = '/login'
+    window.location.href = '/'
   }
 
 }

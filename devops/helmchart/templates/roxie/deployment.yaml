@@ -42,9 +42,9 @@ spec:
         - name: LOGIN_SUCCESS_TARGET
           value: {{ .Values.roxie.loginSuccessTarget | quote }}
         - name: AUTH0_CLIENT_ID
-          value: {{ required "roxie.auth0ClientId" .Values.roxie.auth0ClientId | quote }}
+          value: {{ required "roxie.auth0ClientId required" .Values.roxie.auth0ClientId | quote }}
         - name: AUTH0_CLIENT_SECRET
-          value: {{ required "roxie.auth0ClientSecret" .Values.roxie.auth0ClientSecret | quote }}
+          value: {{ required "roxie.auth0ClientSecret required" .Values.roxie.auth0ClientSecret | quote }}
         - name: AUTH0_REDIRECT_URI
-          value: {{ required "roxie.auth0RedirectUri" .Values.roxie.auth0RedirectUri | quote }}
+          value: {{ required "roxie.auth0RedirectUri required" .Values.roxie.auth0RedirectUri | quote }}
 {{- end }}

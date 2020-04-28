@@ -13,6 +13,7 @@ images:
 upgrade: #images
 	sops -d ./devops/helmchart/local.sops.yaml | \
 	helm upgrade --install scorpicode ./devops/helmchart \
+	-f - \
 	-f devops/helmchart/local.yaml \
 	--set common.cacheBuster=`date +%s` \
 	--set roxie.auth0RedirectUri=http://`minikube ip`:`kubectl get svc roxie -o json | jq '.spec.ports[0].nodePort'`/callback \
@@ -20,8 +21,7 @@ upgrade: #images
 	--set hats.tag=$(TAG) \
 	--set website.tag=$(TAG) \
 	--set roxie.tag=$(TAG) \
-	--set frontend.tag=$(TAG) \
-	-f -
+	--set frontend.tag=$(TAG)
 
 dry-run:
 	helm upgrade --install --debug --dry-run scorpicode ./devops/helmchart \
@@ -91,3 +91,6 @@ mksr:
 # the .tgz files are committed
 hdu:
 	(cd devops/helmchart && helm dependency update)
+
+logs:
+	kc logs -f -l app.kubernetes.io/instance=scorpicode
