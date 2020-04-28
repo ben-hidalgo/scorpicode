@@ -1,12 +1,12 @@
 module.exports = {
 	siteMetadata: {
-		title: 'Gatsby Bulma Quickstart',
-		author: 'Aman Mittal',
-		imageUrl: 'https://i.imgur.com/Vz81GEl.png',
-		description: 'A Project to bootstrap your next Gatsby + Bulma site.',
-		keywords: `Web developer, Web, Developer, CSS, HTML, JS, Javascript, Gatsby, Bulma Developer, CSS3, HTML5, Seo, Starter`,
+		title: 'Scorpicode',
+		author: 'Ben Hidalgo',
+		imageUrl: 'https://repository-images.githubusercontent.com/233114821/c6d6b880-88aa-11ea-886d-7e5f3f36463c',
+		description: 'Scorpicode boilerplate website',
+		keywords: `GoLang, Javascript, React, MobX Gatsby, Bulma, MongoDB, RabbitMQ`,
 		twitter: 'https://twitter.com/amanhimself',
-		github: `https://github.com/amandeepmittal`,
+		github: `https://github.com/ben-hidalgo`,
 		medium: 'https://medium.com/@amanhimself',
 		gatsby: 'https://www.gatsbyjs.org/',
 		bulma: 'https://bulma.io/',
