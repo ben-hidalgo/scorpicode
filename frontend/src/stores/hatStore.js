@@ -68,7 +68,11 @@ class HatStore {
     this.isLoading = true
     agent.Hats.listHats()
       .then(({ hats }) => {
-        this.list = hats
+        // Twirp gRPC doesn't return the empty array
+        if (hats) {
+          this.list = hats
+        }
+        
         this.listInit = true
       })
       .catch(err => {

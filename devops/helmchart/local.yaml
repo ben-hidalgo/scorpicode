@@ -57,6 +57,7 @@ roxie:
 
   # TODO: use the mount and prevent pem from COPYing in Dockerfile
   auth0PemfilePath: /app/scorpicode-local.pem
+  # auth0PemfilePath: /etc/scorpicode/scorpicode.pem
   auth0PemfileMount: /etc/scorpicode/
   # these are dynamic in Makefile
   # loginSuccessTarget: set by dynamic env var

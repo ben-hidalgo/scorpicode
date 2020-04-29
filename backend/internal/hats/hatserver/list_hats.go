@@ -31,6 +31,7 @@ func (hs *Server) ListHats(ctx context.Context, req *hatspb.ListHatsRequest) (*h
 		reps[i] = HatDocToRep(m)
 	}
 
+	// TODO: an empty array is not returned in JSON...
 	return &hatspb.ListHatsResponse{
 		Hats: reps,
 	}, nil
