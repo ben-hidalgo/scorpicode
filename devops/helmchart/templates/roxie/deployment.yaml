@@ -26,10 +26,6 @@ spec:
         ports:
         - containerPort: {{ .Values.roxie.port }}
           name: http
-        volumeMounts:
-          - name: pemfilevolume
-            mountPath: {{ .Values.roxie.auth0PemfileMount }}
-            readOnly: true
         env:
 {{- with .Values.website }}
 {{ include "service.shared" . | indent 8 }}
@@ -46,8 +42,4 @@ spec:
           value: {{ .Values.roxie.enableCors | quote }}
         - name: LOGIN_SUCCESS_TARGET
           value: {{ .Values.roxie.loginSuccessTarget | quote }}
-      volumes:
-        - name: pemfilevolume
-          secret:
-            secretName: {{ .Values.roxie.name }}
 {{- end }}

@@ -1,10 +1,7 @@
-# local values
+# dev values
 
 common:
-  repository:
-  pullPolicy: Never
-  logLevel: debug
-  logFormat: text
+  enabled: false
 
 frontend:
   enabled: false

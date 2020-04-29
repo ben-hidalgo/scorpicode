@@ -26,6 +26,10 @@ spec:
         ports:
           - containerPort: {{ .Values.hats.port }}
             name: http
+        volumeMounts:
+          - name: {{ .Values.common.pemfileVolume }}
+            mountPath: {{ .Values.common.auth0PemfileMount }}
+            readOnly: true    
         env:
 {{- with .Values.hats }}
 {{ include "service.shared" . | indent 8 }}
@@ -38,4 +42,8 @@ spec:
           value: {{ required "missing value hats.mongoDb" .Values.hats.mongoDb | quote }}
         - name: MONGO_URI
           value: {{ required "missing value hats.mongoUri" .Values.hats.mongoUri | quote }}
+      volumes:
+        - name: {{ .Values.common.pemfileVolume }}
+          secret:
+            secretName: {{ .Values.common.name }}
 {{- end }}

@@ -18,17 +18,8 @@ upgrade: #images
 	-f devops/helmchart/local.yaml \
 	-f devops/helmchart/local.plain.yaml \
 	--set common.cacheBuster=`date +%s` \
-	--set roxie.auth0RedirectUri=http://`minikube ip`:30080/callback \
+	--set common.auth0RedirectUri=http://`minikube ip`:30080/callback \
 	--set roxie.loginSuccessTarget=http://`minikube ip`:30080/sc \
-	--set hats.tag=$(TAG) \
-	--set website.tag=$(TAG) \
-	--set roxie.tag=$(TAG) \
-	--set frontend.tag=$(TAG)
-
-dry-run:
-	helm upgrade --install --debug --dry-run scorpicode ./devops/helmchart \
-	-f devops/helmchart/local.yaml \
-	--set common.cacheBuster=`date +%s` \
 	--set hats.tag=$(TAG) \
 	--set website.tag=$(TAG) \
 	--set roxie.tag=$(TAG) \
@@ -38,14 +29,7 @@ dev:
 	kubectl create namespace dev || true
 	helm upgrade --install scorpicode ./devops/helmchart \
 	-f devops/helmchart/dev.yaml \
-	-n dev \
-	--set common.cacheBuster=`date +%s` \
-	--set hats.tag=$(TAG) \
-	--set website.tag=$(TAG) \
-	--set roxie.tag=$(TAG) \
-	--set frontend.tag=$(TAG)
-	#
-	kubectl wait pods -l app=mongodb --for=condition=Ready -n dev
+	-n dev
 
 go-happy:
 	(cd backend && \

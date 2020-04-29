@@ -1,10 +1,16 @@
 # local values
 
 common:
+  enabled: true
   repository:
+  name: common
   pullPolicy: Never
   logLevel: debug
   logFormat: text
+
+  pemfileVolume: pemfilevolume
+  auth0PemfilePath: /etc/scorpicode/scorpicode.pem
+  auth0PemfileMount: /etc/scorpicode/
 
 frontend:
   enabled: true
@@ -56,9 +62,6 @@ roxie:
   enableCors: false
 
   # TODO: use the mount and prevent pem from COPYing in Dockerfile
-  auth0PemfilePath: /app/scorpicode-local.pem
-  # auth0PemfilePath: /etc/scorpicode/scorpicode.pem
-  auth0PemfileMount: /etc/scorpicode/
   # these are dynamic in Makefile
   # loginSuccessTarget: set by dynamic env var
   # auth0RedirectUri: set by dynamic env var
