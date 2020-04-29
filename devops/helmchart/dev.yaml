@@ -18,6 +18,9 @@ website:
 roxie:
   enabled: false
 
+debugger:
+  enabled: false
+  
 ingress:
   enabled: false
 

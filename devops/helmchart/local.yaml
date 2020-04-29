@@ -25,9 +25,7 @@ hats:
   serviceType: ClusterIP
 
   listendAddress: :8080
-  datastoreConfig: redis
-  redisAddress: scorpicode-redis-master:6379
-  redisPassword: redispassword
+  mongoDb: hats
 
 website:
   enabled: true
@@ -61,20 +59,24 @@ roxie:
   # loginSuccessTarget: set by dynamic env var
   # auth0RedirectUri: set by dynamic env var
 
+debugger:
+  enabled: true
+  name: debugger
+  limitsMemory: 128Mi
+  limitsCpu: 50m
+
 ingress:
   enabled: false
-
+        
 nginx:
   enabled: false
 
-mongo:
-  enabled: false
-
+mongodb:
+  enabled: true
+  mongodbUsername: hats
+  mongodbPassword: hats
+  mongodbDatabase: hats
+  
 #TODO: make password in SOPS yaml
 redis:
-  enabled: true
-  password: redispassword
-  master:
-    disableCommands:
-    service:
-      type: LoadBalancer
+  enabled: false

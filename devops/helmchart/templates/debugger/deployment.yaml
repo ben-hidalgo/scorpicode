@@ -1,28 +1,28 @@
-{{- if .Values.hats.enabled }}
+{{- if .Values.debugger.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.hats.name }}
+  name: {{ .Values.debugger.name }}
 spec:
   replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/instance: {{ .Chart.Name }}
-      app.kubernetes.io/name: {{ .Values.hats.name }}
+      app.kubernetes.io/name: {{ .Values.debugger.name }}
   template:
     metadata:
       labels:
         app.kubernetes.io/instance: {{ .Chart.Name }}
-        app.kubernetes.io/name: {{ .Values.hats.name }}  
+        app.kubernetes.io/name: {{ .Values.debugger.name }}  
     spec:
       containers:
-      - name: {{ .Values.hats.name }}
-        image: {{ .Values.common.repository }}{{ .Values.hats.name }}:{{ .Values.hats.tag }}
-        imagePullPolicy: {{ .Values.common.pullPolicy }}
+      - name: {{ .Values.debugger.name }}
+        image: {{ .Values.common.repository }}{{ .Values.debugger.name }}:latest
+        imagePullPolicy: IfNotPresent
         resources:
           limits:
-            memory: {{ .Values.hats.limitsMemory | quote }}
-            cpu: {{ .Values.hats.limitsCpu | quote }}
+            memory: {{ .Values.debugger.limitsMemory | quote }}
+            cpu: {{ .Values.debugger.limitsCpu | quote }}
         ports:
           - containerPort: {{ .Values.hats.port }}
             name: http
@@ -38,3 +38,4 @@ spec:
         - name: MONGO_URI
           value: {{ required "missing value hats.mongoUri" .Values.hats.mongoUri | quote }}
 {{- end }}
+  

@@ -8,6 +8,7 @@ images:
 	docker build . -f devops/dockerfiles/website.Dockerfile  -t website:$(TAG)
 	docker build . -f devops/dockerfiles/frontend.Dockerfile -t frontend:$(TAG)
 	docker build . -f devops/dockerfiles/roxie.Dockerfile    -t roxie:$(TAG)
+	docker build . -f devops/dockerfiles/debugger.Dockerfile -t debugger:latest
 
 #TODO: add wait for services
 upgrade: #images
@@ -16,8 +17,8 @@ upgrade: #images
 	-f - \
 	-f devops/helmchart/local.yaml \
 	--set common.cacheBuster=`date +%s` \
-	--set roxie.auth0RedirectUri=http://`minikube ip`:`kubectl get svc roxie -o json | jq '.spec.ports[0].nodePort'`/callback \
-	--set roxie.loginSuccessTarget=http://`minikube ip`:`kubectl get svc roxie -o json | jq '.spec.ports[0].nodePort'`/sc \
+	--set roxie.auth0RedirectUri=http://`minikube ip`:30080/callback \
+	--set roxie.loginSuccessTarget=http://`minikube ip`:30080/sc \
 	--set hats.tag=$(TAG) \
 	--set website.tag=$(TAG) \
 	--set roxie.tag=$(TAG) \

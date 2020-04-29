@@ -1,12 +1,14 @@
 roxie:
     auth0ClientId: ENC[AES256_GCM,data:j6/jCQHL1t2gENkjUfJ5m68OGbt8P3TbumpGU3Wrkzk=,iv:IGAEWmYq6JHvMAVhyd/2RyU4CrMr+d5ziGA7aEbnBOM=,tag:LiyvHrcFIkwm6FcpTcTX2w==,type:str]
     auth0ClientSecret: ENC[AES256_GCM,data:jD+hMB4VkB5u9Qm8KYwFiSTxlEdcqnsKqgr71GVJKhb29UbkQdsstrCeAiiAVNJOiBKzxoiwg5aHtpgE0cMiXA==,iv:04i8iNq/keAeRm575BPmT7zxbVC2Oi4JKJSbLPhOUms=,tag:jOVRgu/nBQqvhDvW6W1P1A==,type:str]
+hats:
+    mongoUri: ENC[AES256_GCM,data:6zP3mLf6tAClPvd0pS1/45Uc1aQCD2hW7/V3nOpxyXefsLwBvlxgLUuJ/J/6/JuPPw==,iv:OwI3Q/HlhHSaPk51XUa9bcb/zHJYXYmMnQsnNxMjR9U=,tag:/UG3esE3gtH8HFvo9ETpNQ==,type:str]
 sops:
     kms: []
     gcp_kms: []
     azure_kv: []
-    lastmodified: '2020-04-27T23:35:11Z'
-    mac: ENC[AES256_GCM,data:NzuVIfsnqsPGCkIf8gbXmxTssW3+Ungvb1pQRfg8SRHJc6vzUKEXvdly71tval77+OM52+LknMWyu+QJxWMIseNx5UjrLnMHDDr4AcSJlzyQNy0XxeR2+NkTRAGPGw+k8XcbpCBY4EjGAdSnVyoMltKPkyaGVyj91B836r2r7Tw=,iv:IABrF41lABCkdQpZ2gcB5d2USqspgwLyrbAoDx6WMFk=,tag:F/dLmYVU1VHHoxlu0CirDg==,type:str]
+    lastmodified: '2020-04-28T00:28:39Z'
+    mac: ENC[AES256_GCM,data:+UwKHlZynGhqHoxu+9H+NXX4yMIG2gpFczo9ZRN+oMSoCA5i+qcVZkQesv8lsNBQWVIi9cNGN/YpTjAQnrvlXnwhdKlY/ESDhM8DJJzCSd+zLxZ3I6KosRaCpbwZKi14ePhO1iJeL01j3pnVVj3U9AtFSoEY/ihBwdRqKxbx4cA=,iv:6KS1VsTc2XXcsCZbfVIMb8EApydYIObXLTJSYEIB37c=,tag:26h00cpx0PKqiQMxn5kq9w==,type:str]
     pgp:
     -   created_at: '2020-04-27T23:18:50Z'
         enc: |
