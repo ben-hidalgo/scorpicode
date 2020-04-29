@@ -55,6 +55,9 @@ roxie:
   frontendPrefix: http://frontend
   enableCors: false
 
+  # TODO: use the mount and prevent pem from COPYing in Dockerfile
+  auth0PemfilePath: /app/scorpicode-local.pem
+  auth0PemfileMount: /etc/scorpicode/
   # these are dynamic in Makefile
   # loginSuccessTarget: set by dynamic env var
   # auth0RedirectUri: set by dynamic env var

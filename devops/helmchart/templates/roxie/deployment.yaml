@@ -27,9 +27,9 @@ spec:
         - containerPort: {{ .Values.roxie.port }}
           name: http
         volumeMounts:
-          - name: foo
-            mountPath: "/etc/foo"
-            readOnly: true          
+          - name: pemfilevolume
+            mountPath: {{ .Values.roxie.auth0PemfileMount }}
+            readOnly: true
         env:
 {{- with .Values.website }}
 {{ include "service.shared" . | indent 8 }}
@@ -46,10 +46,8 @@ spec:
           value: {{ .Values.roxie.enableCors | quote }}
         - name: LOGIN_SUCCESS_TARGET
           value: {{ .Values.roxie.loginSuccessTarget | quote }}
-        - name: AUTH0_REDIRECT_URI
-          value: {{ required "roxie.auth0RedirectUri required" .Values.roxie.auth0RedirectUri | quote }}
       volumes:
-        - name: foo
+        - name: pemfilevolume
           secret:
             secretName: {{ .Values.roxie.name }}
 {{- end }}

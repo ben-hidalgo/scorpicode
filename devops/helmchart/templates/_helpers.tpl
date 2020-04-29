@@ -19,6 +19,10 @@
   value: {{ required "common.auth0ClientId required" .Values.common.auth0ClientId | quote }}
 - name: AUTH0_CLIENT_SECRET
   value: {{ required "common.auth0ClientSecret required" .Values.common.auth0ClientSecret | quote }}
+- name: AUTH0_PEMFILE_PATH
+  value: {{ required "roxie.auth0PemfilePath required" .Values.roxie.auth0PemfilePath | quote }}
+- name: AUTH0_REDIRECT_URI
+  value: {{ required "roxie.auth0RedirectUri required" .Values.roxie.auth0RedirectUri | quote }}
 {{- end -}}
 
 {/* Service specific shared by all deployments */}

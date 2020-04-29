@@ -38,4 +38,5 @@ func init() {
 	envconfig.SetString("AUTH0_CLIENT_ID", &Auth0ClientID)
 	envconfig.SetString("AUTH0_CLIENT_SECRET", &Auth0ClientSecret)
 	envconfig.SetString("AUTH0_REDIRECT_URI", &Auth0RedirectURI)
+	envconfig.SetString("AUTH0_PEMFILE_PATH", &Auth0PemfilePath)
 }
