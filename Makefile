@@ -12,10 +12,11 @@ images:
 
 #TODO: add wait for services
 upgrade: #images
-	sops -d ./devops/helmchart/local.sops.yaml | \
+	# there is a bug in helm upgrade which intermittently doesn't not accept stdin from sops using: -f -
+	sops -d ./devops/helmchart/local.sops.yaml > ./devops/helmchart/local.plain.yaml
 	helm upgrade --install scorpicode ./devops/helmchart \
-	-f - \
 	-f devops/helmchart/local.yaml \
+	-f devops/helmchart/local.plain.yaml \
 	--set common.cacheBuster=`date +%s` \
 	--set roxie.auth0RedirectUri=http://`minikube ip`:30080/callback \
 	--set roxie.loginSuccessTarget=http://`minikube ip`:30080/sc \
@@ -82,7 +83,9 @@ protobufs:
 
 minikube-start:
 	minikube delete
-	minikube start --cpus 4 --memory 4096
+	# using virtualbox so that ip will be one of: 192.168.99.100, 192.168.99.101, 192.168.99.102
+	# which are registered as callbacks in Auth0
+	minikube start --cpus 4 --memory 4096 --vm-driver=virtualbox
 	minikube addons enable ingress
 
 # minikube service roxie
@@ -94,4 +97,4 @@ hdu:
 	(cd devops/helmchart && helm dependency update)
 
 logs:
-	kc logs -f -l app.kubernetes.io/instance=scorpicode
+	kubectl logs -f -l app.kubernetes.io/instance=scorpicode

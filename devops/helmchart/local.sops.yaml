@@ -1,14 +1,14 @@
-roxie:
-    auth0ClientId: ENC[AES256_GCM,data:j6/jCQHL1t2gENkjUfJ5m68OGbt8P3TbumpGU3Wrkzk=,iv:IGAEWmYq6JHvMAVhyd/2RyU4CrMr+d5ziGA7aEbnBOM=,tag:LiyvHrcFIkwm6FcpTcTX2w==,type:str]
-    auth0ClientSecret: ENC[AES256_GCM,data:jD+hMB4VkB5u9Qm8KYwFiSTxlEdcqnsKqgr71GVJKhb29UbkQdsstrCeAiiAVNJOiBKzxoiwg5aHtpgE0cMiXA==,iv:04i8iNq/keAeRm575BPmT7zxbVC2Oi4JKJSbLPhOUms=,tag:jOVRgu/nBQqvhDvW6W1P1A==,type:str]
+common:
+    auth0ClientId: ENC[AES256_GCM,data:mRFZ4j21F0Yt9rsBnlBePdMV2b0ziMfgDPW1MRw9Qxg=,iv:z/aHllZtS3pu/WDPlnFRy3PPN2EDTuUAvPOjMIyjI38=,tag:iTBf2GCY+0GyEpLGmFr/2A==,type:str]
+    auth0ClientSecret: ENC[AES256_GCM,data:cwa6e/VrRwfgxR6pRqHlFQczxNDkp2u0bvDC/83NBu8kF5oJ4JPWS4hYbEh3LBHeYJVD4HsI9JED05gawcgogA==,iv:CiWxNCvslQU/+WsFk1ES0gitLXut47LD9rr8cIRBG+I=,tag:iQhDq3xEX9/iVCBirHBBYA==,type:str]
 hats:
     mongoUri: ENC[AES256_GCM,data:6zP3mLf6tAClPvd0pS1/45Uc1aQCD2hW7/V3nOpxyXefsLwBvlxgLUuJ/J/6/JuPPw==,iv:OwI3Q/HlhHSaPk51XUa9bcb/zHJYXYmMnQsnNxMjR9U=,tag:/UG3esE3gtH8HFvo9ETpNQ==,type:str]
 sops:
     kms: []
     gcp_kms: []
     azure_kv: []
-    lastmodified: '2020-04-28T00:28:39Z'
-    mac: ENC[AES256_GCM,data:+UwKHlZynGhqHoxu+9H+NXX4yMIG2gpFczo9ZRN+oMSoCA5i+qcVZkQesv8lsNBQWVIi9cNGN/YpTjAQnrvlXnwhdKlY/ESDhM8DJJzCSd+zLxZ3I6KosRaCpbwZKi14ePhO1iJeL01j3pnVVj3U9AtFSoEY/ihBwdRqKxbx4cA=,iv:6KS1VsTc2XXcsCZbfVIMb8EApydYIObXLTJSYEIB37c=,tag:26h00cpx0PKqiQMxn5kq9w==,type:str]
+    lastmodified: '2020-04-29T18:49:40Z'
+    mac: ENC[AES256_GCM,data:Ew/zZxpmWJN89LBlhZHZEWJhklpufFY56gNGWRBzwoKbLH92nWmi/BsvWt+ARqSZphOuah2PbihlGg5ZfLewd33brQJYZH8bYWpRKxE4Lq21Xhw5rqO7FPm+4xYg7IC1WUALAfolHWrfD91Uc7bsAHVQBf87iGKi8OnBeGC8kxo=,iv:K+CTA6j283o+ZulsBi//CsblUtEf/PjQ9Ugcbe1U26s=,tag:mAoMabwogMTmHtGoCsstdg==,type:str]
     pgp:
     -   created_at: '2020-04-27T23:18:50Z'
         enc: |

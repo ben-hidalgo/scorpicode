@@ -60,7 +60,7 @@ roxie:
   # auth0RedirectUri: set by dynamic env var
 
 debugger:
-  enabled: true
+  enabled: false
   name: debugger
   limitsMemory: 128Mi
   limitsCpu: 50m

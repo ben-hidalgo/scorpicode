@@ -31,6 +31,7 @@ spec:
 {{ include "service.shared" . | indent 8 }}
 {{- end }} 
 {{ include "common.shared" . | indent 8 }}
+{{ include "common.auth0"   . | indent 8 }}
         - name: WEBSITE_PREFIX
           value: {{ .Values.roxie.websitePrefix | quote }}
         - name: FRONTEND_PREFIX
@@ -41,10 +42,6 @@ spec:
           value: {{ .Values.roxie.enableCors | quote }}
         - name: LOGIN_SUCCESS_TARGET
           value: {{ .Values.roxie.loginSuccessTarget | quote }}
-        - name: AUTH0_CLIENT_ID
-          value: {{ required "roxie.auth0ClientId required" .Values.roxie.auth0ClientId | quote }}
-        - name: AUTH0_CLIENT_SECRET
-          value: {{ required "roxie.auth0ClientSecret required" .Values.roxie.auth0ClientSecret | quote }}
         - name: AUTH0_REDIRECT_URI
           value: {{ required "roxie.auth0RedirectUri required" .Values.roxie.auth0RedirectUri | quote }}
 {{- end }}

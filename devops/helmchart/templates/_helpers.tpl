@@ -13,6 +13,14 @@
   value: {{ .Values.common.cacheBuster | quote }}
 {{- end -}}
 
+{/* Shared by services requiring auth0 */}
+{{- define "common.auth0" -}}
+- name: AUTH0_CLIENT_ID
+  value: {{ required "common.auth0ClientId required" .Values.common.auth0ClientId | quote }}
+- name: AUTH0_CLIENT_SECRET
+  value: {{ required "common.auth0ClientSecret required" .Values.common.auth0ClientSecret | quote }}
+{{- end -}}
+
 {/* Service specific shared by all deployments */}
 {{- define "service.shared" -}}
 - name: APP_NAME

@@ -30,7 +30,8 @@ spec:
 {{- with .Values.hats }}
 {{ include "service.shared" . | indent 8 }}
 {{- end }}
-{{ include "common.shared" . | indent 8 }}
+{{ include "common.shared"  . | indent 8 }}
+{{ include "common.auth0"   . | indent 8 }}
         - name: DATASTORE_CONFIG
           value: {{ .Values.hats.datastoreConfig | quote }}
         - name: MONGO_DB
