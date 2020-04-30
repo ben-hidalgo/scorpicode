@@ -3,10 +3,13 @@ dependencies:
   repository: https://charts.bitnami.com/bitnami
   version: 5.1.3
 - name: mongodb
-  repository: https://kubernetes-charts.storage.googleapis.com/
-  version: 7.8.2
+  repository: https://charts.bitnami.com/bitnami
+  version: 7.10.6
+- name: rabbitmq
+  repository: https://charts.bitnami.com/bitnami
+  version: 6.25.5
 - name: redis
   repository: https://kubernetes-charts.storage.googleapis.com/
   version: 10.4.1
-digest: sha256:984589a39300a656550d595a1e2b24f022b2efde510ebafcf3ccf4d9ddff65f4
-generated: "2020-02-06T13:14:17.72966-08:00"
+digest: sha256:efc0351bee42c61d98300060f5baf5f83006a64853143e951e8c9e2f0bb201f3
+generated: "2020-04-29T17:40:39.123435-07:00"

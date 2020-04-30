@@ -32,5 +32,8 @@ mongodb:
   service:
     type: LoadBalancer
 
+rabbitmq:
+  enabled: true
+    
 redis:
   enabled: false

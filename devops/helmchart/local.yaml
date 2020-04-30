@@ -83,7 +83,9 @@ mongodb:
   mongodbUsername: hats
   mongodbPassword: hats
   mongodbDatabase: hats
-  
-#TODO: make password in SOPS yaml
+
+rabbitmq:
+  enabled: false
+
 redis:
   enabled: false
