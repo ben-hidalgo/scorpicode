@@ -10,9 +10,9 @@ images:
 	docker build . -f devops/dockerfiles/roxie.Dockerfile    -t roxie:$(TAG)
 	docker build . -f devops/dockerfiles/debugger.Dockerfile -t debugger:latest
 
-#TODO: add wait for services
+#TODO: add wait for services... mongo startup is longer than the default wait timeout
+# there is a bug in helm upgrade which intermittently doesn't not accept stdin from sops using: -f -
 upgrade: #images
-	# there is a bug in helm upgrade which intermittently doesn't not accept stdin from sops using: -f -
 	sops -d ./devops/helmchart/local.sops.yaml > ./devops/helmchart/local.plain.yaml
 	helm upgrade --install scorpicode ./devops/helmchart \
 	-f devops/helmchart/local.yaml \
@@ -72,12 +72,12 @@ minikube-start:
 	minikube start --cpus 4 --memory 4096 --vm-driver=virtualbox
 	minikube addons enable ingress
 
-# minikube service roxie
-mksr:
+# opens the load balancer at http://<minikube ip>:<roxie port>
+minikube-service-roxie:
 	minikube service roxie
 
 # the .tgz files are committed
-hdu:
+helm-dependency-update:
 	(cd devops/helmchart && helm dependency update)
 
 logs:

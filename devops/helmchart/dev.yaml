@@ -32,8 +32,18 @@ mongodb:
   service:
     type: LoadBalancer
 
-rabbitmq:
+rabbitmq-ha:
   enabled: true
-    
+  managementUsername: mgmt
+  managementPassword: mgmt
+  rabbitmqUsername: mgmt
+  rabbitmqPassword: mgmt
+  replicaCount: 1
+  service:
+    type: LoadBalancer
+  prometheus:
+    operator:
+      enabled: false
+
 redis:
   enabled: false

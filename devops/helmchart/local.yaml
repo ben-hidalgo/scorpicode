@@ -84,7 +84,7 @@ mongodb:
   mongodbPassword: hats
   mongodbDatabase: hats
 
-rabbitmq:
+rabbitmq-ha:
   enabled: false
 
 redis:
