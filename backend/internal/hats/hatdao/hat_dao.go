@@ -55,7 +55,7 @@ func From(ctx context.Context) HatDao {
 	case HatDao:
 		return v
 	default:
-		panic("FromContext() no value found")
+		panic("hatdao.From() no value found")
 	}
 }
 

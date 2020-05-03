@@ -15,7 +15,7 @@ import (
 // DatabaseName .
 var DatabaseName = "hats"
 
-// MongoURI . TODO: use env var
+// MongoURI .
 var MongoURI = "mongodb://hats:hats@localhost:27017/hats"
 
 func init() {
@@ -23,15 +23,14 @@ func init() {
 	envconfig.SetString("MONGO_URI", &MongoURI)
 }
 
-func init() {
-
-	if err := mgm.SetDefaultConfig(nil, DatabaseName, options.Client().ApplyURI(MongoURI)); err != nil {
-		panic(fmt.Sprintf("%#v", err))
-	}
-}
-
 // ServerHooks is a Twirp middleware
 func ServerHooks() *twirp.ServerHooks {
+
+	logrus.Infof(fmt.Sprintf("MongoURI=%s", MongoURI))
+
+	if err := mgm.SetDefaultConfig(nil, DatabaseName, options.Client().ApplyURI(MongoURI)); err != nil {
+		panic(fmt.Sprintf("MongoURI=%s %#v", MongoURI, err))
+	}
 
 	// Ping the DB once to confirm connectivity
 	if err := mgm.Coll(&hatdao.Hat{}).Database().Client().Ping(context.Background(), nil); err != nil {

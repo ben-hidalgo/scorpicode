@@ -6,6 +6,7 @@ import (
 	"backend/internal/hats/mongoclient"
 	"backend/pkg/httpwrap"
 	_ "backend/pkg/logging" // init logrus
+	"backend/pkg/rabbit"
 	"backend/rpc/hatspb"
 	"context"
 	"net/http"
@@ -24,7 +25,7 @@ func main() {
 	logrus.Infof("main() %s starting", config.AppName)
 
 	// middleware filter chain
-	hooks := twirp.ChainHooks(mongoclient.ServerHooks())
+	hooks := twirp.ChainHooks(mongoclient.ServerHooks(), rabbit.ServerHooks())
 
 	twirpHandler := hatspb.NewHatsServer(hatserver.NewServer(), hooks)
 

@@ -16,9 +16,12 @@ LOG_LEVEL=trace \
 LOCAL_HEADERS_PATH=../../../ignored/.headers \
 go run main.go) &
 
+# TODO: use kubectl output jsonpath
+# TODO: switch rabbit creds to rabbit:rabbit
 (cd backend/cmd/hats/ && \
 LOG_LEVEL=trace \
-MONGO_URI=mongodb://hats:hats@`minikube ip`:`kubectl get svc scorpicode-mongodb -n dev -o json | jq '.spec.ports[0].nodePort'`/hats \
+MONGO_URI=mongodb://hats:hats@`minikube ip`:`kubectl get svc scorpicode-mongodb     -n dev -o json | jq '.spec.ports[0].nodePort'`/hats \
+AMQP_DSN=amqp://mgmt:mgmt@`minikube ip`:`kubectl get svc scorpicode-rabbitmq-ha -n dev -o json | jq '.spec.ports[1].nodePort'` \
 go run main.go) &
 
 cat

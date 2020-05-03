@@ -3,6 +3,7 @@ package hatserver
 import (
 	"backend/internal/hats/hatdao"
 	"backend/pkg/authnz"
+	"backend/pkg/rabbit"
 	"backend/pkg/util"
 	"backend/rpc/hatspb"
 	"context"
@@ -86,6 +87,10 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 	if err != nil {
 		return nil, util.InternalErrorWith(err)
 	}
+
+	rmq := rabbit.From(ctx)
+
+	logrus.Infof("rmq=%#v", rmq)
 
 	res := &hatspb.MakeHatsResponse{
 		// TODO: modify response structure?
