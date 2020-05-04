@@ -10,6 +10,7 @@ import (
 	"backend/pkg/util"
 	"backend/rpc/hatspb"
 	"context"
+	"fmt"
 	"testing"
 	"time"
 
@@ -79,6 +80,21 @@ func TestHatSuccess(t *testing.T) {
 
 	rm := &rabbitmock.Mock{
 		SendJSONF: func(ex rabbit.Exchange, key rabbit.RKey, msg interface{}) error {
+			if ex != rabbit.ServiceMsgtypeTx {
+				t.Fatalf(GOT, ex, WANTED, rabbit.ServiceMsgtypeTx)
+			}
+			if key != rabbit.HatsDotMakeHats {
+				t.Fatalf(GOT, key, WANTED, rabbit.HatsDotMakeHats)
+			}
+			// type assertion
+			docs, ok := msg.([]*hatdao.Hat)
+			if !ok {
+				t.Fatalf(GOT, fmt.Sprintf("%T", msg), WANTED, "[]*hatdao.Hat")
+			}
+			if len(docs) != DefaultQuantity {
+				t.Fatalf(GOT, len(docs), WANTED, DefaultQuantity)
+			}
+
 			return nil
 		},
 	}

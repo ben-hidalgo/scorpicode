@@ -93,7 +93,7 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 	logrus.Infof("rmq=%#v", rmq)
 
 	// publish the message
-	rmq.SendJSON(rabbit.ServiceMsgtypeTx, rabbit.HatsDotStar, docs)
+	rmq.SendJSON(rabbit.ServiceMsgtypeTx, rabbit.HatsDotMakeHats, docs)
 
 	res := &hatspb.MakeHatsResponse{
 		// TODO: modify response structure?

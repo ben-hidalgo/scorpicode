@@ -8,7 +8,7 @@ const (
 
 // Keys
 const (
-	HatsDotStar = RKey("hats.*")
+	HatsDotMakeHats = RKey("hats.makehats")
 )
 
 // Queues
