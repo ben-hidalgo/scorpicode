@@ -17,19 +17,14 @@ func init() {
 	envconfig.SetString("AMQP_DSN", &AmqpDsn)
 }
 
-const (
-	// ServiceMsgtypeTx topic exchange
-	ServiceMsgtypeTx = "service_msgtype_tx"
-)
-
 // Exchange rabbitmq exchange
 type Exchange string
 
 // RKey rabbitmq routing key
 type RKey string
 
-// // Queue rabbitmq queue
-// type Queue string
+// Queue rabbitmq queue
+type Queue string
 
 // Rmq Hat Data Access Object
 type Rmq interface {
@@ -93,16 +88,3 @@ func ServerHooks() *twirp.ServerHooks {
 		},
 	}
 }
-
-const schema = `
-exchanges:
-  service_msgtype_tx:
-    durable: true
-    type: topic
-queues:
-  hats_q:
-    durable: true
-    bindings:
-      - exchange: "service_msgtype_tx"
-        key: "hats.*"
-`

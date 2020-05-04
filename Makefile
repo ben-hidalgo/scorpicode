@@ -76,9 +76,16 @@ minikube-start:
 minikube-service-roxie:
 	minikube service roxie
 
+# to get the rabbit management console (opens three tabs, just close two)
+minikube-service-rabbit-dev:
+	minikube service scorpicode-rabbitmq-ha -n dev
+
 # the .tgz files are committed
 helm-dependency-update:
 	(cd devops/helmchart && helm dependency update)
 
-logs:
+logs-local:
 	kubectl logs -f -l app.kubernetes.io/instance=scorpicode
+
+logs-dev:
+	kubectl logs -n dev -f -l app.kubernetes.io/instance=scorpicode

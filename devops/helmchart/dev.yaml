@@ -34,10 +34,10 @@ mongodb:
 
 rabbitmq-ha:
   enabled: true
-  managementUsername: mgmt
-  managementPassword: mgmt
-  rabbitmqUsername: mgmt
-  rabbitmqPassword: mgmt
+  managementUsername: rabbit
+  managementPassword: rabbit
+  rabbitmqUsername: rabbit
+  rabbitmqPassword: rabbit
   replicaCount: 1
   service:
     type: LoadBalancer
