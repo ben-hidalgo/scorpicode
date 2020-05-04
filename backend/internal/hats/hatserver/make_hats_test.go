@@ -5,6 +5,8 @@ import (
 	"backend/internal/hats/hatdao/hatdaomock"
 	"backend/internal/hats/hatserver"
 	"backend/pkg/authnz"
+	"backend/pkg/rabbit"
+	"backend/pkg/rabbit/rabbitmock"
 	"backend/pkg/util"
 	"backend/rpc/hatspb"
 	"context"
@@ -27,11 +29,13 @@ const (
 var DefaultCreatedAt = time.Date(2020, time.January, 0, 0, 0, 0, 0, time.UTC)
 var DefaultUpdatedAt = time.Date(2020, time.January, 1, 1, 1, 1, 1, time.UTC)
 
-func startHat(mr *hatdaomock.Mock) (context.Context, *hatserver.Server, *hatspb.MakeHatsRequest) {
+func startHat(hdm *hatdaomock.Mock, rm *rabbitmock.Mock) (context.Context, *hatserver.Server, *hatspb.MakeHatsRequest) {
 
 	ctx := context.Background()
 
-	ctx = context.WithValue(ctx, hatdao.Key, mr)
+	ctx = context.WithValue(ctx, hatdao.Key, hdm)
+
+	ctx = context.WithValue(ctx, rabbit.Key, rm)
 
 	ctx = context.WithValue(ctx, authnz.Key, &authnz.BearerToken{
 		CC: &authnz.CustomClaims{
@@ -56,7 +60,7 @@ func startHat(mr *hatdaomock.Mock) (context.Context, *hatserver.Server, *hatspb.
 
 func TestHatSuccess(t *testing.T) {
 
-	mr := &hatdaomock.Mock{
+	hdm := &hatdaomock.Mock{
 		CreateF: func(ctx context.Context, mhc *hatdao.Hat) error {
 			id, err := primitive.ObjectIDFromHex(DefaultHexID)
 			if err != nil {
@@ -73,7 +77,13 @@ func TestHatSuccess(t *testing.T) {
 		},
 	}
 
-	ctx, hs, req := startHat(mr)
+	rm := &rabbitmock.Mock{
+		SendF: func(ex, msg, key string) error {
+			return nil
+		},
+	}
+
+	ctx, hs, req := startHat(hdm, rm)
 
 	res, err := hs.MakeHats(ctx, req)
 
@@ -113,7 +123,7 @@ func TestHatSuccess(t *testing.T) {
 
 func TestMissingRole(t *testing.T) {
 
-	ctx, hs, req := startHat(hatdaomock.NewRepo())
+	ctx, hs, req := startHat(hatdaomock.New(), rabbitmock.New())
 
 	// overwrite the default bearer with no roles
 	ctx = context.WithValue(ctx, authnz.Key, &authnz.BearerToken{
@@ -141,7 +151,7 @@ func TestMissingRole(t *testing.T) {
 
 func TestSizeRequired(t *testing.T) {
 
-	ctx, hs, req := startHat(hatdaomock.NewRepo())
+	ctx, hs, req := startHat(hatdaomock.New(), rabbitmock.New())
 
 	req.Size = ""
 
@@ -150,7 +160,7 @@ func TestSizeRequired(t *testing.T) {
 
 func TestColorRequired(t *testing.T) {
 
-	ctx, hs, req := startHat(hatdaomock.NewRepo())
+	ctx, hs, req := startHat(hatdaomock.New(), rabbitmock.New())
 
 	req.Color = ""
 
@@ -159,7 +169,7 @@ func TestColorRequired(t *testing.T) {
 
 func TestColorDomain(t *testing.T) {
 
-	ctx, hs, req := startHat(hatdaomock.NewRepo())
+	ctx, hs, req := startHat(hatdaomock.New(), rabbitmock.New())
 
 	req.Color = "not a color"
 
@@ -183,7 +193,7 @@ func TestColorDomain(t *testing.T) {
 
 func TestNameRequired(t *testing.T) {
 
-	ctx, hs, req := startHat(hatdaomock.NewRepo())
+	ctx, hs, req := startHat(hatdaomock.New(), rabbitmock.New())
 
 	req.Style = hatspb.Style_UNKNOWN_STYLE
 

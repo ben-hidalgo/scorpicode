@@ -17,6 +17,19 @@ func init() {
 	envconfig.SetString("AMQP_DSN", &AmqpDsn)
 }
 
+const (
+	// ServiceMsgtypeTx topic exchange
+	ServiceMsgtypeTx = "service_msgtype_tx"
+)
+
+// Rmq Hat Data Access Object
+type Rmq interface {
+	Send(ex, key, msg string) error
+}
+
+// enforces the interface is implemented
+var _ Rmq = (*impl)(nil)
+
 // New .
 func New() Rmq {
 
@@ -40,24 +53,6 @@ func New() Rmq {
 	return &impl{
 		Conn: conn,
 	}
-}
-
-// Rmq Hat Data Access Object
-type Rmq interface {
-	Send(msg, key string) error
-}
-
-//impl .
-type impl struct {
-	Conn *jazz.Connection
-}
-
-// enforces the interface is implemented
-var _ Rmq = (*impl)(nil)
-
-// Send .
-func (i *impl) Send(msg, key string) error {
-	return nil
 }
 
 // used to store the Repo in Context

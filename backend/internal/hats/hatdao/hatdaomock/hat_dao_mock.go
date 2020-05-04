@@ -18,8 +18,8 @@ type Mock struct {
 // enforces the interface is implemented
 var _ hatdao.HatDao = (*Mock)(nil)
 
-// NewRepo .
-func NewRepo() *Mock {
+// New .
+func New() *Mock {
 	return &Mock{}
 }
 
