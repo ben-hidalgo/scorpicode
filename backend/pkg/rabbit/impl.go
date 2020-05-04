@@ -14,17 +14,17 @@ type impl struct {
 }
 
 // Send .
-func (i *impl) Send(ex, key, msg string) error {
-	return i.Conn.SendMessage(ex, key, msg)
+func (i *impl) Send(ex Exchange, key RKey, msg string) error {
+	return i.Conn.SendMessage(string(ex), string(key), msg)
 }
 
 // SendBlob .
-func (i *impl) SendBlob(ex, key string, msg []byte) error {
-	return i.Conn.SendBlob(ex, key, msg)
+func (i *impl) SendBlob(ex Exchange, key RKey, msg []byte) error {
+	return i.Conn.SendBlob(string(ex), string(key), msg)
 }
 
 // SendJSON .
-func (i *impl) SendJSON(ex, key string, msg interface{}) error {
+func (i *impl) SendJSON(ex Exchange, key RKey, msg interface{}) error {
 
 	s, err := json.Marshal(msg)
 	if err != nil {

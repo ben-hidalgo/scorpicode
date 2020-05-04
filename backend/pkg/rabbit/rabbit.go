@@ -22,9 +22,20 @@ const (
 	ServiceMsgtypeTx = "service_msgtype_tx"
 )
 
+// Exchange rabbitmq exchange
+type Exchange string
+
+// RKey rabbitmq routing key
+type RKey string
+
+// // Queue rabbitmq queue
+// type Queue string
+
 // Rmq Hat Data Access Object
 type Rmq interface {
-	Send(ex, key, msg string) error
+	Send(ex Exchange, key RKey, msg string) error
+	SendBlob(ex Exchange, key RKey, msg []byte) error
+	SendJSON(ex Exchange, key RKey, msg interface{}) error
 }
 
 // enforces the interface is implemented

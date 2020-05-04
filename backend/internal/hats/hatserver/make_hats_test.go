@@ -78,7 +78,7 @@ func TestHatSuccess(t *testing.T) {
 	}
 
 	rm := &rabbitmock.Mock{
-		SendF: func(ex, msg, key string) error {
+		SendF: func(ex rabbit.Exchange, key rabbit.RKey, msg string) error {
 			return nil
 		},
 	}

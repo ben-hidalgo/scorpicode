@@ -92,6 +92,8 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 
 	logrus.Infof("rmq=%#v", rmq)
 
+	// TODO: send msg
+
 	res := &hatspb.MakeHatsResponse{
 		// TODO: modify response structure?
 		Hat: HatDocToRep(docs[0]),
