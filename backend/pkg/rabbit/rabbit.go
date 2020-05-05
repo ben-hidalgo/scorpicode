@@ -39,10 +39,7 @@ var _ Rmq = (*impl)(nil)
 // New .
 func New() Rmq {
 
-	conn, err := jazz.Connect(AmqpDsn)
-	if err != nil {
-		logrus.Panicf("Could not connect to RabbitMQ: %v", err.Error())
-	}
+	conn := Connect()
 
 	reader := bytes.NewReader([]byte(schema))
 
@@ -59,6 +56,16 @@ func New() Rmq {
 	return &impl{
 		Conn: conn,
 	}
+}
+
+// Connect .
+func Connect() *jazz.Connection {
+
+	conn, err := jazz.Connect(AmqpDsn)
+	if err != nil {
+		logrus.Panicf("Could not connect to RabbitMQ: %v", err.Error())
+	}
+	return conn
 }
 
 // used to store the Repo in Context

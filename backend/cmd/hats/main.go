@@ -2,6 +2,7 @@ package main
 
 import (
 	"backend/internal/hats/config"
+	"backend/internal/hats/hatrabbit"
 	"backend/internal/hats/hatserver"
 	"backend/internal/hats/mongoclient"
 	"backend/pkg/httpwrap"
@@ -51,6 +52,9 @@ func main() {
 		}
 		close(idleConnsClosed)
 	}()
+
+	// start rabbit listeners
+	hatrabbit.Listen()
 
 	logrus.Infof("main() %s listening on %s", config.AppName, config.ListenAddress)
 
