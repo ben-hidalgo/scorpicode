@@ -26,18 +26,19 @@ nginx:
 
 mongodb:
   enabled: true
-  mongodbUsername: hats
-  mongodbPassword: hats
-  mongodbDatabase: hats
+  mongodbUsername: scuser
+  mongodbPassword: scpass
+  mongodbDatabase: scdata
   service:
     type: LoadBalancer
 
 rabbitmq-ha:
   enabled: true
-  managementUsername: rabbit
-  managementPassword: rabbit
-  rabbitmqUsername: rabbit
-  rabbitmqPassword: rabbit
+  managementUsername: scuser
+  managementPassword: scpass
+  rabbitmqUsername: scuser
+  rabbitmqPassword: scpass
+  rabbitmqVhost: schost
   replicaCount: 1
   service:
     type: LoadBalancer

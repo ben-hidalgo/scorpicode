@@ -6,8 +6,6 @@ import (
 	"github.com/socifi/jazz"
 )
 
-// AmqpDsn .
-
 //impl .
 type impl struct {
 	Conn *jazz.Connection

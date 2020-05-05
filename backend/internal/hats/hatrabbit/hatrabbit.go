@@ -13,7 +13,7 @@ func Listen() {
 
 	// Handler function
 	f := func(msg []byte) {
-		// TODO: use channels and switch by message type
+		// TODO: add channels and switch by message type
 		logrus.Infof("hatrabbit.Connect() msg=%s", string(msg))
 	}
 

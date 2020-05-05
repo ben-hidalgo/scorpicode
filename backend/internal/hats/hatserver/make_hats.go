@@ -92,6 +92,7 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 
 	logrus.Infof("rmq=%#v", rmq)
 
+	// TODO: add "envelope" message type in proto
 	// publish the message
 	rmq.SendJSON(rabbit.ServiceMsgtypeTx, rabbit.HatsDotMakeHats, docs)
 

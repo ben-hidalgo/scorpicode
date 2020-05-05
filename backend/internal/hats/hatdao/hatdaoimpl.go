@@ -9,56 +9,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// Hat .
-type Hat struct {
-	// DefaultModel includes: _id,created_at and updated_at
-	mgm.DefaultModel `bson:",inline"`
-	Size             string `json:"size"          bson:"size"`
-	Color            string `json:"color"         bson:"color"`
-	Style            string `json:"style"         bson:"style"`
-	Version          int32  `json:"version"       bson:"version"`
-	// TODO: add batch UUID
-	// TODO: add notes
-}
-
-// HatDao Hat Data Access Object
-type HatDao interface {
-	Create(context.Context, *Hat) error
-	Delete(context.Context, *Hat) error
-	Find(ctx context.Context, id string) (*Hat, error) // not found returns nil, nil
-	Query(context.Context) ([]*Hat, error)
-	VisitTxn(context.Context, func() error) error
-}
-
-//impl .
-type impl struct {
-}
-
-// enforces the interface is implemented
-var _ HatDao = (*impl)(nil)
-
-// used to store the Repo in Context
-type key int
-
-// Key is the key for the repo in context; public for mock injection
-const Key key = 0
-
-// New .
-func New() HatDao {
-	return &impl{}
-}
-
-// From returns the dao and panics if not found
-func From(ctx context.Context) HatDao {
-
-	switch v := ctx.Value(Key).(type) {
-	case HatDao:
-		return v
-	default:
-		panic("hatdao.From() no value found")
-	}
-}
-
 // Create .
 func (i *impl) Create(ctx context.Context, e *Hat) error {
 	e.Version = 1
