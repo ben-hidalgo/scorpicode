@@ -4,12 +4,11 @@ import (
 	"backend/pkg/rabbit"
 
 	"github.com/sirupsen/logrus"
+	"github.com/socifi/jazz"
 )
 
 // Listen .
-func Listen() {
-
-	conn := rabbit.Connect()
+func Listen(jc *jazz.Connection) {
 
 	// Handler function
 	f := func(msg []byte) {
@@ -17,6 +16,6 @@ func Listen() {
 		logrus.Infof("hatrabbit.Connect() msg=%s", string(msg))
 	}
 
-	go conn.ProcessQueue(string(rabbit.HatsQueue), f)
+	go jc.ProcessQueue(string(rabbit.HatsQueue), f)
 
 }

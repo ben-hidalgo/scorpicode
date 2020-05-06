@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"context"
 
-	"github.com/sirupsen/logrus"
 	"github.com/socifi/jazz"
 	"github.com/twitchtv/twirp"
 )
@@ -37,35 +36,33 @@ type Rmq interface {
 var _ Rmq = (*impl)(nil)
 
 // New .
-func New() Rmq {
+func New(jc *jazz.Connection) Rmq {
+	return &impl{
+		Conn: jc,
+	}
+}
 
-	conn := Connect()
+// Connect .
+func Connect() (*jazz.Connection, error) {
+
+	jc, err := jazz.Connect(AmqpDsn)
+	if err != nil {
+		return nil, err
+	}
 
 	reader := bytes.NewReader([]byte(schema))
 
 	scheme, err := jazz.DecodeYaml(reader)
 	if err != nil {
-		logrus.Panicf("Could not read YAML: %v", err.Error())
+		return nil, err
 	}
 
-	err = conn.CreateScheme(scheme)
+	err = jc.CreateScheme(scheme)
 	if err != nil {
-		logrus.Panicf("Could not create scheme: %v", err.Error())
+		return nil, err
 	}
 
-	return &impl{
-		Conn: conn,
-	}
-}
-
-// Connect .
-func Connect() *jazz.Connection {
-
-	conn, err := jazz.Connect(AmqpDsn)
-	if err != nil {
-		logrus.Panicf("Could not connect to RabbitMQ: %v", err.Error())
-	}
-	return conn
+	return jc, nil
 }
 
 // used to store the Repo in Context
@@ -85,13 +82,13 @@ func From(ctx context.Context) Rmq {
 	}
 }
 
-// ServerHooks is a Twirp middleware
-func ServerHooks() *twirp.ServerHooks {
+// ServerHooks is a Twirp middleware which injects the Rabbit Rmq impl
+func ServerHooks(jc *jazz.Connection) *twirp.ServerHooks {
 
 	return &twirp.ServerHooks{
 		RequestReceived: func(ctx context.Context) (context.Context, error) {
 
-			return context.WithValue(ctx, Key, New()), nil
+			return context.WithValue(ctx, Key, New(jc)), nil
 		},
 	}
 }

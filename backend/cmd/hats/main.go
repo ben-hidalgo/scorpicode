@@ -26,15 +26,25 @@ func main() {
 
 	logrus.Infof("main() %s starting", config.AppName)
 
+	// connect mongo
 	mongoClient, err := mongodb.Client()
 	if err != nil {
 		logrus.Fatalf("hats.main() mongo err=%#v", err)
 	}
 	defer mongoClient.Disconnect(context.Background())
 
-	// TODO: need to defer rabbit Connection.Close()
+	// connect rabbit
+	rabbitConn, err := rabbit.Connect()
+	if err != nil {
+		logrus.Fatalf("hats.main() rabbit err=%#v", err)
+	}
+	defer rabbitConn.Close()
+
+	// start rabbit listeners
+	hatrabbit.Listen(rabbitConn)
+
 	// middleware filter chain
-	hooks := twirp.ChainHooks(hatmongo.ServerHooks(mongoClient), rabbit.ServerHooks())
+	hooks := twirp.ChainHooks(hatmongo.ServerHooks(mongoClient), rabbit.ServerHooks(rabbitConn))
 
 	twirpHandler := hatspb.NewHatsServer(hatserver.NewServer(), hooks)
 
@@ -60,10 +70,6 @@ func main() {
 		}
 		close(idleConnsClosed)
 	}()
-
-	// TODO: need to defer rabbit Connection.Close()
-	// start rabbit listeners
-	hatrabbit.Listen()
 
 	logrus.Infof("main() %s listening on %s", config.AppName, config.ListenAddress)
 
