@@ -183,7 +183,7 @@ func TestColorRequired(t *testing.T) {
 	testRequired(t, ctx, hs, req, hatserver.HatColorRequired)
 }
 
-func TestColorDomain(t *testing.T) {
+func TestColorInvalid(t *testing.T) {
 
 	ctx, hs, req := startHat(hatdaomock.New(), rabbitmock.New())
 
@@ -202,8 +202,32 @@ func TestColorDomain(t *testing.T) {
 	if e.Code() != twirp.InvalidArgument {
 		t.Fatalf(GOT, e.Code(), WANTED, twirp.InvalidArgument)
 	}
-	if e.Msg() != string(hatserver.HatColorDomain) {
-		t.Fatalf(GOT, e.Msg(), WANTED, hatserver.HatColorDomain)
+	if e.Msg() != string(hatserver.HatColorInvalid) {
+		t.Fatalf(GOT, e.Msg(), WANTED, hatserver.HatColorInvalid)
+	}
+}
+
+func TestStyleInvalid(t *testing.T) {
+
+	ctx, hs, req := startHat(hatdaomock.New(), rabbitmock.New())
+
+	req.Style = "not a style"
+
+	res, err := hs.MakeHats(ctx, req)
+
+	if err == nil {
+		t.Fatalf(GOT, err, WANTED, NOT_NIL)
+	}
+	if res != nil {
+		t.Fatalf(GOT, res, WANTED, nil)
+	}
+
+	e := err.(twirp.Error)
+	if e.Code() != twirp.InvalidArgument {
+		t.Fatalf(GOT, e.Code(), WANTED, twirp.InvalidArgument)
+	}
+	if e.Msg() != string(hatserver.HatStyleInvalid) {
+		t.Fatalf(GOT, e.Msg(), WANTED, hatserver.HatStyleInvalid)
 	}
 }
 

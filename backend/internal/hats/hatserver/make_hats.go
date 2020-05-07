@@ -23,6 +23,16 @@ var colors = map[string]interface{}{
 	"ORANGE": struct{}{},
 }
 
+var styles = map[string]interface{}{
+	"BOWLER":   struct{}{},
+	"FEDORA":   struct{}{},
+	"BASEBALL": struct{}{},
+	"NEWSBOY":  struct{}{},
+	"COWBOY":   struct{}{},
+	"DERBY":    struct{}{},
+	"TOP_HAT":  struct{}{},
+}
+
 // MakeHats makes a hat
 func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*hatspb.MakeHatsResponse, error) {
 
@@ -43,11 +53,15 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 	}
 
 	if _, ok := colors[req.GetColor()]; ok == false {
-		return nil, util.InvalidArgumentError(HatColorDomain)
+		return nil, util.InvalidArgumentError(HatColorInvalid)
 	}
 
 	if req.GetStyle() == "" {
 		return nil, util.InvalidArgumentError(HatStyleRequired)
+	}
+
+	if _, ok := styles[req.GetStyle()]; ok == false {
+		return nil, util.InvalidArgumentError(HatStyleInvalid)
 	}
 
 	if req.GetQuantity() <= 0 {

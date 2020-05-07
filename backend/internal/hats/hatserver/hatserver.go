@@ -29,8 +29,11 @@ const HatVersionMismatch = util.ErrMsg("hat.version.mismatch")
 // HatColorRequired .
 const HatColorRequired = util.ErrMsg("hat.color.required")
 
-// HatColorDomain .
-const HatColorDomain = util.ErrMsg("hat.color.domain")
+// HatColorInvalid .
+const HatColorInvalid = util.ErrMsg("hat.color.invalid")
+
+// HatStyleInvalid .
+const HatStyleInvalid = util.ErrMsg("hat.style.invalid")
 
 // HatSizeRequired .
 const HatSizeRequired = util.ErrMsg("hat.size.required")
