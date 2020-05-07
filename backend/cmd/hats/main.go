@@ -41,7 +41,7 @@ func main() {
 	defer rabbitConn.Close()
 
 	// start rabbit listeners
-	hatrabbit.Listen(rabbitConn)
+	hatrabbit.Listen(rabbitConn, mongoClient)
 
 	// middleware filter chain
 	hooks := twirp.ChainHooks(hatmongo.ServerHooks(mongoClient), rabbit.ServerHooks(rabbitConn))
