@@ -23,16 +23,6 @@ service Hats {
   rpc FetchHat(FetchHatRequest) returns (FetchHatResponse);
 }
 
-enum Style {
-  UNKNOWN_STYLE = 0;
-  BOWLER = 1;
-  FEDORA = 2;
-  BASEBALL = 3;
-  NEWSBOY = 4;
-  COWBOY = 5;
-  DERBY = 6;
-  TOP_HAT = 7;
-}
 
 // A Hat is a piece of headwear
 message Hat {
@@ -42,7 +32,7 @@ message Hat {
   int32 version = 4;
   string size = 5;
   string color = 6;
-  Style style = 7;
+  string style = 7;
   int32 quantity = 8;
   string notes = 9;
 }
@@ -50,7 +40,7 @@ message Hat {
 message MakeHatsRequest {
   string size = 1;
   string color = 2; // one of: RED, BLUE, GREEN, YELLOW, PURPLE, BLACK, GREY, ORANGE
-  Style style = 3;
+  string style = 3;
   int32 quantity = 4;
   string notes = 5;
 }

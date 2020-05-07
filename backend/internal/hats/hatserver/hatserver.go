@@ -43,24 +43,3 @@ const HatQuantityInvalid = util.ErrMsg("hat.quantity.invalid")
 
 // MakeHatsForbidden .
 const MakeHatsForbidden = util.ErrMsg("makehats.forbidden")
-
-// ToStyle converts a string to a Style type
-func ToStyle(s string) hatspb.Style {
-	return hatspb.Style(hatspb.Style_value[s])
-}
-
-// // MakeHatsCmdToHat .
-// func MakeHatsCmdToHat(cmd *hatsrepo.MakeHatsCmd) *hatspb.Hat {
-// 	return &hatspb.Hat{
-// 		Id:        cmd.ID.Hex(),
-// 		CreatedAt: cmd.CreatedAt.Format(time.RFC3339),
-// 		UpdatedAt: cmd.UpdatedAt.Format(time.RFC3339),
-// 		Version:   int32(cmd.Version),
-// 		Color:     cmd.Color,
-// 		Style:     ToStyle(cmd.Style),
-// 		Size:      cmd.Size,
-// 		Quantity:  int32(cmd.Quantity),
-
-// 		Notes: cmd.Notes,
-// 	}
-// }

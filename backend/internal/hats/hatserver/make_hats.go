@@ -46,7 +46,7 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 		return nil, util.InvalidArgumentError(HatColorDomain)
 	}
 
-	if req.GetStyle() == hatspb.Style_UNKNOWN_STYLE {
+	if req.GetStyle() == "" {
 		return nil, util.InvalidArgumentError(HatStyleRequired)
 	}
 
@@ -68,7 +68,7 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 		for i := int32(0); i < req.GetQuantity(); i++ {
 			hat := &hatdao.Hat{
 				Color: req.GetColor(),
-				Style: req.GetStyle().String(),
+				Style: req.GetStyle(),
 				Size:  req.GetSize(),
 				// TODO: add notes
 			}
@@ -114,7 +114,7 @@ func HatDocToRep(hat *hatdao.Hat) *hatspb.Hat {
 		UpdatedAt: hat.UpdatedAt.Format(time.RFC3339),
 		Version:   int32(hat.Version),
 		Color:     hat.Color,
-		Style:     ToStyle(hat.Style),
+		Style:     hat.Style,
 		Size:      hat.Size,
 		// Quantity:  int32(hat.Quantity),
 		// TODO: add notes to mod

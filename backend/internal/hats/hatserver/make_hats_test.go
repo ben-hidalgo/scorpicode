@@ -20,7 +20,7 @@ import (
 
 const (
 	DefaultColor    = "RED"
-	DefaultStyle    = hatspb.Style_FEDORA
+	DefaultStyle    = "FEDORA"
 	DefaultSize     = "06000"
 	DefaultQuantity = 10
 	DefaultNotes    = "Lorem ipsum"
@@ -211,7 +211,7 @@ func TestNameRequired(t *testing.T) {
 
 	ctx, hs, req := startHat(hatdaomock.New(), rabbitmock.New())
 
-	req.Style = hatspb.Style_UNKNOWN_STYLE
+	req.Style = ""
 
 	testRequired(t, ctx, hs, req, hatserver.HatStyleRequired)
 }
