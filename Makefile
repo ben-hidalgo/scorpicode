@@ -58,12 +58,8 @@ login:
 	open http://localhost:8080/login
 
 protobufs:
-	(cd backend &&             \
-	protoc                     \
-	--proto_path=./rpc/hatspb  \
-	--twirp_out=./rpc/hatspb/  \
-	--go_out=./rpc/hatspb/     \
-	rpc/hatspb/hats.proto)
+	(cd backend && protoc --proto_path=./rpc/hatspb --twirp_out=./rpc/hatspb/ --go_out=./rpc/hatspb/ rpc/hatspb/hats.proto)
+	(cd backend && protoc --proto_path=./rpc/rmqpb  --twirp_out=./rpc/rmqpb/  --go_out=./rpc/rmqpb/  rpc/rmqpb/rmq.proto)
 
 minikube-start:
 	minikube delete

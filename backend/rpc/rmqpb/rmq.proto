@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package rmq;
+
+option go_package = "rmqpb";
+
+// empty service
+service Rmq {
+}
+
+// OrderHats represents a request to make hats
+message OrderHats {
+  string id = 1;
+  string created_at = 2;
+  string updated_at = 3;
+  int32 version = 4;
+  string size = 5;
+  string color = 6;
+  string style = 7;
+  int32 quantity = 8;
+  string notes = 9;
+}
+
+// HatCreated represents a hat that has been created
+message HatCreated {
+  string id = 1;
+  string created_at = 2;
+  string updated_at = 3;
+  int32 version = 4;
+  string size = 5;
+  string color = 6;
+  string style = 7;
+}
