@@ -10,12 +10,27 @@ import (
 // Listen .
 func Listen(jc *jazz.Connection) {
 
-	// Handler function
-	f := func(msg []byte) {
-		// TODO: add channels and switch by message type
-		logrus.Infof("hatrabbit.Connect() msg=%s", string(msg))
+	go jc.ProcessQueue(rabbit.HatsOrderCreatedQ.Name(), WrapProcessor(ProcessHatsOrderCreated))
+
+}
+
+// WrapProcessor wrappers the handler func with error handling
+func WrapProcessor(f func(msg []byte) error) func(msg []byte) {
+
+	handle := func(msg []byte) {
+
+		err := f(msg)
+		if err != nil {
+			logrus.Errorf("hatrabbit.WrapProcessor() err=%#v", err)
+			// TODO: publish to dead letter exchange
+		}
 	}
+	return handle
+}
 
-	go jc.ProcessQueue(string(rabbit.HatsQueue), f)
+// ProcessHatsOrderCreated handles
+func ProcessHatsOrderCreated(msg []byte) error {
+	logrus.Infof("hatrabbit.ProcessHatsOrderCreated() msg=%s", string(msg))
 
+	return nil
 }

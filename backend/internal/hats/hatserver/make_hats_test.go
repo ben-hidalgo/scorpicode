@@ -82,11 +82,11 @@ func TestHatSuccess(t *testing.T) {
 
 	rm := &rabbitmock.Mock{
 		SendJSONF: func(ex rabbit.Exchange, key rabbit.RKey, msg interface{}) error {
-			if ex != rabbit.ServiceMsgAction {
-				t.Fatalf(GOT, ex, WANTED, rabbit.ServiceMsgAction)
+			if ex != rabbit.ServiceMsgActionX {
+				t.Fatalf(GOT, ex, WANTED, rabbit.ServiceMsgActionX)
 			}
-			if key != rabbit.HatsOrderCreated {
-				t.Fatalf(GOT, key, WANTED, rabbit.HatsOrderCreated)
+			if key != rabbit.HatsOrderCreatedK {
+				t.Fatalf(GOT, key, WANTED, rabbit.HatsOrderCreatedK)
 			}
 			// type assertion
 			order, ok := msg.(*orderdao.Order)

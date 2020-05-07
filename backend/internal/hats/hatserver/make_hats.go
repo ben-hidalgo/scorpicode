@@ -87,7 +87,7 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 	rmq := rabbit.From(ctx)
 
 	// publish the message to RabbitMQ
-	rmq.SendJSON(rabbit.ServiceMsgAction, rabbit.HatsOrderCreated, order)
+	rmq.SendJSON(rabbit.ServiceMsgActionX, rabbit.HatsOrderCreatedK, order)
 
 	res := &hatspb.MakeHatsResponse{
 		Order: OrderDocToRep(order),

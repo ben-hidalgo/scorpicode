@@ -3,17 +3,17 @@ package rabbit
 // Exchanges are hyphen separated (by convention)
 const (
 	// ServiceMsgAction topic exchange
-	ServiceMsgAction = Exchange("service-msg-action")
+	ServiceMsgActionX = Exchange("service-msg-action")
 )
 
 // Keys are dot separated (by rule) and can contain asterisk or hash (* or #)
 const (
-	HatsOrderCreated = RKey("hats.order.created")
+	HatsOrderCreatedK = RKey("hats.order.created")
 )
 
 // Queues are underscore separated (by convention)
 const (
-	HatsQueue = Queue("hats_order_created")
+	HatsOrderCreatedQ = Queue("hats_order_created")
 )
 
 const schema = `

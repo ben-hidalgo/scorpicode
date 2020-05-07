@@ -25,6 +25,11 @@ type RKey string
 // Queue rabbitmq queue
 type Queue string
 
+// Name returns the name of the queue
+func (q Queue) Name() string {
+	return string(q)
+}
+
 // Rmq Hat Data Access Object
 type Rmq interface {
 	Send(ex Exchange, key RKey, msg string) error
