@@ -2,6 +2,7 @@ package hatmongo
 
 import (
 	"backend/internal/hats/hatdao"
+	"backend/internal/hats/orderdao"
 	"context"
 
 	"github.com/twitchtv/twirp"
@@ -14,8 +15,9 @@ func ServerHooks(mc *mongo.Client) *twirp.ServerHooks {
 	return &twirp.ServerHooks{
 		RequestReceived: func(ctx context.Context) (context.Context, error) {
 
-			// each Dao will be added to the context separately
+			// each DAO is added to the context separately
 			ctx = context.WithValue(ctx, hatdao.Key, hatdao.New(mc))
+			ctx = context.WithValue(ctx, orderdao.Key, orderdao.New(mc))
 
 			return ctx, nil
 		},

@@ -2,6 +2,7 @@ package hatserver
 
 import (
 	"backend/internal/hats/hatdao"
+	"backend/internal/hats/orderdao"
 	"backend/pkg/authnz"
 	"backend/pkg/rabbit"
 	"backend/pkg/util"
@@ -68,36 +69,18 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 		return nil, util.InvalidArgumentError(HatQuantityInvalid)
 	}
 
-	hd := hatdao.From(ctx)
+	dao := orderdao.From(ctx)
 
-	// TODO: save the created by user id
-
-	// TODO: used for publishing RMQ message
-	var docs []*hatdao.Hat
-
-	// use a transaction so all hats or none are committed
-	tf := func() error {
-
-		// save a hat per quantity
-		for i := int32(0); i < req.GetQuantity(); i++ {
-			hat := &hatdao.Hat{
-				Color: req.GetColor(),
-				Style: req.GetStyle(),
-				Size:  req.GetSize(),
-				// TODO: add notes
-			}
-			err := hd.Create(ctx, hat)
-			if err != nil {
-				return err
-			}
-			docs = append(docs, hat)
-		}
-
-		return nil
+	order := &orderdao.Order{
+		Color:    req.GetColor(),
+		Style:    req.GetStyle(),
+		Size:     req.GetSize(),
+		Notes:    req.GetNotes(),
+		Quantity: req.GetQuantity(),
+		// TODO: use subject
+		CreatedBy: bearer.GetEmail(),
 	}
-
-	// TODO: add test to ensure the internal error is returned
-	err := hd.VisitTxn(ctx, tf)
+	err := dao.Create(ctx, order)
 	if err != nil {
 		return nil, util.InternalErrorWith(err)
 	}
@@ -108,11 +91,10 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 
 	// TODO: add "envelope" message type in proto
 	// publish the message
-	rmq.SendJSON(rabbit.ServiceMsgtypeTx, rabbit.HatsDotMakeHats, docs)
+	rmq.SendJSON(rabbit.ServiceMsgtypeTx, rabbit.HatsDotMakeHats, order)
 
 	res := &hatspb.MakeHatsResponse{
-		// TODO: modify response structure?
-		Hat: HatDocToRep(docs[0]),
+		Order: OrderDocToRep(order),
 	}
 
 	logrus.Debugf("MakeHats() res=%#v", res)
@@ -133,5 +115,20 @@ func HatDocToRep(hat *hatdao.Hat) *hatspb.Hat {
 		// Quantity:  int32(hat.Quantity),
 		// TODO: add notes to mod
 		// Notes:     hat.Notes,
+	}
+}
+
+// OrderDocToRep convert Order document (Mongo) to Order representation (gRPC)
+func OrderDocToRep(order *orderdao.Order) *hatspb.Order {
+	return &hatspb.Order{
+		Id:        order.ID.Hex(),
+		CreatedAt: order.CreatedAt.Format(time.RFC3339),
+		UpdatedAt: order.UpdatedAt.Format(time.RFC3339),
+		Version:   int32(order.Version),
+		Color:     order.Color,
+		Style:     order.Style,
+		Size:      order.Size,
+		Quantity:  int32(order.Quantity),
+		Notes:     order.Notes,
 	}
 }

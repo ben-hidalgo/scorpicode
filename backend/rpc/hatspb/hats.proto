@@ -33,9 +33,22 @@ message Hat {
   string size = 5;
   string color = 6;
   string style = 7;
+  string batch = 8;
+}
+
+message Order {
+  string id = 1;
+  string created_at = 2;
+  string updated_at = 3;
+  int32 version = 4;
+  string size = 5;
+  string color = 6;
+  string style = 7;
   int32 quantity = 8;
   string notes = 9;
+  string batch = 10;
 }
+
 
 message MakeHatsRequest {
   string size = 1;
@@ -45,7 +58,7 @@ message MakeHatsRequest {
   string notes = 5;
 }
 message MakeHatsResponse {
-  Hat hat = 1;
+  Order order = 1;
 }
 
 message ListHatsRequest {

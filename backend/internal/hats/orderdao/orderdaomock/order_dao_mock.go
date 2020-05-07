@@ -1,4 +1,4 @@
-package hatdaomock
+package orderdaomock
 
 import (
 	"backend/internal/hats/orderdao"

@@ -1,9 +1,9 @@
 package hatserver_test
 
 import (
-	"backend/internal/hats/hatdao"
-	"backend/internal/hats/hatdao/hatdaomock"
 	"backend/internal/hats/hatserver"
+	"backend/internal/hats/orderdao"
+	"backend/internal/hats/orderdao/orderdaomock"
 	"backend/pkg/authnz"
 	"backend/pkg/rabbit"
 	"backend/pkg/rabbit/rabbitmock"
@@ -30,11 +30,11 @@ const (
 var DefaultCreatedAt = time.Date(2020, time.January, 0, 0, 0, 0, 0, time.UTC)
 var DefaultUpdatedAt = time.Date(2020, time.January, 1, 1, 1, 1, 1, time.UTC)
 
-func startHat(hdm *hatdaomock.Mock, rm *rabbitmock.Mock) (context.Context, *hatserver.Server, *hatspb.MakeHatsRequest) {
+func startHat(mock *orderdaomock.Mock, rm *rabbitmock.Mock) (context.Context, *hatserver.Server, *hatspb.MakeHatsRequest) {
 
 	ctx := context.Background()
 
-	ctx = context.WithValue(ctx, hatdao.Key, hdm)
+	ctx = context.WithValue(ctx, orderdao.Key, mock)
 
 	ctx = context.WithValue(ctx, rabbit.Key, rm)
 
@@ -61,20 +61,17 @@ func startHat(hdm *hatdaomock.Mock, rm *rabbitmock.Mock) (context.Context, *hats
 
 func TestHatSuccess(t *testing.T) {
 
-	hdm := &hatdaomock.Mock{
-		CreateF: func(ctx context.Context, mhc *hatdao.Hat) error {
+	mock := &orderdaomock.Mock{
+		CreateF: func(ctx context.Context, o *orderdao.Order) error {
 			id, err := primitive.ObjectIDFromHex(DefaultHexID)
 			if err != nil {
 				t.Fatal(err)
 			}
-			mhc.SetID(id)
-			mhc.CreatedAt = DefaultCreatedAt
-			mhc.UpdatedAt = DefaultUpdatedAt
-			mhc.Version = 1
+			o.SetID(id)
+			o.CreatedAt = DefaultCreatedAt
+			o.UpdatedAt = DefaultUpdatedAt
+			o.Version = 1
 			return nil
-		},
-		VisitTxnF: func(ctx context.Context, tf func() error) error {
-			return tf()
 		},
 	}
 
@@ -87,19 +84,18 @@ func TestHatSuccess(t *testing.T) {
 				t.Fatalf(GOT, key, WANTED, rabbit.HatsDotMakeHats)
 			}
 			// type assertion
-			docs, ok := msg.([]*hatdao.Hat)
+			order, ok := msg.(*orderdao.Order)
 			if !ok {
-				t.Fatalf(GOT, fmt.Sprintf("%T", msg), WANTED, "[]*hatdao.Hat")
+				t.Fatalf(GOT, fmt.Sprintf("%T", msg), WANTED, "*orderdao.Order")
 			}
-			if len(docs) != DefaultQuantity {
-				t.Fatalf(GOT, len(docs), WANTED, DefaultQuantity)
-			}
+			// TODO: validate order is populated correctly
+			_ = order
 
 			return nil
 		},
 	}
 
-	ctx, hs, req := startHat(hdm, rm)
+	ctx, hs, req := startHat(mock, rm)
 
 	res, err := hs.MakeHats(ctx, req)
 
@@ -110,36 +106,36 @@ func TestHatSuccess(t *testing.T) {
 	if res == nil {
 		t.Fatalf(GOT, res, WANTED, NOT_NIL)
 	}
-	if res.GetHat() == nil {
-		t.Fatalf(GOT, res.GetHat(), WANTED, NOT_NIL)
+	if res.GetOrder() == nil {
+		t.Fatalf(GOT, res.GetOrder(), WANTED, NOT_NIL)
 	}
-	if res.GetHat().GetId() != DefaultHexID {
-		t.Fatalf(GOT, res.GetHat().GetId(), WANTED, DefaultHexID)
+	if res.GetOrder().GetId() != DefaultHexID {
+		t.Fatalf(GOT, res.GetOrder().GetId(), WANTED, DefaultHexID)
 	}
-	if res.GetHat().GetCreatedAt() != DefaultCreatedAt.Format(time.RFC3339) {
-		t.Fatalf(GOT, res.GetHat().GetCreatedAt(), WANTED, DefaultCreatedAt.Format(time.RFC3339))
+	if res.GetOrder().GetCreatedAt() != DefaultCreatedAt.Format(time.RFC3339) {
+		t.Fatalf(GOT, res.GetOrder().GetCreatedAt(), WANTED, DefaultCreatedAt.Format(time.RFC3339))
 	}
-	if res.GetHat().GetUpdatedAt() != DefaultUpdatedAt.Format(time.RFC3339) {
-		t.Fatalf(GOT, res.GetHat().GetUpdatedAt(), WANTED, DefaultUpdatedAt.Format(time.RFC3339))
+	if res.GetOrder().GetUpdatedAt() != DefaultUpdatedAt.Format(time.RFC3339) {
+		t.Fatalf(GOT, res.GetOrder().GetUpdatedAt(), WANTED, DefaultUpdatedAt.Format(time.RFC3339))
 	}
-	if res.GetHat().GetVersion() != 1 {
-		t.Fatalf(GOT, res.GetHat().GetVersion(), WANTED, 1)
+	if res.GetOrder().GetVersion() != 1 {
+		t.Fatalf(GOT, res.GetOrder().GetVersion(), WANTED, 1)
 	}
-	if res.GetHat().GetSize() != DefaultSize {
-		t.Fatalf(GOT, res.GetHat().GetSize(), WANTED, DefaultSize)
+	if res.GetOrder().GetSize() != DefaultSize {
+		t.Fatalf(GOT, res.GetOrder().GetSize(), WANTED, DefaultSize)
 	}
-	if res.GetHat().GetStyle() != DefaultStyle {
-		t.Fatalf(GOT, res.GetHat().GetStyle(), WANTED, DefaultStyle)
+	if res.GetOrder().GetStyle() != DefaultStyle {
+		t.Fatalf(GOT, res.GetOrder().GetStyle(), WANTED, DefaultStyle)
 	}
-	if res.GetHat().GetColor() != DefaultColor {
-		t.Fatalf(GOT, res.GetHat().GetColor(), WANTED, DefaultColor)
+	if res.GetOrder().GetColor() != DefaultColor {
+		t.Fatalf(GOT, res.GetOrder().GetColor(), WANTED, DefaultColor)
 	}
 
 }
 
 func TestMissingRole(t *testing.T) {
 
-	ctx, hs, req := startHat(hatdaomock.New(), rabbitmock.New())
+	ctx, hs, req := startHat(orderdaomock.New(), rabbitmock.New())
 
 	// overwrite the default bearer with no roles
 	ctx = context.WithValue(ctx, authnz.Key, &authnz.BearerToken{
@@ -167,7 +163,7 @@ func TestMissingRole(t *testing.T) {
 
 func TestSizeRequired(t *testing.T) {
 
-	ctx, hs, req := startHat(hatdaomock.New(), rabbitmock.New())
+	ctx, hs, req := startHat(orderdaomock.New(), rabbitmock.New())
 
 	req.Size = ""
 
@@ -176,7 +172,7 @@ func TestSizeRequired(t *testing.T) {
 
 func TestColorRequired(t *testing.T) {
 
-	ctx, hs, req := startHat(hatdaomock.New(), rabbitmock.New())
+	ctx, hs, req := startHat(orderdaomock.New(), rabbitmock.New())
 
 	req.Color = ""
 
@@ -185,7 +181,7 @@ func TestColorRequired(t *testing.T) {
 
 func TestColorInvalid(t *testing.T) {
 
-	ctx, hs, req := startHat(hatdaomock.New(), rabbitmock.New())
+	ctx, hs, req := startHat(orderdaomock.New(), rabbitmock.New())
 
 	req.Color = "not a color"
 
@@ -209,7 +205,7 @@ func TestColorInvalid(t *testing.T) {
 
 func TestStyleInvalid(t *testing.T) {
 
-	ctx, hs, req := startHat(hatdaomock.New(), rabbitmock.New())
+	ctx, hs, req := startHat(orderdaomock.New(), rabbitmock.New())
 
 	req.Style = "not a style"
 
@@ -233,7 +229,7 @@ func TestStyleInvalid(t *testing.T) {
 
 func TestNameRequired(t *testing.T) {
 
-	ctx, hs, req := startHat(hatdaomock.New(), rabbitmock.New())
+	ctx, hs, req := startHat(orderdaomock.New(), rabbitmock.New())
 
 	req.Style = ""
 
