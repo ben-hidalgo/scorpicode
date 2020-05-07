@@ -16,6 +16,7 @@ message OrderHats {
   string style = 7;
   int32 quantity = 8;
   string notes = 9;
+  string batch = 10;
 }
 
 // HatCreated represents a hat that has been created
