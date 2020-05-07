@@ -88,8 +88,27 @@ func TestHatSuccess(t *testing.T) {
 			if !ok {
 				t.Fatalf(GOT, fmt.Sprintf("%T", msg), WANTED, "*orderdao.Order")
 			}
-			// TODO: validate order is populated correctly
-			_ = order
+			if order.ID.Hex() != DefaultHexID {
+				t.Fatalf(GOT, order.ID.Hex(), WANTED, DefaultHexID)
+			}
+			if order.CreatedAt != DefaultCreatedAt {
+				t.Fatalf(GOT, order.CreatedAt, WANTED, DefaultCreatedAt)
+			}
+			if order.UpdatedAt != DefaultUpdatedAt {
+				t.Fatalf(GOT, order.UpdatedAt, WANTED, DefaultUpdatedAt)
+			}
+			if order.Version != 1 {
+				t.Fatalf(GOT, order.Version, WANTED, 1)
+			}
+			if order.Size != DefaultSize {
+				t.Fatalf(GOT, order.Size, WANTED, DefaultSize)
+			}
+			if order.Style != DefaultStyle {
+				t.Fatalf(GOT, order.Style, WANTED, DefaultStyle)
+			}
+			if order.Color != DefaultColor {
+				t.Fatalf(GOT, order.Color, WANTED, DefaultColor)
+			}
 
 			return nil
 		},
