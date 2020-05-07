@@ -16,6 +16,7 @@ import (
 
 	"github.com/twitchtv/twirp"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"gopkg.in/square/go-jose.v2/jwt"
 )
 
 const (
@@ -25,6 +26,7 @@ const (
 	DefaultQuantity = 10
 	DefaultNotes    = "Lorem ipsum"
 	DefaultHexID    = "5e8e20bbe6b38b8cb0870808"
+	DefaultSubject  = "google-oauth2|204673116516641832842"
 )
 
 var DefaultCreatedAt = time.Date(2020, time.January, 0, 0, 0, 0, 0, time.UTC)
@@ -42,6 +44,9 @@ func startHat(mock *orderdaomock.Mock, rm *rabbitmock.Mock) (context.Context, *h
 		CC: &authnz.CustomClaims{
 			Roles: []authnz.Role{
 				authnz.HABERDASHER,
+			},
+			Claims: jwt.Claims{
+				Subject: DefaultSubject,
 			},
 		},
 	})
@@ -77,11 +82,11 @@ func TestHatSuccess(t *testing.T) {
 
 	rm := &rabbitmock.Mock{
 		SendJSONF: func(ex rabbit.Exchange, key rabbit.RKey, msg interface{}) error {
-			if ex != rabbit.ServiceMsgtypeTx {
-				t.Fatalf(GOT, ex, WANTED, rabbit.ServiceMsgtypeTx)
+			if ex != rabbit.ServiceMsgAction {
+				t.Fatalf(GOT, ex, WANTED, rabbit.ServiceMsgAction)
 			}
-			if key != rabbit.HatsDotMakeHats {
-				t.Fatalf(GOT, key, WANTED, rabbit.HatsDotMakeHats)
+			if key != rabbit.HatsOrderCreated {
+				t.Fatalf(GOT, key, WANTED, rabbit.HatsOrderCreated)
 			}
 			// type assertion
 			order, ok := msg.(*orderdao.Order)
@@ -108,6 +113,9 @@ func TestHatSuccess(t *testing.T) {
 			}
 			if order.Color != DefaultColor {
 				t.Fatalf(GOT, order.Color, WANTED, DefaultColor)
+			}
+			if order.CreatedBy != DefaultSubject {
+				t.Fatalf(GOT, order.CreatedBy, WANTED, DefaultSubject)
 			}
 
 			return nil

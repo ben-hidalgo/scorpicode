@@ -72,13 +72,12 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 	dao := orderdao.From(ctx)
 
 	order := &orderdao.Order{
-		Color:    req.GetColor(),
-		Style:    req.GetStyle(),
-		Size:     req.GetSize(),
-		Notes:    req.GetNotes(),
-		Quantity: req.GetQuantity(),
-		// TODO: use subject
-		CreatedBy: bearer.GetEmail(),
+		Color:     req.GetColor(),
+		Style:     req.GetStyle(),
+		Size:      req.GetSize(),
+		Notes:     req.GetNotes(),
+		Quantity:  req.GetQuantity(),
+		CreatedBy: bearer.GetSubject(),
 	}
 	err := dao.Create(ctx, order)
 	if err != nil {
@@ -87,11 +86,8 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 
 	rmq := rabbit.From(ctx)
 
-	logrus.Infof("rmq=%#v", rmq)
-
-	// TODO: add "envelope" message type in proto
-	// publish the message
-	rmq.SendJSON(rabbit.ServiceMsgtypeTx, rabbit.HatsDotMakeHats, order)
+	// publish the message to RabbitMQ
+	rmq.SendJSON(rabbit.ServiceMsgAction, rabbit.HatsOrderCreated, order)
 
 	res := &hatspb.MakeHatsResponse{
 		Order: OrderDocToRep(order),

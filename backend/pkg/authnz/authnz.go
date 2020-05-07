@@ -34,6 +34,7 @@ type Bearer interface {
 	// has any role provided
 	HasRole(r ...Role) bool
 	GetEmail() string
+	GetSubject() string
 	GetRoles() []Role
 }
 
@@ -82,6 +83,14 @@ func (bt *BearerToken) GetEmail() string {
 		return ""
 	}
 	return bt.CC.Email
+}
+
+// GetSubject .
+func (bt *BearerToken) GetSubject() string {
+	if bt.CC == nil {
+		return ""
+	}
+	return bt.CC.Subject
 }
 
 // GetRoles .
