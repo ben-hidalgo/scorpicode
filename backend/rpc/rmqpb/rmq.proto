@@ -4,9 +4,6 @@ package rmq;
 
 option go_package = "rmqpb";
 
-// empty service
-service Rmq {
-}
 
 // OrderHats represents a request to make hats
 message OrderHats {
