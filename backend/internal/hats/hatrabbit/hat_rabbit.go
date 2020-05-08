@@ -17,6 +17,8 @@ func Listen(jc *jazz.Connection, mc *mongo.Client) {
 
 	go jc.ProcessQueue(rabbit.HatsOrderCreatedQ.Name(), WrapProcessor(jc, mc, ProcessHatsOrderCreated))
 
+	go jc.ProcessQueue(rabbit.HatsHatCreatedQ.Name(), WrapProcessor(jc, mc, ProcessHatsHatCreated))
+
 }
 
 // Processor is a func type to facilitate wrappering
@@ -45,7 +47,7 @@ func WrapProcessor(jc *jazz.Connection, mc *mongo.Client, processor Processor) f
 	return handler
 }
 
-// ProcessHatsOrderCreated handles
+// ProcessHatsOrderCreated .
 func ProcessHatsOrderCreated(ctx context.Context, msg []byte) error {
 
 	logrus.Infof("hatrabbit.ProcessHatsOrderCreated() msg=%s", string(msg))
@@ -80,8 +82,7 @@ func ProcessHatsOrderCreated(ctx context.Context, msg []byte) error {
 				return err
 			}
 
-			// TODO: send
-			// rmq.SendJSON()
+			rmq.SendJSON(rabbit.ServiceMsgActionX, rabbit.HatsHatCreatedK, hat)
 		}
 		return nil
 	}
@@ -91,5 +92,11 @@ func ProcessHatsOrderCreated(ctx context.Context, msg []byte) error {
 		return err
 	}
 
+	return nil
+}
+
+// ProcessHatsHatCreated .
+func ProcessHatsHatCreated(ctx context.Context, msg []byte) error {
+	logrus.Infof("hatrabbit.ProcessHatsHatCreated() msg=%s", string(msg))
 	return nil
 }
