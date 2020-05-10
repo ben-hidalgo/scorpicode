@@ -16,7 +16,8 @@ const (
 const (
 	HatsOrderCreatedQ = Queue("hats_order_created")
 	// this one is probably temporary... and/or will move the the web sockets service
-	HatsHatCreatedQ = Queue("hats_hat_created")
+	HatsHatCreatedQ  = Queue("hats_hat_created")
+	SoxieHatCreatedQ = Queue("soxie_hat_created")
 )
 
 const schema = `
@@ -31,6 +32,11 @@ queues:
       - exchange: "service-msg-action"
         key: "hats.order.created"
   hats_hat_created:
+    durable: true
+    bindings:
+      - exchange: "service-msg-action"
+        key: "hats.hat.created"    
+  soxie_hat_created:
     durable: true
     bindings:
       - exchange: "service-msg-action"

@@ -25,6 +25,7 @@ go run main.go) &
 
 (cd backend/cmd/soxie/ && \
 LOG_LEVEL=trace \
+AMQP_DSN=amqp://scuser:scpass@`minikube ip`:`kubectl get svc scorpicode-rabbitmq-ha -n dev -o json | jq '.spec.ports[1].nodePort'`/schost \
 go run main.go) &
 
 cat

@@ -2,7 +2,8 @@ package main
 
 import (
 	"backend/internal/soxie/config"
-	"flag"
+	"backend/internal/soxie/soxierabbit"
+	"backend/pkg/rabbit"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -39,6 +40,27 @@ var (
 		WriteBufferSize: 1024,
 	}
 )
+
+func main() {
+	logrus.Infof("soxie.main() starting")
+
+	// connect rabbit
+	rabbitConn, err := rabbit.Connect()
+	if err != nil {
+		logrus.Fatalf("hats.main() rabbit err=%#v", err)
+	}
+	defer rabbitConn.Close()
+
+	// start rabbit listeners
+	soxierabbit.Listen(rabbitConn)
+
+	http.HandleFunc("/", serveHome)
+	http.HandleFunc("/ws", serveWs)
+	logrus.Infof("soxie.main() listening on %s", config.ListenAddress)
+	if err := http.ListenAndServe(config.ListenAddress, nil); err != nil {
+		log.Fatal(err)
+	}
+}
 
 func readFileIfModified(lastMod time.Time) ([]byte, time.Time, error) {
 	fi, err := os.Stat(filename)
@@ -152,18 +174,6 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 		strconv.FormatInt(lastMod.UnixNano(), 16),
 	}
 	homeTempl.Execute(w, &v)
-}
-
-func main() {
-	logrus.Infof("soxie.main() starting")
-	flag.Parse()
-
-	http.HandleFunc("/", serveHome)
-	http.HandleFunc("/ws", serveWs)
-	logrus.Infof("soxie.main() listening on %s", config.ListenAddress)
-	if err := http.ListenAndServe(config.ListenAddress, nil); err != nil {
-		log.Fatal(err)
-	}
 }
 
 const homeHTML = `<!DOCTYPE html>
