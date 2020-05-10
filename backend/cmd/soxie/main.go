@@ -1,10 +1,7 @@
-// Copyright 2013 The Gorilla WebSocket Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
-
 package main
 
 import (
+	"backend/internal/soxie/config"
 	"flag"
 	"html/template"
 	"io/ioutil"
@@ -33,9 +30,8 @@ const (
 )
 
 var (
-	addr      = flag.String("addr", ":8084", "http service address")
 	homeTempl = template.Must(template.New("").Parse(homeHTML))
-	filename  string
+	filename  = "foo.txt"
 	upgrader  = websocket.Upgrader{
 		ReadBufferSize:  1024,
 		WriteBufferSize: 1024,
@@ -159,15 +155,11 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 func main() {
 	logrus.Infof("soxie.main() starting")
 	flag.Parse()
-	// if flag.NArg() != 1 {
-	// 	log.Fatal("filename not specified")
-	// }
-	// filename = flag.Args()[0]
-	filename = "foo.txt"
+
 	http.HandleFunc("/", serveHome)
 	http.HandleFunc("/ws", serveWs)
-	logrus.Infof("soxie.main() listening on %s", *addr)
-	if err := http.ListenAndServe(*addr, nil); err != nil {
+	logrus.Infof("soxie.main() listening on %s", config.ListenAddress)
+	if err := http.ListenAndServe(config.ListenAddress, nil); err != nil {
 		log.Fatal(err)
 	}
 }

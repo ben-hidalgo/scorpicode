@@ -5,10 +5,10 @@ import (
 )
 
 // ListenAddress .
-var ListenAddress = ":8083"
+var ListenAddress = ":8084"
 
 // AppName .
-var AppName = "hats"
+var AppName = "soxie"
 
 func init() {
 	envconfig.SetString("LISTEN_ADDRESS", &ListenAddress)

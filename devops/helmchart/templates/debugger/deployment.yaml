@@ -31,11 +31,7 @@ spec:
 {{ include "service.shared" . | indent 8 }}
 {{- end }}
 {{ include "common.shared" . | indent 8 }}
-        - name: DATASTORE_CONFIG
-          value: {{ .Values.hats.datastoreConfig | quote }}
-        - name: MONGO_DB
-          value: {{ required "missing value hats.mongoDb" .Values.hats.mongoDb | quote }}
-        - name: MONGO_URI
-          value: {{ required "missing value hats.mongoUri" .Values.hats.mongoUri | quote }}
+        - name: PLACEHOLDER
+          value: {{ .Values.debugger.PLACEHOLDER | quote }}
 {{- end }}
   
