@@ -6,6 +6,7 @@ require (
 	github.com/Kamva/mgm/v2 v2.0.0
 	github.com/auth0-community/go-auth0 v1.0.0
 	github.com/golang/protobuf v1.4.0
+	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rs/xid v1.2.1
 	github.com/sirupsen/logrus v1.5.0
