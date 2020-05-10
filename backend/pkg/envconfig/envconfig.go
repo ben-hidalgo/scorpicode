@@ -38,6 +38,18 @@ func SetInt32(name string, value *int32) {
 	}
 }
 
+// SetInt64 populates value if name exists
+func SetInt64(name string, value *int64) {
+	v, ok := os.LookupEnv(name)
+	if ok {
+		i, err := strconv.Atoi(v)
+		if err != nil {
+			panic(fmt.Sprintf("failed to convert %s from %s to int64", name, v))
+		}
+		*value = int64(i)
+	}
+}
+
 // SetBool populates value if name exists
 func SetBool(name string, value *bool) {
 	v, ok := os.LookupEnv(name)

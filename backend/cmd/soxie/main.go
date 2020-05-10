@@ -16,22 +16,24 @@ import (
 )
 
 const (
+	// TODO: factor out file listener
+	// Poll file for changes with this period.
+	filePeriod = 10 * time.Second
+	// TODO: factor out file listener
+	filename = "foo.txt"
+)
+
+var (
 	// Time allowed to write the file to the client.
-	writeWait = 10 * time.Second
+	writeWait = time.Duration(config.WriteWaitSeconds) * time.Second
 
 	// Time allowed to read the next pong message from the client.
-	pongWait = 60 * time.Second
+	pongWait = time.Duration(config.PongWaitSeconds) * time.Second
 
 	// Send pings to client with this period. Must be less than pongWait.
 	pingPeriod = (pongWait * 9) / 10
 
-	// Poll file for changes with this period.
-	filePeriod = 10 * time.Second
-)
-
-var (
 	homeTempl = template.Must(template.New("").Parse(homeHTML))
-	filename  = "foo.txt"
 	upgrader  = websocket.Upgrader{
 		ReadBufferSize:  1024,
 		WriteBufferSize: 1024,
