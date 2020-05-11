@@ -34,3 +34,9 @@
 - name: CACHE_BUSTER
   value: {{ .cacheBuster | default "1" | quote }}
 {{- end -}}
+
+{/* Service specific env for rabbitmq */}
+{{- define "service.rabbit" -}}
+- name: AMQP_DSN
+  value: {{ .amspDsn | quote }}
+{{- end -}}

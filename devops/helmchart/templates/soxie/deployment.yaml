@@ -1,0 +1,41 @@
+{{- if .Values.soxie.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.soxie.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Chart.Name }}
+      app.kubernetes.io/name: {{ .Values.soxie.name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: {{ .Chart.Name }}
+        app.kubernetes.io/name: {{ .Values.soxie.name }}  
+    spec:
+      containers:
+      - name: {{ .Values.soxie.name }}
+        image: {{ .Values.common.repository }}{{ .Values.soxie.name }}:{{ .Values.soxie.tag }}
+        imagePullPolicy: {{ .Values.common.pullPolicy }}
+        resources:
+          limits:
+            memory: {{ .Values.soxie.limitsMemory | quote }}
+            cpu: {{ .Values.soxie.limitsCpu | quote }}
+        ports:
+        - containerPort: {{ .Values.soxie.port }}
+          name: http
+        env:
+{{- with .Values.website }}
+{{ include "service.shared" . | indent 8 }}
+{{ include "service.rabbit" . | indent 8 }}
+{{- end }} 
+{{ include "common.shared" . | indent 8 }}
+{{ include "common.auth0"   . | indent 8 }}
+        - name: WRITE_WAIT_SECONDS
+          value: {{ .Values.soxie.writeWaitSeconds | quote }}
+        - name: PONG_WAIT_SECONDS
+          value: {{ .Values.soxie.pongWaitSeconds | quote }}
+
+{{- end }}

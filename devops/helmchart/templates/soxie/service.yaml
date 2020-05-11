@@ -1,0 +1,18 @@
+{{- if .Values.soxie.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.soxie.name }}
+spec:
+  type: {{ .Values.soxie.serviceType }}
+  ports:
+    - name: http
+      # temporarily using a nodePort for minikube to allow a static IP locally
+      # TODO: avoid nodePort in Kubernetes so that any branch can be deployed without collision on the cloud nodes
+      nodePort: 30081
+      port: {{ .Values.soxie.port }}
+      targetPort: http
+  selector:
+    app.kubernetes.io/instance: {{ .Chart.Name }}
+    app.kubernetes.io/name: {{ .Values.soxie.name }}
+{{- end }}

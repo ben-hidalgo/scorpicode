@@ -8,6 +8,7 @@ images:
 	docker build . -f devops/dockerfiles/website.Dockerfile  -t website:$(TAG)
 	docker build . -f devops/dockerfiles/frontend.Dockerfile -t frontend:$(TAG)
 	docker build . -f devops/dockerfiles/roxie.Dockerfile    -t roxie:$(TAG)
+	docker build . -f devops/dockerfiles/soxie.Dockerfile    -t soxie:$(TAG)
 	docker build . -f devops/dockerfiles/debugger.Dockerfile -t debugger:latest
 
 #TODO: add wait for services... mongo startup is longer than the default wait timeout

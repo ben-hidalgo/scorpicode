@@ -15,6 +15,9 @@ website:
 roxie:
   enabled: false
 
+soxie:
+  enabled: false
+  
 debugger:
   enabled: false
   
