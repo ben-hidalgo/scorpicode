@@ -6,23 +6,13 @@ import (
 	"backend/pkg/rabbit"
 	"fmt"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 	"time"
 
 	"github.com/gorilla/websocket"
 	"github.com/sirupsen/logrus"
-)
-
-const (
-	// TODO: factor out file listener
-	// Poll file for changes with this period.
-	filePeriod = 10 * time.Second
-	// TODO: factor out file listener
-	filename = "foo.txt"
 )
 
 var (
@@ -64,21 +54,6 @@ func main() {
 	}
 }
 
-func readFileIfModified(lastMod time.Time) ([]byte, time.Time, error) {
-	fi, err := os.Stat(filename)
-	if err != nil {
-		return nil, lastMod, err
-	}
-	if !fi.ModTime().After(lastMod) {
-		return nil, lastMod, nil
-	}
-	p, err := ioutil.ReadFile(filename)
-	if err != nil {
-		return nil, fi.ModTime(), err
-	}
-	return p, fi.ModTime(), nil
-}
-
 func reader(ws *websocket.Conn) {
 	defer ws.Close()
 	ws.SetReadLimit(512)
@@ -88,47 +63,6 @@ func reader(ws *websocket.Conn) {
 		_, _, err := ws.ReadMessage()
 		if err != nil {
 			break
-		}
-	}
-}
-
-func writer(ws *websocket.Conn, lastMod time.Time) {
-	lastError := ""
-	pingTicker := time.NewTicker(pingPeriod)
-	fileTicker := time.NewTicker(filePeriod)
-	defer func() {
-		pingTicker.Stop()
-		fileTicker.Stop()
-		ws.Close()
-	}()
-	for {
-		select {
-		case <-fileTicker.C:
-			var p []byte
-			var err error
-
-			p, lastMod, err = readFileIfModified(lastMod)
-
-			if err != nil {
-				if s := err.Error(); s != lastError {
-					lastError = s
-					p = []byte(lastError)
-				}
-			} else {
-				lastError = ""
-			}
-
-			if p != nil {
-				ws.SetWriteDeadline(time.Now().Add(writeWait))
-				if err := ws.WriteMessage(websocket.TextMessage, p); err != nil {
-					return
-				}
-			}
-		case <-pingTicker.C:
-			ws.SetWriteDeadline(time.Now().Add(writeWait))
-			if err := ws.WriteMessage(websocket.PingMessage, []byte{}); err != nil {
-				return
-			}
 		}
 	}
 }
@@ -166,12 +100,6 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var lastMod time.Time
-	if n, err := strconv.ParseInt(r.FormValue("lastMod"), 16, 64); err == nil {
-		lastMod = time.Unix(0, n)
-	}
-
-	go writer(ws, lastMod)
 	go tempwriter(ws)
 	reader(ws)
 }
@@ -186,19 +114,14 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	p, lastMod, err := readFileIfModified(time.Time{})
-	if err != nil {
-		p = []byte(err.Error())
-		lastMod = time.Unix(0, 0)
-	}
 	var v = struct {
 		Host    string
 		Data    string
 		LastMod string
 	}{
 		r.Host,
-		string(p),
-		strconv.FormatInt(lastMod.UnixNano(), 16),
+		string(""),
+		strconv.FormatInt(time.Now().UnixNano(), 16),
 	}
 	homeTempl.Execute(w, &v)
 }
