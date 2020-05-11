@@ -4,7 +4,6 @@ import (
 	"backend/internal/soxie/config"
 	"backend/internal/soxie/soxierabbit"
 	"backend/pkg/rabbit"
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -43,11 +42,10 @@ func main() {
 	defer rabbitConn.Close()
 
 	// start rabbit listeners
-	soxierabbit.Listen(rabbitConn)
+	soxierabbit.Listen(rabbitConn, wsChannel)
 
 	http.HandleFunc("/", serveHome)
 	http.HandleFunc("/ws", serveWs)
-	http.HandleFunc("/temp", temp)
 	logrus.Infof("soxie.main() listening on %s", config.ListenAddress)
 	if err := http.ListenAndServe(config.ListenAddress, nil); err != nil {
 		log.Fatal(err)
@@ -67,23 +65,13 @@ func reader(ws *websocket.Conn) {
 	}
 }
 
-// maybe keep a map of response funcs based on path segments corresponding to channels for a subscription
-func temp(w http.ResponseWriter, r *http.Request) {
-
-	msg := fmt.Sprintf("%s", time.Now())
-	tempString = fmt.Sprintf("%s\n%s", msg, tempString)
-	logrus.Infof("temp() msg=%s", msg)
-	tempTicker <- tempString
-}
-
-var tempString = ""
-var tempTicker = make(chan string)
+var wsChannel = make(chan string)
 
 func tempwriter(ws *websocket.Conn) {
 
 	for {
 		select {
-		case msg := <-tempTicker:
+		case msg := <-wsChannel:
 			if err := ws.WriteMessage(websocket.TextMessage, []byte(msg)); err != nil {
 				return
 			}
