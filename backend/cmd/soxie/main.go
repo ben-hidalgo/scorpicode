@@ -135,11 +135,14 @@ func writer(ws *websocket.Conn, lastMod time.Time) {
 
 // maybe keep a map of response funcs based on path segments corresponding to channels for a subscription
 func temp(w http.ResponseWriter, r *http.Request) {
+
 	msg := fmt.Sprintf("%s", time.Now())
+	tempString = fmt.Sprintf("%s\n%s", msg, tempString)
 	logrus.Infof("temp() msg=%s", msg)
-	tempTicker <- msg
+	tempTicker <- tempString
 }
 
+var tempString = ""
 var tempTicker = make(chan string)
 
 func tempwriter(ws *websocket.Conn) {
