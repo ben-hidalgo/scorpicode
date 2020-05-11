@@ -67,7 +67,7 @@ func reader(ws *websocket.Conn) {
 
 var wsChannel = make(chan string)
 
-func tempwriter(ws *websocket.Conn) {
+func writer(ws *websocket.Conn) {
 
 	for {
 		select {
@@ -88,7 +88,7 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	go tempwriter(ws)
+	go writer(ws)
 	reader(ws)
 }
 
