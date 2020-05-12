@@ -7,7 +7,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -53,11 +52,17 @@ func main() {
 }
 
 func reader(ws *websocket.Conn) {
+	logrus.Info("soxie.reader() RRRRRRR")
 	defer ws.Close()
 	ws.SetReadLimit(512)
 	ws.SetReadDeadline(time.Now().Add(pongWait))
-	ws.SetPongHandler(func(string) error { ws.SetReadDeadline(time.Now().Add(pongWait)); return nil })
+	ws.SetPongHandler(func(string) error {
+		logrus.Info("soxie.PongHandler() PPPPPP")
+		ws.SetReadDeadline(time.Now().Add(pongWait))
+		return nil
+	})
 	for {
+		logrus.Info("soxie.reader() read message MMMMMM")
 		_, _, err := ws.ReadMessage()
 		if err != nil {
 			break
@@ -68,7 +73,7 @@ func reader(ws *websocket.Conn) {
 var wsChannel = make(chan string)
 
 func writer(ws *websocket.Conn) {
-
+	logrus.Info("soxie.writer() WWWWWW")
 	for {
 		select {
 		case msg := <-wsChannel:
@@ -76,23 +81,31 @@ func writer(ws *websocket.Conn) {
 				return
 			}
 		}
+		// TODO: add ping ticker and flush target mapping on no response
 	}
 }
 
 func serveWs(w http.ResponseWriter, r *http.Request) {
+	logrus.Info("soxie.serveWs() SSSSSS")
+
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		if _, ok := err.(websocket.HandshakeError); !ok {
-			log.Println(err)
-		}
+		logrus.Errorf("soxie.serveWs() handshake err=%#v", err)
 		return
 	}
+
+	target := r.FormValue("target")
+	if target == "" {
+		return
+	}
+	logrus.Infof("soxie.serveWs() target=%s", target)
 
 	go writer(ws)
 	reader(ws)
 }
 
 func serveHome(w http.ResponseWriter, r *http.Request) {
+	logrus.Info("soxie.serveHome() HHHHHH")
 	if r.URL.Path != "/" {
 		http.Error(w, "Not found", http.StatusNotFound)
 		return
@@ -102,14 +115,17 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+
+	target := r.FormValue("target")
+	logrus.Infof("soxie.serveHome() TTT target=%s", target)
+
+	// TODO: get the "target" from a query param
 	var v = struct {
-		Host    string
-		Data    string
-		LastMod string
+		Host   string
+		Target string
 	}{
 		r.Host,
-		string(""),
-		strconv.FormatInt(time.Now().UnixNano(), 16),
+		target,
 	}
 	homeTempl.Execute(w, &v)
 }
@@ -117,14 +133,14 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 const homeHTML = `<!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>WebSocket Example</title>
+        <title>Soxie</title>
     </head>
     <body>
-        <pre id="fileData">{{.Data}}</pre>
+        <pre id="fileData"></pre>
         <script type="text/javascript">
             (function() {
                 var data = document.getElementById("fileData");
-                var conn = new WebSocket("ws://{{.Host}}/ws?lastMod={{.LastMod}}");
+                var conn = new WebSocket("ws://{{.Host}}/ws?target={{.Target}}");
                 conn.onclose = function(evt) {
                     data.textContent = 'Connection closed';
                 }
