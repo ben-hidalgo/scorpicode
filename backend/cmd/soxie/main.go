@@ -50,7 +50,10 @@ func main() {
 		OrderCreatedChannel: orderCreatedChannel,
 	})
 
-	http.HandleFunc("/", serveHome)
+	if config.HomePath != "" {
+		http.HandleFunc(config.HomePath, serveHome)
+	}
+
 	http.HandleFunc("/ws", serveWs)
 	logrus.Infof("soxie.main() listening on %s", config.ListenAddress)
 	if err := http.ListenAndServe(config.ListenAddress, nil); err != nil {
