@@ -13,11 +13,15 @@ const HatView = () => {
 
   let { id } = useParams()
 
+  // TODO: current grabbing Order... need to refactor
   let hat = hatStore.fetchHat(id)
 
   if (!hat) {
     return <NotFound id={id} />
   }
+
+  let wsUrl = `ws://${process.env.REACT_APP_SOCKET_HOST}/ws?target=order:${hat.id}`
+  console.log(`wsUrl=${wsUrl}`)
 
   let handleData = (data) => {
     let result = JSON.parse(data);
@@ -30,7 +34,7 @@ const HatView = () => {
 
   return (
     <div className="container">
-      <Websocket url={`ws://localhost:8084/ws?target=order:${hat.id}`} onMessage={handleData}/>
+      <Websocket url={wsUrl} onMessage={handleData}/>
       <div className="card">
         <header className="card-header">
           <p className="card-header-title">

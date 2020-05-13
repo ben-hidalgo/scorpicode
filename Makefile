@@ -48,12 +48,12 @@ REDIS_PASSWORD=redispassword
 test:
 	(cd backend && ${TEST_ARGS} go test ./... -v -count=1)
 
-start-backend: #go-happy
+start-backend: # uses a script to trap killall
 	./devops/scripts/start.sh
 
 start-frontend:
 	(cd frontend  && \
-	npm install   && \
+	REACT_APP_SOCKET_HOST=localhost:8084 \
 	npm start)
 
 login:
