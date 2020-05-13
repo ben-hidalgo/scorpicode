@@ -21,6 +21,7 @@ upgrade: #images
 	--set common.cacheBuster=`date +%s` \
 	--set common.auth0RedirectUri=http://`minikube ip`:30080/callback \
 	--set roxie.loginSuccessTarget=http://`minikube ip`:30080/sc \
+	--set frontend.socketHost=`minikube ip`:30081 \
 	--set hats.tag=$(TAG) \
 	--set website.tag=$(TAG) \
 	--set roxie.tag=$(TAG) \

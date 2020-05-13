@@ -28,4 +28,6 @@ spec:
           name: http
         env:
 {{ include "common.shared" . | indent 8 }}
+        - name: REACT_APP_SOCKET_HOST
+          value: {{ required "missing value frontend.socketHost" .Values.frontend.socketHost | quote }}
 {{- end }}

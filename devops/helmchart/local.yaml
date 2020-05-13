@@ -21,6 +21,9 @@ frontend:
   port: 80
   serviceType: ClusterIP
 
+  # specified dynamically in Makefile
+  socketHost:
+
 hats:
   enabled: true
   name: hats
