@@ -118,7 +118,7 @@ func (sm *SubMgr) Subscribe(target string, ws *websocket.Conn) {
 // HandleHatCreated write message to all web sockets subscribed to the implied target
 func (sm *SubMgr) HandleHatCreated(hat hatdao.Hat) {
 	// TODO: the order subscription handles hats... confusing naming???
-	sm.HandleJSON(fmt.Sprintf("order:%s", hat.ID.Hex()), hat)
+	sm.HandleJSON(fmt.Sprintf("order:%s", hat.OrderID.Hex()), hat)
 }
 
 // HandleOrderCreated write message to all web sockets subscribed to the implied target
@@ -132,15 +132,13 @@ func (sm *SubMgr) HandleJSON(target string, v interface{}) {
 
 	logrus.Infof("soxie.HandleJSON() target=%s v=%v", target, v)
 
-	logrus.Infof("soxie.HandleJSON() XXX subMgr.TargetSocketMap=%#v", subMgr.TargetSocketMap)
+	logrus.Infof("soxie.HandleJSON() subMgr.TargetSocketMap=%#v", subMgr.TargetSocketMap)
 
 	sockets := subMgr.TargetSocketMap[target]
 
 	logrus.Infof("soxie.HandleJSON() sockets=%v", sockets)
 
 	for _, ws := range sockets {
-
-		logrus.Infof("soxie.HandleJSON() writing to socket ws=%s", ws)
 
 		msg, err := json.Marshal(v)
 		if err != nil {
@@ -233,7 +231,7 @@ const homeHTML = `<!DOCTYPE html>
                 }
                 conn.onmessage = function(evt) {
                     console.log(evt.data);
-                    data.textContent = data.textContent + evt.data;
+                    data.textContent = evt.data + '\n' + data.textContent;
                 }
             })();
         </script>

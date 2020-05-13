@@ -6,16 +6,12 @@ import (
 	"backend/pkg/rabbit"
 	"context"
 	"encoding/json"
-	"time"
 
 	"github.com/sirupsen/logrus"
 )
 
 // ProcessHatsOrderCreated .
 func ProcessHatsOrderCreated(ctx context.Context, msg []byte) error {
-
-	// TODO: sleep is temporary for debugging web sockets
-	time.Sleep(5 * time.Second)
 
 	logrus.Infof("hatrabbit.ProcessHatsOrderCreated() msg=%s", string(msg))
 
