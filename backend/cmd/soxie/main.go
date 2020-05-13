@@ -102,6 +102,7 @@ func (sm *SubMgr) Subscribe(target string, ws *websocket.Conn) {
 
 	logrus.Infof("soxie.Subscribe() target=%s", target)
 
+	// TODO: need to prevent double append by Header: 'Sec-WebSocket-Key: zAKVwwGXWAH6qtt5TgzYXA=='
 	subMgr.TargetSocketMap[target] = append(subMgr.TargetSocketMap[target], ws)
 }
 

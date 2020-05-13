@@ -95,7 +95,7 @@ class HatStore {
       .then(({ order }) => {        
         this.error = null
         this.current = order
-        history.push(`/hatsview/${order.id}`)
+        history.push(`/ordersview/${order.id}`)
       })
       .catch(err => {
         this.handleCatch(err)

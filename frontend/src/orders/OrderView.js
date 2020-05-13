@@ -19,16 +19,16 @@ const OrderView = () => {
     return <NotFound id={id} />
   }
 
-  let wsUrl = `ws://${process.env.REACT_APP_SOCKET_HOST}/ws?target=order:${order.id}`
+  // let wsUrl = `ws://${process.env.REACT_APP_SOCKET_HOST}/ws?target=order:${order.id}`
 
   let handleData = (data) => {
     let result = JSON.parse(data);
     console.log(result)
-  }  
+  }
 
   return (
     <div className="container">
-      <Websocket url={wsUrl} onMessage={handleData}/>
+      <Websocket url={`ws://${process.env.REACT_APP_SOCKET_HOST}/ws?target=order:${order.id}`} onMessage={handleData}/>
       <div className="card">
         <header className="card-header">
           <p className="card-header-title">
