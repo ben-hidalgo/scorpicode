@@ -27,15 +27,14 @@ spec:
         - containerPort: {{ .Values.soxie.port }}
           name: http
         env:
-{{- with .Values.website }}
+{{- with .Values.soxie }}
 {{ include "service.shared" . | indent 8 }}
 {{ include "service.rabbit" . | indent 8 }}
 {{- end }} 
-{{ include "common.shared" . | indent 8 }}
+{{ include "common.shared"  . | indent 8 }}
 {{ include "common.auth0"   . | indent 8 }}
         - name: WRITE_WAIT_SECONDS
           value: {{ .Values.soxie.writeWaitSeconds | quote }}
         - name: PONG_WAIT_SECONDS
           value: {{ .Values.soxie.pongWaitSeconds | quote }}
-
 {{- end }}

@@ -32,6 +32,7 @@ hats:
 
   listendAddress: :8080
   mongoDb: hats
+  amqpDsn: amqp://scuser:scpass@scorpicode-rabbitmq-ha:5672/schost
 
 website:
   enabled: true
@@ -86,7 +87,7 @@ soxie:
   # TODO: map nodePort here 30081
   
 debugger:
-  enabled: false
+  enabled: true
   name: debugger
   limitsMemory: 128Mi
   limitsCpu: 50m
@@ -104,7 +105,18 @@ mongodb:
   mongodbDatabase: hats
 
 rabbitmq-ha:
-  enabled: false
-
+  enabled: true
+  managementUsername: scuser
+  managementPassword: scpass
+  rabbitmqUsername: scuser
+  rabbitmqPassword: scpass
+  rabbitmqVhost: schost
+  replicaCount: 1
+  service:
+    type: LoadBalancer
+  prometheus:
+    operator:
+      enabled: false
+  
 redis:
   enabled: false

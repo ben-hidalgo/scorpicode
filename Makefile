@@ -24,6 +24,7 @@ upgrade: #images
 	--set hats.tag=$(TAG) \
 	--set website.tag=$(TAG) \
 	--set roxie.tag=$(TAG) \
+	--set soxie.tag=$(TAG) \
 	--set frontend.tag=$(TAG)
 
 dev:
@@ -81,8 +82,8 @@ minikube-service-rabbit-dev:
 helm-dependency-update:
 	(cd devops/helmchart && helm dependency update)
 
-logs-local:
-	kubectl logs -f -l app.kubernetes.io/instance=scorpicode
+logs-default:
+	kubectl logs -n default -f -l app.kubernetes.io/instance=scorpicode --max-log-requests=20
 
 logs-dev:
 	kubectl logs -n dev -f -l app.kubernetes.io/instance=scorpicode

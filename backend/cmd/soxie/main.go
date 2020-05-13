@@ -40,7 +40,7 @@ func main() {
 	// connect rabbit
 	rabbitConn, err := rabbit.Connect()
 	if err != nil {
-		logrus.Fatalf("hats.main() rabbit err=%#v", err)
+		logrus.Fatalf("soxie.main() rabbit err=%#v", err)
 	}
 	defer rabbitConn.Close()
 

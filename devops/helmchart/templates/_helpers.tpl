@@ -38,5 +38,5 @@
 {/* Service specific env for rabbitmq */}
 {{- define "service.rabbit" -}}
 - name: AMQP_DSN
-  value: {{ .amspDsn | quote }}
+  value: {{ required "<service>.amqpDsn required" .amqpDsn | quote }}
 {{- end -}}
