@@ -91,10 +91,11 @@ class HatStore {
 
     // size is inches
     agent.Hats.makeHat(this.draft)
-      .then(({ hat }) => {        
+      // TODO: this needs to handle order response...
+      .then(({ order }) => {        
         this.error = null
-        this.current = hat
-        history.push(`/hatsview/${hat.id}`)
+        this.current = order
+        history.push(`/hatsview/${order.id}`)
       })
       .catch(err => {
         this.handleCatch(err)
