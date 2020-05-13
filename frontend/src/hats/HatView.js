@@ -1,4 +1,5 @@
 import React from 'react'
+import Websocket from 'react-websocket';
 import { useParams } from 'react-router-dom'
 import { observer }  from 'mobx-react'
 
@@ -18,10 +19,18 @@ const HatView = () => {
     return <NotFound id={id} />
   }
 
+  let handleData = (data) => {
+    let result = JSON.parse(data);
+    console.log(result)
+    //this.setState({count: this.state.count + result.movement});
+  }  
+
   // TODO: add edit feature (link here)
+  // TODO: get websocket URL from env config or bootstrap call
 
   return (
     <div className="container">
+      <Websocket url={`ws://localhost:8084/ws?target=order:${hat.id}`} onMessage={handleData}/>
       <div className="card">
         <header className="card-header">
           <p className="card-header-title">
