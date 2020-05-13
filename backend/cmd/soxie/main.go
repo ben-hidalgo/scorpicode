@@ -15,7 +15,6 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/sirupsen/logrus"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 var (
@@ -53,7 +52,6 @@ func main() {
 
 	http.HandleFunc("/", serveHome)
 	http.HandleFunc("/ws", serveWs)
-	http.HandleFunc("/temp", temp)
 	logrus.Infof("soxie.main() listening on %s", config.ListenAddress)
 	if err := http.ListenAndServe(config.ListenAddress, nil); err != nil {
 		log.Fatal(err)
@@ -94,17 +92,6 @@ type SubMgr struct {
 
 var subMgr = &SubMgr{
 	TargetSocketMap: make(map[string][]*websocket.Conn),
-}
-
-func temp(w http.ResponseWriter, r *http.Request) {
-	logrus.Infof("soxie.temp() subMgr=%#v", subMgr)
-
-	id, _ := primitive.ObjectIDFromHex("5e8e20bbe6b38b8cb0870808")
-
-	h := &hatdao.Hat{}
-	h.SetID(id)
-
-	subMgr.HandleHatCreated(*h)
 }
 
 // Subscribe add the subscription
