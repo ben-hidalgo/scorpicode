@@ -1,9 +1,11 @@
 package soxierabbit
 
 import (
+	"backend/internal/hats/hatdao"
+	"backend/internal/hats/orderdao"
 	"backend/pkg/rabbit"
 	"context"
-	"fmt"
+	"encoding/json"
 
 	"github.com/sirupsen/logrus"
 	"github.com/socifi/jazz"
@@ -15,37 +17,45 @@ type key int
 // Key is the key for the repo in context; public for mock injection
 const Key key = 0
 
-// Listen TODO: need to pass a handle to the socket writer wrapper
-func Listen(jc *jazz.Connection, wsc chan string) {
+// Channels .
+type Channels struct {
+	HatCreatedChannel   chan hatdao.Hat
+	OrderCreatedChannel chan orderdao.Order
+}
+
+// Listen .
+func Listen(jc *jazz.Connection, c Channels) {
 
 	ctx := context.Background()
 
-	ctx = context.WithValue(ctx, Key, wsc)
+	ctx = context.WithValue(ctx, Key, c)
 
 	listener := &rabbit.Listener{
 		Context: ctx,
 	}
 
 	go jc.ProcessQueue(rabbit.SoxieHatCreatedQ.Name(), listener.Wrap(ProcessHatsHatCreated))
-
 }
+
+// TODO: need to implement fanout to non-durable queues for multi-pod deployment
 
 // ProcessHatsHatCreated .
 func ProcessHatsHatCreated(ctx context.Context, msg []byte) error {
 	logrus.Infof("soxierabbit.ProcessHatsHatCreated() msg=%s", string(msg))
-	wsc := From(ctx)
-	tempString = fmt.Sprintf("%s\n%s", msg, tempString)
-	wsc <- tempString
+	var h hatdao.Hat
+	err := json.Unmarshal(msg, &h)
+	if err != nil {
+		return err
+	}
+
+	From(ctx).HatCreatedChannel <- h
 	return nil
 }
 
-var tempString = ""
-
 // From gets the web socket channel from the context
-func From(ctx context.Context) chan string {
-
+func From(ctx context.Context) Channels {
 	switch v := ctx.Value(Key).(type) {
-	case chan string:
+	case Channels:
 		return v
 	default:
 		panic("soxierabbit.From() no value found")

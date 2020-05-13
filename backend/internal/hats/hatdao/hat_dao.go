@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/Kamva/mgm/v2"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -11,10 +12,12 @@ import (
 type Hat struct {
 	// DefaultModel includes: _id,created_at and updated_at
 	mgm.DefaultModel `bson:",inline"`
-	Size             string `json:"size"          bson:"size"`
-	Color            string `json:"color"         bson:"color"`
-	Style            string `json:"style"         bson:"style"`
-	Version          int32  `json:"version"       bson:"version"`
+	Size             string             `json:"size"          bson:"size"`
+	Color            string             `json:"color"         bson:"color"`
+	Style            string             `json:"style"         bson:"style"`
+	Version          int32              `json:"version"       bson:"version"`
+	Ordinal          int32              `json:"ordinal"       bson:"ordinal"`
+	OrderID          primitive.ObjectID `json:"order_id"      bson:"order_id"`
 	// TODO: add batch UUID
 	// TODO: add notes
 }

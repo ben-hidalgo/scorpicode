@@ -1,9 +1,13 @@
 package main
 
 import (
+	"backend/internal/hats/hatdao"
+	"backend/internal/hats/orderdao"
 	"backend/internal/soxie/config"
 	"backend/internal/soxie/soxierabbit"
 	"backend/pkg/rabbit"
+	"encoding/json"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -11,6 +15,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/sirupsen/logrus"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 var (
@@ -41,10 +46,14 @@ func main() {
 	defer rabbitConn.Close()
 
 	// start rabbit listeners
-	soxierabbit.Listen(rabbitConn, wsChannel)
+	soxierabbit.Listen(rabbitConn, soxierabbit.Channels{
+		HatCreatedChannel:   hatCreatedChannel,
+		OrderCreatedChannel: orderCreatedChannel,
+	})
 
 	http.HandleFunc("/", serveHome)
 	http.HandleFunc("/ws", serveWs)
+	http.HandleFunc("/temp", temp)
 	logrus.Infof("soxie.main() listening on %s", config.ListenAddress)
 	if err := http.ListenAndServe(config.ListenAddress, nil); err != nil {
 		log.Fatal(err)
@@ -70,18 +79,77 @@ func reader(ws *websocket.Conn) {
 	}
 }
 
-var wsChannel = make(chan string)
+var hatCreatedChannel = make(chan hatdao.Hat)
+var orderCreatedChannel = make(chan orderdao.Order)
 
-func writer(ws *websocket.Conn) {
-	logrus.Info("soxie.writer() WWWWWW")
-	for {
-		select {
-		case msg := <-wsChannel:
-			if err := ws.WriteMessage(websocket.TextMessage, []byte(msg)); err != nil {
-				return
-			}
+// example subscription targets:
+//  user:<userId>
+//  order:<orderId>
+
+// SubMgr manages substrictions to target channels
+type SubMgr struct {
+	// maps a target to the array of websockets subscribing to it
+	TargetSocketMap map[string][]*websocket.Conn
+}
+
+var subMgr = &SubMgr{
+	TargetSocketMap: make(map[string][]*websocket.Conn),
+}
+
+func temp(w http.ResponseWriter, r *http.Request) {
+	logrus.Infof("soxie.temp() subMgr=%#v", subMgr)
+
+	id, _ := primitive.ObjectIDFromHex("5e8e20bbe6b38b8cb0870808")
+
+	h := &hatdao.Hat{}
+	h.SetID(id)
+
+	subMgr.HandleHatCreated(*h)
+}
+
+// Subscribe add the subscription
+func (sm *SubMgr) Subscribe(target string, ws *websocket.Conn) {
+
+	logrus.Infof("soxie.Subscribe() target=%s", target)
+
+	subMgr.TargetSocketMap[target] = append(subMgr.TargetSocketMap[target], ws)
+}
+
+// HandleHatCreated write message to all web sockets subscribed to the implied target
+func (sm *SubMgr) HandleHatCreated(hat hatdao.Hat) {
+	// TODO: the order subscription handles hats... confusing naming???
+	sm.HandleJSON(fmt.Sprintf("order:%s", hat.ID.Hex()), hat)
+}
+
+// HandleOrderCreated write message to all web sockets subscribed to the implied target
+func (sm *SubMgr) HandleOrderCreated(order orderdao.Order) {
+	// TODO: the user subscription handles orders... confusing naming???
+	sm.HandleJSON(fmt.Sprintf("user:%s", order.ID.Hex()), order)
+}
+
+// HandleJSON write message to all web sockets subscribed to the implied target
+func (sm *SubMgr) HandleJSON(target string, v interface{}) {
+
+	logrus.Infof("soxie.HandleJSON() target=%s v=%v", target, v)
+
+	logrus.Infof("soxie.HandleJSON() XXX subMgr.TargetSocketMap=%#v", subMgr.TargetSocketMap)
+
+	sockets := subMgr.TargetSocketMap[target]
+
+	logrus.Infof("soxie.HandleJSON() sockets=%v", sockets)
+
+	for _, ws := range sockets {
+
+		logrus.Infof("soxie.HandleJSON() writing to socket ws=%s", ws)
+
+		msg, err := json.Marshal(v)
+		if err != nil {
+			logrus.Errorf("HandleJSON() json marshal err=%#v", err)
 		}
-		// TODO: add ping ticker and flush target mapping on no response
+
+		if err := ws.WriteMessage(websocket.TextMessage, msg); err != nil {
+			logrus.Errorf("HandleJSON() write message err=%#v", err)
+		}
 	}
 }
 
@@ -100,8 +168,27 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 	}
 	logrus.Infof("soxie.serveWs() target=%s", target)
 
-	go writer(ws)
+	// this is synchronous because the subscription must exist before the channel receives
+	subMgr.Subscribe(target, ws)
+
+	// creates a new routine which will create a socket target pair and receive messages by channel
+	go asynchSocketWriter(ws, target)
+
 	reader(ws)
+}
+
+func asynchSocketWriter(ws *websocket.Conn, target string) {
+	logrus.Info("soxie.asynchSocketWriter() WWWWWW")
+
+	for {
+		select {
+		case msg := <-hatCreatedChannel:
+			subMgr.HandleHatCreated(msg)
+		case msg := <-orderCreatedChannel:
+			subMgr.HandleOrderCreated(msg)
+		}
+		// TODO: add ping ticker and flush target mapping on no response
+	}
 }
 
 func serveHome(w http.ResponseWriter, r *http.Request) {
@@ -145,8 +232,8 @@ const homeHTML = `<!DOCTYPE html>
                     data.textContent = 'Connection closed';
                 }
                 conn.onmessage = function(evt) {
-                    console.log('file updated');
-                    data.textContent = evt.data;
+                    console.log(evt.data);
+                    data.textContent = data.textContent + evt.data;
                 }
             })();
         </script>

@@ -6,12 +6,16 @@ import (
 	"backend/pkg/rabbit"
 	"context"
 	"encoding/json"
+	"time"
 
 	"github.com/sirupsen/logrus"
 )
 
 // ProcessHatsOrderCreated .
 func ProcessHatsOrderCreated(ctx context.Context, msg []byte) error {
+
+	// TODO: sleep is temporary for debugging web sockets
+	time.Sleep(5 * time.Second)
 
 	logrus.Infof("hatrabbit.ProcessHatsOrderCreated() msg=%s", string(msg))
 
@@ -36,9 +40,11 @@ func ProcessHatsOrderCreated(ctx context.Context, msg []byte) error {
 		// save a hat per quantity
 		for i := int32(0); i < order.Quantity; i++ {
 			hat := &hatdao.Hat{
-				Color: order.Color,
-				Style: order.Style,
-				Size:  order.Size,
+				Color:   order.Color,
+				Style:   order.Style,
+				Size:    order.Size,
+				Ordinal: i,
+				OrderID: order.ID,
 			}
 			err := hd.Create(ctx, hat)
 			if err != nil {
