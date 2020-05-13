@@ -71,12 +71,21 @@ minikube-start:
 	minikube addons enable ingress
 
 # opens the load balancer at http://<minikube ip>:<roxie port>
-minikube-service-roxie:
-	minikube service roxie
+minikube-service-roxie-default:
+	minikube service roxie -n default
+
+# opens the load balancer at http://<minikube ip>:<soxie port>
+minikube-service-soxie-default:
+	minikube service soxie -n default
 
 # to get the rabbit management console (opens three tabs, just close two)
 minikube-service-rabbit-dev:
 	minikube service scorpicode-rabbitmq-ha -n dev
+
+# to get the rabbit management console (opens three tabs, just close two)
+minikube-service-rabbit-default:
+	minikube service scorpicode-rabbitmq-ha -n default
+
 
 # the .tgz files are committed
 helm-dependency-update:

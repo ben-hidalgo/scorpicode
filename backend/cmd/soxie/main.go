@@ -207,7 +207,8 @@ const homeHTML = `<!DOCTYPE html>
     <head>
         <title>Soxie</title>
     </head>
-    <body>
+	<body>
+		<h1>Soxie</h1>
         <pre id="fileData"></pre>
         <script type="text/javascript">
             (function() {
