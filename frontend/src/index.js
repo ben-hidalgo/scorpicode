@@ -9,6 +9,7 @@ import Hero from './globals/Hero'
 // import Helmet from './globals/Helmet'
 import NavBar from './globals/NavBar'
 import Footer from './globals/Footer'
+import OrderView from './orders/OrderView'
 import HatView from './hats/HatView'
 import HatList from './hats/HatList'
 import HatCreate from './hats/HatCreate'
@@ -16,11 +17,13 @@ import HatCreate from './hats/HatCreate'
 import commonStore from './stores/commonStore'
 import authStore from './stores/authStore'
 import hatStore from './stores/hatStore'
+import orderStore from './stores/orderStore'
 import languageStore from './stores/languageStore'
 
 const stores = {
   commonStore,
   hatStore,
+  orderStore,
   languageStore,
   authStore,
 }
@@ -40,6 +43,7 @@ if (authStore.isLoggedIn()) {
       <Route path='/hats' render={() => <HatList />}/>
       <Route path='/hatsview/:id' render={() => <HatView />}/>
       <Route path='/hatsnew' render={() => <HatCreate stores={stores}/>}/>
+      <Route path='/ordersview/:id' render={() => <OrderView />}/>
       <br/>
       <Footer stores={stores} />
     </HashRouter>  

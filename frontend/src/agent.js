@@ -56,7 +56,12 @@ const Hats = {
   fetchHat: (id) => requests.post('/hats/FetchHat', {id: id}),
 }
 
+const Orders = {
+  fetchOrder: (id) => requests.post('/hats/FetchOrder', {id: id}),
+}
+
 
 export default {
   Hats,
+  Orders,
 }

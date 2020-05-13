@@ -132,7 +132,7 @@ func ValidateRequest(r *http.Request) (Bearer, error) {
 		return nil, errors.New("validateRequest() Auth0PemfilePath is required")
 	}
 
-	traceRequest(r)
+	// traceRequest(r)
 
 	// read the pem file and parse the certificate
 	cert, err := loadCert()

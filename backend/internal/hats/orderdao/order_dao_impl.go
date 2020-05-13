@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 
 	"github.com/Kamva/mgm/v2"
+	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -23,10 +24,12 @@ func (i *impl) Find(ctx context.Context, id string) (*Order, error) {
 
 	err := coll.FindByIDWithCtx(ctx, id, o)
 	if err == hex.ErrLength || err == mongo.ErrNoDocuments {
+		logrus.Warnf("orderdao.Find() warn err=%s", err)
 		// malformed id means not found
 		return nil, nil
 	}
 	if err != nil {
+		logrus.Errorf("orderdao.Find() err=%s", err)
 		return nil, err
 	}
 	return o, nil

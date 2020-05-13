@@ -21,6 +21,9 @@ service Hats {
 
   // FetchHat returns the hat by ID
   rpc FetchHat(FetchHatRequest) returns (FetchHatResponse);
+
+  // FetchOrder returns the order by ID
+  rpc FetchOrder(FetchOrderRequest) returns (FetchOrderResponse);
 }
 
 
@@ -94,4 +97,11 @@ message FetchHatRequest {
 }
 message FetchHatResponse {
   Hat hat = 1;
+}
+
+message FetchOrderRequest {
+  string id = 1;
+}
+message FetchOrderResponse {
+  Order order = 1;
 }
