@@ -104,20 +104,23 @@ func (sm *SubMgr) Subscribe(target string, ws *websocket.Conn) {
 
 // HandleHatCreated write the message to all web sockets subscribed by user id (CreatedBy)
 func (sm *SubMgr) HandleHatCreated(hat hatdao.Hat) {
-	sm.HandleJSON(hat.CreatedBy, hat)
+	sm.HandleJSON(rabbit.SoxieHatCreatedQ, hat.CreatedBy, hat)
 }
 
 // HandleOrderCreated write the message to all web sockets subscribed by user id (CreatedBy)
 func (sm *SubMgr) HandleOrderCreated(order orderdao.Order) {
-	sm.HandleJSON(order.CreatedBy, order)
+	sm.HandleJSON(rabbit.SoxieOrderCreatedQ, order.CreatedBy, order)
 }
 
 // HandleJSON write message to all web sockets subscribed to the implied target
-func (sm *SubMgr) HandleJSON(target string, v interface{}) {
+func (sm *SubMgr) HandleJSON(q rabbit.Queue, target string, v interface{}) {
 
-	logrus.Infof("soxie.HandleJSON() target=%s v=%v", target, v)
+	logrus.Infof("soxie.HandleJSON() target=%s", target)
 
-	logrus.Infof("soxie.HandleJSON() subMgr.SubjectSocketMap=%#v", subMgr.SubjectSocketMap)
+	var m = map[string]interface{}{
+		"queue": q.Name(),
+		"data":  v,
+	}
 
 	sockets := subMgr.SubjectSocketMap[target]
 
@@ -125,7 +128,7 @@ func (sm *SubMgr) HandleJSON(target string, v interface{}) {
 
 	for _, ws := range sockets {
 
-		msg, err := json.Marshal(v)
+		msg, err := json.Marshal(m)
 		if err != nil {
 			logrus.Errorf("HandleJSON() json marshal err=%#v", err)
 		}
