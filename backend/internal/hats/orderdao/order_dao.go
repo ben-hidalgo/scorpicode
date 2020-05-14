@@ -15,7 +15,6 @@ type Order struct {
 	Color            string `json:"color"         bson:"color"`
 	Style            string `json:"style"         bson:"style"`
 	Version          int32  `json:"version"       bson:"version"`
-	Batch            string `json:"batch"         bson:"batch"`
 	Quantity         int32  `json:"quantity"      bson:"quantity"`
 	Notes            string `json:"notes"         bson:"notes"`
 	// CreatedBy is the User ID e.g. "google-oauth2|205673156517641842853"

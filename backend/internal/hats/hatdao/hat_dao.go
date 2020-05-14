@@ -18,8 +18,7 @@ type Hat struct {
 	Version          int32              `json:"version"       bson:"version"`
 	Ordinal          int32              `json:"ordinal"       bson:"ordinal"`
 	OrderID          primitive.ObjectID `json:"order_id"      bson:"order_id"`
-	// TODO: add batch UUID
-	// TODO: add notes
+	CreatedBy        string             `json:"created_by"       bson:"created_by"`
 }
 
 // HatDao Hat Data Access Object

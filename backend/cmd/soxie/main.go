@@ -8,7 +8,6 @@ import (
 	"backend/pkg/authnz"
 	"backend/pkg/rabbit"
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -84,18 +83,14 @@ func reader(ws *websocket.Conn) {
 var hatCreatedChannel = make(chan hatdao.Hat)
 var orderCreatedChannel = make(chan orderdao.Order)
 
-// example subscription targets:
-//  user:<userId>
-//  order:<orderId>
-
 // SubMgr manages substrictions to target channels
 type SubMgr struct {
-	// maps a target to the array of websockets subscribing to it
-	TargetSocketMap map[string][]*websocket.Conn
+	// maps a subject (user id) to the array of websockets subscribing to it (array for multiple tabs / browsers)
+	SubjectSocketMap map[string][]*websocket.Conn
 }
 
 var subMgr = &SubMgr{
-	TargetSocketMap: make(map[string][]*websocket.Conn),
+	SubjectSocketMap: make(map[string][]*websocket.Conn),
 }
 
 // Subscribe add the subscription
@@ -103,20 +98,18 @@ func (sm *SubMgr) Subscribe(target string, ws *websocket.Conn) {
 
 	logrus.Infof("soxie.Subscribe() target=%s", target)
 
-	// TODO: need to prevent double append by Header: 'Sec-WebSocket-Key: zAKVwwGXWAH6qtt5TgzYXA=='
-	subMgr.TargetSocketMap[target] = append(subMgr.TargetSocketMap[target], ws)
+	// TODO: ??? prevent double append by Header: 'Sec-WebSocket-Key: zAKVwwGXWAH6qtt5TgzYXA=='
+	subMgr.SubjectSocketMap[target] = append(subMgr.SubjectSocketMap[target], ws)
 }
 
-// HandleHatCreated write message to all web sockets subscribed to the implied target
+// HandleHatCreated write the message to all web sockets subscribed by user id (CreatedBy)
 func (sm *SubMgr) HandleHatCreated(hat hatdao.Hat) {
-	// TODO: the order subscription handles hats... confusing naming???
-	sm.HandleJSON(fmt.Sprintf("order:%s", hat.OrderID.Hex()), hat)
+	sm.HandleJSON(hat.CreatedBy, hat)
 }
 
-// HandleOrderCreated write message to all web sockets subscribed to the implied target
+// HandleOrderCreated write the message to all web sockets subscribed by user id (CreatedBy)
 func (sm *SubMgr) HandleOrderCreated(order orderdao.Order) {
-	// TODO: the user subscription handles orders... confusing naming???
-	sm.HandleJSON(fmt.Sprintf("user:%s", order.ID.Hex()), order)
+	sm.HandleJSON(order.CreatedBy, order)
 }
 
 // HandleJSON write message to all web sockets subscribed to the implied target
@@ -124,9 +117,9 @@ func (sm *SubMgr) HandleJSON(target string, v interface{}) {
 
 	logrus.Infof("soxie.HandleJSON() target=%s v=%v", target, v)
 
-	logrus.Infof("soxie.HandleJSON() subMgr.TargetSocketMap=%#v", subMgr.TargetSocketMap)
+	logrus.Infof("soxie.HandleJSON() subMgr.SubjectSocketMap=%#v", subMgr.SubjectSocketMap)
 
-	sockets := subMgr.TargetSocketMap[target]
+	sockets := subMgr.SubjectSocketMap[target]
 
 	logrus.Infof("soxie.HandleJSON() sockets=%v", sockets)
 

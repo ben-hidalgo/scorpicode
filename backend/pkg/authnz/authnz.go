@@ -177,7 +177,7 @@ func ValidateCookie(name string, r *http.Request) (Bearer, error) {
 	}
 
 	// use a temp request to reuse validate request logic
-	req, err := http.NewRequest("GET", "", nil)
+	req, err := http.NewRequest("", "", nil)
 	if err != nil {
 		logrus.Errorf("authnz.ValidateCookie() new request err=%#v", err)
 		return nil, err
