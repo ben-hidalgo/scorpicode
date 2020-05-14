@@ -5,6 +5,7 @@ import (
 	"backend/internal/hats/orderdao"
 	"backend/internal/soxie/config"
 	"backend/internal/soxie/soxierabbit"
+	"backend/pkg/authnz"
 	"backend/pkg/rabbit"
 	"encoding/json"
 	"fmt"
@@ -145,19 +146,43 @@ func (sm *SubMgr) HandleJSON(target string, v interface{}) {
 func serveWs(w http.ResponseWriter, r *http.Request) {
 	logrus.Info("soxie.serveWs() SSSSSS")
 
+	cookie, err := r.Cookie("id_token")
+	if err != nil {
+		logrus.Errorf("soxie.serveWs() cookie err=%#v", err)
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
+
+	// use a temp request to invoke authnz bearer logic
+	req, err := http.NewRequest("GET", "", nil)
+	if err != nil {
+		logrus.Errorf("soxie.serveWs() new request err=%#v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", cookie.Value))
+	bearer, err := authnz.ValidateRequest(req)
+	if err != nil {
+		logrus.Errorf("soxie.serveWs() validate request err=%#v", err)
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
+
+	_ = bearer
+
+	logrus.Infof("soxie.serveWs() cookie=%#v", cookie)
+
 	// TODO: validate against list of approved origins
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		logrus.Errorf("soxie.serveWs() handshake err=%#v", err)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	target := r.FormValue("target")
-	if target == "" {
-		return
-	}
+	target := bearer.GetSubject()
 	logrus.Infof("soxie.serveWs() target=%s", target)
 
 	// this is synchronous because the subscription must exist before the channel receives

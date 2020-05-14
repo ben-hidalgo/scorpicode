@@ -9,6 +9,7 @@ import Hero from './globals/Hero'
 // import Helmet from './globals/Helmet'
 import NavBar from './globals/NavBar'
 import Footer from './globals/Footer'
+import Socket from './globals/Socket'
 import OrderView from './orders/OrderView'
 import HatView from './hats/HatView'
 import HatList from './hats/HatList'
@@ -38,6 +39,7 @@ if (authStore.isLoggedIn()) {
     <HashRouter>
       {/*<Helmet />  disabled due to componentWillMount usage warning */}
       <NavBar />
+      <Socket />
       <Route path='/' render={() => <Hero />}/>
       <br/>
       <Route path='/hats' render={() => <HatList />}/>
