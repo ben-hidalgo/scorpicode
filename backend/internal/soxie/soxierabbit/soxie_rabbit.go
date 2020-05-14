@@ -35,6 +35,7 @@ func Listen(jc *jazz.Connection, c Channels) {
 	}
 
 	go jc.ProcessQueue(rabbit.SoxieHatCreatedQ.Name(), listener.Wrap(ProcessHatsHatCreated))
+	go jc.ProcessQueue(rabbit.SoxieOrderCreatedQ.Name(), listener.Wrap(ProcessHatsOrderCreated))
 }
 
 // TODO: need to implement fanout to non-durable queues for multi-pod deployment
@@ -49,6 +50,19 @@ func ProcessHatsHatCreated(ctx context.Context, msg []byte) error {
 	}
 
 	From(ctx).HatCreatedChannel <- h
+	return nil
+}
+
+// ProcessHatsOrderCreated .
+func ProcessHatsOrderCreated(ctx context.Context, msg []byte) error {
+	logrus.Infof("soxierabbit.ProcessHatsOrderCreated() msg=%s", string(msg))
+	var o orderdao.Order
+	err := json.Unmarshal(msg, &o)
+	if err != nil {
+		return err
+	}
+
+	From(ctx).OrderCreatedChannel <- o
 	return nil
 }
 

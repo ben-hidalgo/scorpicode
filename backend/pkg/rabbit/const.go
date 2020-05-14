@@ -14,10 +14,10 @@ const (
 
 // Queues are underscore separated (by convention)
 const (
-	HatsOrderCreatedQ = Queue("hats_order_created")
-	// this one is probably temporary... and/or will move the the web sockets service
-	HatsHatCreatedQ  = Queue("hats_hat_created")
-	SoxieHatCreatedQ = Queue("soxie_hat_created")
+	HatsOrderCreatedQ  = Queue("hats_order_created")
+	HatsHatCreatedQ    = Queue("hats_hat_created")
+	SoxieOrderCreatedQ = Queue("soxie_order_created")
+	SoxieHatCreatedQ   = Queue("soxie_hat_created")
 )
 
 const schema = `
@@ -41,4 +41,9 @@ queues:
     bindings:
       - exchange: "service-msg-action"
         key: "hats.hat.created"    
+  soxie_order_created:
+    durable: true
+    bindings:
+      - exchange: "service-msg-action"
+        key: "hats.order.created"
 `
