@@ -146,33 +146,15 @@ func (sm *SubMgr) HandleJSON(target string, v interface{}) {
 func serveWs(w http.ResponseWriter, r *http.Request) {
 	logrus.Info("soxie.serveWs() SSSSSS")
 
-	cookie, err := r.Cookie("id_token")
-	if err != nil {
-		logrus.Errorf("soxie.serveWs() cookie err=%#v", err)
-		w.WriteHeader(http.StatusForbidden)
-		return
-	}
-
-	// use a temp request to invoke authnz bearer logic
-	req, err := http.NewRequest("GET", "", nil)
-	if err != nil {
-		logrus.Errorf("soxie.serveWs() new request err=%#v", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", cookie.Value))
-	bearer, err := authnz.ValidateRequest(req)
+	// TODO: cookie name is hard coded
+	bearer, err := authnz.ValidateCookie("id_token", r)
 	if err != nil {
 		logrus.Errorf("soxie.serveWs() validate request err=%#v", err)
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 
-	_ = bearer
-
-	logrus.Infof("soxie.serveWs() cookie=%#v", cookie)
-
-	// TODO: validate against list of approved origins
+	// TODO: validate against list of injected origins
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 
 	ws, err := upgrader.Upgrade(w, r, nil)
@@ -182,14 +164,14 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	target := bearer.GetSubject()
-	logrus.Infof("soxie.serveWs() target=%s", target)
+	subject := bearer.GetSubject()
+	logrus.Infof("soxie.serveWs() subject=%s", subject)
 
 	// this is synchronous because the subscription must exist before the channel receives
-	subMgr.Subscribe(target, ws)
+	subMgr.Subscribe(subject, ws)
 
-	// creates a new routine which will create a socket target pair and receive messages by channel
-	go asynchSocketWriter(ws, target)
+	// creates a new routine which will create a socket subject pair and receive messages by channel
+	go asynchSocketWriter(ws, subject)
 
 	reader(ws)
 }

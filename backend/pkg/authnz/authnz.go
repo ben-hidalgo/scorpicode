@@ -167,6 +167,33 @@ func ValidateRequest(r *http.Request) (Bearer, error) {
 	}, nil
 }
 
+// ValidateCookie .
+func ValidateCookie(name string, r *http.Request) (Bearer, error) {
+
+	cookie, err := r.Cookie(name)
+	if err != nil {
+		logrus.Errorf("authnz.ValidateCookie() cookie err=%#v", err)
+		return nil, err
+	}
+
+	// use a temp request to reuse validate request logic
+	req, err := http.NewRequest("GET", "", nil)
+	if err != nil {
+		logrus.Errorf("authnz.ValidateCookie() new request err=%#v", err)
+		return nil, err
+	}
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", cookie.Value))
+
+	bearer, err := ValidateRequest(req)
+	if err != nil {
+		logrus.Errorf("authnz.ValidateCookie() validate request err=%#v", err)
+		return nil, err
+	}
+
+	return bearer, nil
+
+}
+
 // cache in memory
 var pemFile []byte
 
