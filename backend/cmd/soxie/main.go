@@ -8,7 +8,6 @@ import (
 	"backend/pkg/authnz"
 	"backend/pkg/rabbit"
 	"encoding/json"
-	"html/template"
 	"log"
 	"net/http"
 	"time"
@@ -27,10 +26,11 @@ var (
 	// Send pings to client with this period. Must be less than pongWait.
 	pingPeriod = (pongWait * 9) / 10
 
-	homeTempl = template.Must(template.New("").Parse(homeHTML))
-	upgrader  = websocket.Upgrader{
+	upgrader = websocket.Upgrader{
 		ReadBufferSize:  1024,
 		WriteBufferSize: 1024,
+		// TODO: validate against list of injected origins
+		CheckOrigin: func(r *http.Request) bool { return true },
 	}
 )
 
@@ -49,10 +49,6 @@ func main() {
 		HatCreatedChannel:   hatCreatedChannel,
 		OrderCreatedChannel: orderCreatedChannel,
 	})
-
-	if config.HomePath != "" {
-		http.HandleFunc(config.HomePath, serveHome)
-	}
 
 	http.HandleFunc("/ws", serveWs)
 	logrus.Infof("soxie.main() listening on %s", config.ListenAddress)
@@ -123,9 +119,6 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: validate against list of injected origins
-	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
-
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		logrus.Errorf("soxie.serveWs() handshake err=%#v", err)
@@ -141,19 +134,25 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 }
 
 func asynchSocketWriter(ws *websocket.Conn, subject string) {
-	logrus.Info("soxie.asynchSocketWriter()")
+	logrus.Info("soxie.asynchSocketWriter() subject=%s", subject)
 
 	pingTicker := time.NewTicker(pingPeriod)
 
 	for {
 		select {
 		case hat := <-hatCreatedChannel:
+			logrus.Infof("soxie.asynchSocketWriter() hat.CreatedBy=%s", hat.CreatedBy)
 			if hat.CreatedBy == subject {
 				WsHandleJSON(ws, rabbit.SoxieHatCreatedQ, hat)
+			} else {
+				logrus.Errorf("soxie.asynchSocketWriter() hat WTF hat.CreatedBy=%s", hat.CreatedBy)
 			}
 		case order := <-orderCreatedChannel:
+			logrus.Infof("soxie.asynchSocketWriter() order.CreatedBy=%s", order.CreatedBy)
 			if order.CreatedBy == subject {
 				WsHandleJSON(ws, rabbit.SoxieOrderCreatedQ, order)
+			} else {
+				logrus.Errorf("soxie.asynchSocketWriter() order WTF order.CreatedBy=%s", order.CreatedBy)
 			}
 		case <-pingTicker.C:
 			ws.SetWriteDeadline(time.Now().Add(writeWait))
@@ -164,54 +163,3 @@ func asynchSocketWriter(ws *websocket.Conn, subject string) {
 		}
 	}
 }
-
-func serveHome(w http.ResponseWriter, r *http.Request) {
-	logrus.Info("soxie.serveHome() HHHHHH")
-	if r.URL.Path != "/" {
-		http.Error(w, "Not found", http.StatusNotFound)
-		return
-	}
-	if r.Method != "GET" {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-
-	target := r.FormValue("target")
-	logrus.Infof("soxie.serveHome() TTT target=%s", target)
-
-	// TODO: get the "target" from a query param
-	var v = struct {
-		Host   string
-		Target string
-	}{
-		r.Host,
-		target,
-	}
-	homeTempl.Execute(w, &v)
-}
-
-const homeHTML = `<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Soxie</title>
-    </head>
-	<body>
-		<h1>Soxie</h1>
-        <pre id="fileData"></pre>
-        <script type="text/javascript">
-            (function() {
-                var data = document.getElementById("fileData");
-                var conn = new WebSocket("ws://{{.Host}}/ws?target={{.Target}}");
-                conn.onclose = function(evt) {
-                    data.textContent = 'Connection closed';
-                }
-                conn.onmessage = function(evt) {
-                    console.log(evt.data);
-                    data.textContent = evt.data + '\n' + data.textContent;
-                }
-            })();
-        </script>
-    </body>
-</html>
-`
