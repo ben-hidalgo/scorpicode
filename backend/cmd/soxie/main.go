@@ -62,19 +62,22 @@ func main() {
 }
 
 func reader(ws *websocket.Conn) {
-	logrus.Info("soxie.reader() RRRRRRR")
+	logrus.Info("soxie.reader()")
 	defer ws.Close()
 	ws.SetReadLimit(512)
 	ws.SetReadDeadline(time.Now().Add(pongWait))
 	ws.SetPongHandler(func(string) error {
-		logrus.Info("soxie.PongHandler() PPPPPP")
+		logrus.Info("soxie.PongHandler() pong received")
 		ws.SetReadDeadline(time.Now().Add(pongWait))
 		return nil
 	})
 	for {
-		logrus.Info("soxie.reader() read message MMMMMM")
-		_, _, err := ws.ReadMessage()
+		_, pong, err := ws.ReadMessage()
+		logrus.Infof("soxie.reader() read message pong=%s", pong)
 		if err != nil {
+			logrus.Infof("soxie.reader() read message err=%#v", err)
+			// breaking out of this infinite loop allows this func to return which
+			// triggers the defer websocket close
 			break
 		}
 	}
@@ -83,37 +86,8 @@ func reader(ws *websocket.Conn) {
 var hatCreatedChannel = make(chan hatdao.Hat)
 var orderCreatedChannel = make(chan orderdao.Order)
 
-// SubMgr manages substrictions to target channels
-type SubMgr struct {
-	// maps a subject (user id) to the array of websockets subscribing to it (array for multiple tabs / browsers)
-	SubjectSocketMap map[string][]*websocket.Conn
-}
-
-var subMgr = &SubMgr{
-	SubjectSocketMap: make(map[string][]*websocket.Conn),
-}
-
-// Subscribe add the subscription
-func (sm *SubMgr) Subscribe(target string, ws *websocket.Conn) {
-
-	logrus.Infof("soxie.Subscribe() target=%s", target)
-
-	// TODO: ??? prevent double append by Header: 'Sec-WebSocket-Key: zAKVwwGXWAH6qtt5TgzYXA=='
-	subMgr.SubjectSocketMap[target] = append(subMgr.SubjectSocketMap[target], ws)
-}
-
-// HandleHatCreated write the message to all web sockets subscribed by user id (CreatedBy)
-func (sm *SubMgr) HandleHatCreated(hat hatdao.Hat) {
-	sm.HandleJSON(rabbit.SoxieHatCreatedQ, hat.CreatedBy, hat)
-}
-
-// HandleOrderCreated write the message to all web sockets subscribed by user id (CreatedBy)
-func (sm *SubMgr) HandleOrderCreated(order orderdao.Order) {
-	sm.HandleJSON(rabbit.SoxieOrderCreatedQ, order.CreatedBy, order)
-}
-
-// HandleJSON write message to all web sockets subscribed to the implied target
-func (sm *SubMgr) HandleJSON(q rabbit.Queue, target string, v interface{}) {
+// WsHandleJSON .
+func WsHandleJSON(ws *websocket.Conn, q rabbit.Queue, target string, v interface{}) {
 
 	logrus.Infof("soxie.HandleJSON() target=%s", target)
 
@@ -122,28 +96,31 @@ func (sm *SubMgr) HandleJSON(q rabbit.Queue, target string, v interface{}) {
 		"data":  v,
 	}
 
-	sockets := subMgr.SubjectSocketMap[target]
+	// sockets := subMgr.SubjectSocketMap[target]
 
-	logrus.Infof("soxie.HandleJSON() sockets=%v", sockets)
+	// logrus.Infof("soxie.HandleJSON() sockets=%v", sockets)
 
-	for _, ws := range sockets {
+	msg, err := json.Marshal(m)
+	if err != nil {
+		logrus.Errorf("HandleJSON() json marshal err=%#v", err)
+	}
 
-		msg, err := json.Marshal(m)
-		if err != nil {
-			logrus.Errorf("HandleJSON() json marshal err=%#v", err)
-		}
-
-		if err := ws.WriteMessage(websocket.TextMessage, msg); err != nil {
+	err = ws.WriteMessage(websocket.TextMessage, msg)
+	if err != nil {
+		if err == websocket.ErrCloseSent {
+			// TODO: remove socket from array / map
+		} else {
 			logrus.Errorf("HandleJSON() write message err=%#v", err)
 		}
+
 	}
 }
 
 func serveWs(w http.ResponseWriter, r *http.Request) {
-	logrus.Info("soxie.serveWs() SSSSSS")
+	logrus.Info("soxie.serveWs()")
 
 	// TODO: cookie name is hard coded
-	bearer, err := authnz.ValidateCookie("id_token", r)
+	_, err := authnz.ValidateCookie("id_token", r)
 	if err != nil {
 		logrus.Errorf("soxie.serveWs() validate request err=%#v", err)
 		w.WriteHeader(http.StatusForbidden)
@@ -160,29 +137,33 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	subject := bearer.GetSubject()
-	logrus.Infof("soxie.serveWs() subject=%s", subject)
+	// creates a new routine encapsulating a websocket bound to this subject
+	go asynchSocketWriter(ws)
 
-	// this is synchronous because the subscription must exist before the channel receives
-	subMgr.Subscribe(subject, ws)
-
-	// creates a new routine which will create a socket subject pair and receive messages by channel
-	go asynchSocketWriter(ws, subject)
-
+	// reader will block until the socket is closed
 	reader(ws)
 }
 
-func asynchSocketWriter(ws *websocket.Conn, target string) {
-	logrus.Info("soxie.asynchSocketWriter() WWWWWW")
+func asynchSocketWriter(ws *websocket.Conn) {
+	logrus.Info("soxie.asynchSocketWriter()")
+
+	pingTicker := time.NewTicker(pingPeriod)
 
 	for {
 		select {
-		case msg := <-hatCreatedChannel:
-			subMgr.HandleHatCreated(msg)
-		case msg := <-orderCreatedChannel:
-			subMgr.HandleOrderCreated(msg)
+		case hat := <-hatCreatedChannel:
+			// subMgr.HandleHatCreated(msg)
+			WsHandleJSON(ws, rabbit.SoxieHatCreatedQ, hat.CreatedBy, hat)
+		case order := <-orderCreatedChannel:
+			// subMgr.HandleOrderCreated(msg)
+			WsHandleJSON(ws, rabbit.SoxieOrderCreatedQ, order.CreatedBy, order)
+		case <-pingTicker.C:
+			ws.SetWriteDeadline(time.Now().Add(writeWait))
+			if err := ws.WriteMessage(websocket.PingMessage, []byte{}); err != nil {
+				// the error causes a return from this go routine
+				return
+			}
 		}
-		// TODO: add ping ticker and flush target mapping on no response
 	}
 }
 

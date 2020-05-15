@@ -9,4 +9,4 @@ https://github.com/golang/go/wiki/TableDrivenTests
 https://mobx-react.js.org/recipes-context
 https://auth0.com/docs/authorization/concepts/sample-use-cases-rules
 https://www.gatsbyjs.org/starters/amandeepmittal/gatsby-bulma-quickstart/
-
+https://github.com/gorilla/websocket/blob/master/examples/filewatch/main.go
