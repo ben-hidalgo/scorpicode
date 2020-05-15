@@ -63,7 +63,6 @@ func reader(ws *websocket.Conn) {
 	ws.SetReadLimit(512)
 	ws.SetReadDeadline(time.Now().Add(pongWait))
 	ws.SetPongHandler(func(string) error {
-		logrus.Info("soxie.PongHandler() pong received")
 		ws.SetReadDeadline(time.Now().Add(pongWait))
 		return nil
 	})
@@ -83,7 +82,7 @@ var hatCreatedChannel = make(chan hatdao.Hat)
 var orderCreatedChannel = make(chan orderdao.Order)
 
 // WsHandleJSON .
-func WsHandleJSON(ws *websocket.Conn, q rabbit.Queue, v interface{}) {
+func WsHandleJSON(ws *websocket.Conn, q rabbit.Queue, v interface{}) error {
 
 	// this map envelope allows the client to use queue name as a message type switch
 	var m = map[string]interface{}{
@@ -94,18 +93,15 @@ func WsHandleJSON(ws *websocket.Conn, q rabbit.Queue, v interface{}) {
 	msg, err := json.Marshal(m)
 	if err != nil {
 		logrus.Errorf("HandleJSON() json marshal err=%#v", err)
-		return
+		return err
 	}
 
 	err = ws.WriteMessage(websocket.TextMessage, msg)
 	if err != nil {
-		if err == websocket.ErrCloseSent {
-			// TODO: remove socket from array / map
-		} else {
-			logrus.Errorf("HandleJSON() write message err=%#v", err)
-		}
-
+		logrus.Errorf("HandleJSON() write message err=%#v", err)
+		return err
 	}
+	return nil
 }
 
 func serveWs(w http.ResponseWriter, r *http.Request) {
@@ -134,25 +130,25 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 }
 
 func asynchSocketWriter(ws *websocket.Conn, subject string) {
-	logrus.Info("soxie.asynchSocketWriter() subject=%s", subject)
+	logrus.Tracef("soxie.asynchSocketWriter() subject=%s", subject)
 
 	pingTicker := time.NewTicker(pingPeriod)
 
 	for {
 		select {
 		case hat := <-hatCreatedChannel:
-			logrus.Infof("soxie.asynchSocketWriter() hat.CreatedBy=%s", hat.CreatedBy)
 			if hat.CreatedBy == subject {
-				WsHandleJSON(ws, rabbit.SoxieHatCreatedQ, hat)
-			} else {
-				logrus.Errorf("soxie.asynchSocketWriter() hat WTF hat.CreatedBy=%s", hat.CreatedBy)
+				if err := WsHandleJSON(ws, rabbit.SoxieHatCreatedQ, hat); err != nil {
+					logrus.Errorf("soxie.asynchSocketWriter() WsHandleJSON hat err=%#v", err)
+					return
+				}
 			}
 		case order := <-orderCreatedChannel:
-			logrus.Infof("soxie.asynchSocketWriter() order.CreatedBy=%s", order.CreatedBy)
 			if order.CreatedBy == subject {
-				WsHandleJSON(ws, rabbit.SoxieOrderCreatedQ, order)
-			} else {
-				logrus.Errorf("soxie.asynchSocketWriter() order WTF order.CreatedBy=%s", order.CreatedBy)
+				if err := WsHandleJSON(ws, rabbit.SoxieOrderCreatedQ, order); err != nil {
+					logrus.Errorf("soxie.asynchSocketWriter() WsHandleJSON order err=%#v", err)
+					return
+				}
 			}
 		case <-pingTicker.C:
 			ws.SetWriteDeadline(time.Now().Add(writeWait))
