@@ -72,8 +72,8 @@ func reader(ws *websocket.Conn) {
 		return nil
 	})
 	for {
-		_, pong, err := ws.ReadMessage()
-		logrus.Infof("soxie.reader() read message pong=%s", pong)
+		// ignore the message
+		_, _, err := ws.ReadMessage()
 		if err != nil {
 			logrus.Infof("soxie.reader() read message err=%#v", err)
 			// breaking out of this infinite loop allows this func to return which
@@ -87,22 +87,18 @@ var hatCreatedChannel = make(chan hatdao.Hat)
 var orderCreatedChannel = make(chan orderdao.Order)
 
 // WsHandleJSON .
-func WsHandleJSON(ws *websocket.Conn, q rabbit.Queue, target string, v interface{}) {
+func WsHandleJSON(ws *websocket.Conn, q rabbit.Queue, v interface{}) {
 
-	logrus.Infof("soxie.HandleJSON() target=%s", target)
-
+	// this map envelope allows the client to use queue name as a message type switch
 	var m = map[string]interface{}{
 		"queue": q.Name(),
 		"data":  v,
 	}
 
-	// sockets := subMgr.SubjectSocketMap[target]
-
-	// logrus.Infof("soxie.HandleJSON() sockets=%v", sockets)
-
 	msg, err := json.Marshal(m)
 	if err != nil {
 		logrus.Errorf("HandleJSON() json marshal err=%#v", err)
+		return
 	}
 
 	err = ws.WriteMessage(websocket.TextMessage, msg)
@@ -120,7 +116,7 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 	logrus.Info("soxie.serveWs()")
 
 	// TODO: cookie name is hard coded
-	_, err := authnz.ValidateCookie("id_token", r)
+	bearer, err := authnz.ValidateCookie("id_token", r)
 	if err != nil {
 		logrus.Errorf("soxie.serveWs() validate request err=%#v", err)
 		w.WriteHeader(http.StatusForbidden)
@@ -138,13 +134,13 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// creates a new routine encapsulating a websocket bound to this subject
-	go asynchSocketWriter(ws)
+	go asynchSocketWriter(ws, bearer.GetSubject())
 
 	// reader will block until the socket is closed
 	reader(ws)
 }
 
-func asynchSocketWriter(ws *websocket.Conn) {
+func asynchSocketWriter(ws *websocket.Conn, subject string) {
 	logrus.Info("soxie.asynchSocketWriter()")
 
 	pingTicker := time.NewTicker(pingPeriod)
@@ -152,15 +148,17 @@ func asynchSocketWriter(ws *websocket.Conn) {
 	for {
 		select {
 		case hat := <-hatCreatedChannel:
-			// subMgr.HandleHatCreated(msg)
-			WsHandleJSON(ws, rabbit.SoxieHatCreatedQ, hat.CreatedBy, hat)
+			if hat.CreatedBy == subject {
+				WsHandleJSON(ws, rabbit.SoxieHatCreatedQ, hat)
+			}
 		case order := <-orderCreatedChannel:
-			// subMgr.HandleOrderCreated(msg)
-			WsHandleJSON(ws, rabbit.SoxieOrderCreatedQ, order.CreatedBy, order)
+			if order.CreatedBy == subject {
+				WsHandleJSON(ws, rabbit.SoxieOrderCreatedQ, order)
+			}
 		case <-pingTicker.C:
 			ws.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := ws.WriteMessage(websocket.PingMessage, []byte{}); err != nil {
-				// the error causes a return from this go routine
+				// the error causes a return from this go routine, allowing garbage collection
 				return
 			}
 		}
