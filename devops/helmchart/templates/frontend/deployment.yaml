@@ -30,4 +30,6 @@ spec:
 {{ include "common.shared" . | indent 8 }}
         - name: REACT_APP_SOCKET_HOST
           value: {{ required "missing value frontend.socketHost" .Values.frontend.socketHost | quote }}
+        - name: REACT_APP_SOCKET_DEBUG
+          value: {{ .Values.frontend.socketDebug | quote }}
 {{- end }}

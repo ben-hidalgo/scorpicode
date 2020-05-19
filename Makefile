@@ -55,6 +55,7 @@ start-backend: # uses a script to trap killall
 start-frontend:
 	(cd frontend  && \
 	REACT_APP_SOCKET_HOST=localhost:8084 \
+	REACT_APP_SOCKET_DEBUG=true \
 	npm start)
 
 login:

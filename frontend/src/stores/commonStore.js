@@ -7,6 +7,7 @@ class CommonStore {
     })
   }
 
-}
+
+} // CommonStore
 
 export default new CommonStore()

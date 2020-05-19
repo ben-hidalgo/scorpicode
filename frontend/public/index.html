@@ -28,6 +28,12 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <!-- the react app environment variables will be replaced at runtime -->
+    <script type='text/javascript'>
+      window.REACT_APP_SOCKET_HOST  = '___REACT_APP_SOCKET_HOST___';
+      window.REACT_APP_SOCKET_DEBUG = '___REACT_APP_SOCKET_DEBUG___';
+    </script>
+  
     <div id="root"></div>
     <!--
       This HTML file is a template.

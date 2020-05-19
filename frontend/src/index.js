@@ -16,6 +16,7 @@ import HatList from './hats/HatList'
 import HatCreate from './hats/HatCreate'
 
 import commonStore from './stores/commonStore'
+import configStore from './stores/configStore'
 import authStore from './stores/authStore'
 import hatStore from './stores/hatStore'
 import orderStore from './stores/orderStore'
@@ -23,6 +24,7 @@ import languageStore from './stores/languageStore'
 
 const stores = {
   commonStore,
+  configStore,
   hatStore,
   orderStore,
   languageStore,
