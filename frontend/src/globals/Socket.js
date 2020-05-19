@@ -10,18 +10,12 @@ const Socket = () => {
     configStore,
   } = React.useContext(StoreContext)
 
-  let handleData = (data) => {
-    let result = JSON.parse(data);
-    console.log(result)
-  }
-  console.log(hatStore)
-
   return (
     <div>
       <Websocket 
-      url={configStore.getSocketUrl()}
-      onMessage={handleData}
-      debug={configStore.getSocketDebug()}
+        url={configStore.getSocketUrl()}
+        onMessage={hatStore.appendHat}
+        debug={configStore.getSocketDebugBool()}
       />
     </div>
   )

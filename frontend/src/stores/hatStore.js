@@ -121,6 +121,12 @@ class HatStore {
 
   } // deleteHat
 
+  // allows web socket to append hats
+  appendHat = (hat) => {
+    this.list.push(hat)
+  } // appendHat
+
+
 } // HatStore
 
 export default new HatStore()

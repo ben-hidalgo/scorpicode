@@ -8,6 +8,7 @@ const OrderView = () => {
 
   let {
     orderStore,
+    hatStore,
   } = React.useContext(StoreContext)
 
   let { id } = useParams()
@@ -24,7 +25,7 @@ const OrderView = () => {
       <div className="card">
         <header className="card-header">
           <p className="card-header-title">
-            Order: {order.id}
+            Order: {order.id} Processing {hatStore.list.length}
           </p>
         </header>
         <div className="card-content">
