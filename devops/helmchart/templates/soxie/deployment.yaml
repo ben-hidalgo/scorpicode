@@ -26,6 +26,11 @@ spec:
         ports:
         - containerPort: {{ .Values.soxie.port }}
           name: http
+
+        volumeMounts:
+          - name: {{ .Values.common.pemfileVolume }}
+            mountPath: {{ .Values.common.auth0PemfileMount }}
+            readOnly: true
         env:
 {{- with .Values.soxie }}
 {{ include "service.shared" . | indent 8 }}
@@ -37,4 +42,8 @@ spec:
           value: {{ .Values.soxie.writeWaitSeconds | quote }}
         - name: PONG_WAIT_SECONDS
           value: {{ .Values.soxie.pongWaitSeconds | quote }}
+      volumes:
+        - name: {{ .Values.common.pemfileVolume }}
+          secret:
+            secretName: {{ .Values.common.name }}    
 {{- end }}
