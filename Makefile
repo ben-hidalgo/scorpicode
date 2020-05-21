@@ -4,11 +4,11 @@
 TAG=latest
 
 images:
-	docker build . -f devops/dockerfiles/hats.Dockerfile     -t hats:$(TAG)
-	docker build . -f devops/dockerfiles/website.Dockerfile  -t website:$(TAG)
-	docker build . -f devops/dockerfiles/frontend.Dockerfile -t frontend:$(TAG)
-	docker build . -f devops/dockerfiles/roxie.Dockerfile    -t roxie:$(TAG)
-	docker build . -f devops/dockerfiles/soxie.Dockerfile    -t soxie:$(TAG)
+	docker build . -f devops/dockerfiles/hats.Dockerfile     -t hats:$(shell ./devops/scripts/go-checksum.sh hats)
+	docker build . -f devops/dockerfiles/website.Dockerfile  -t website:$(shell ./devops/scripts/js-checksum.sh website)
+	docker build . -f devops/dockerfiles/frontend.Dockerfile -t frontend:$(shell ./devops/scripts/js-checksum.sh frontend)
+	docker build . -f devops/dockerfiles/roxie.Dockerfile    -t roxie:$(shell ./devops/scripts/go-checksum.sh roxie)
+	docker build . -f devops/dockerfiles/soxie.Dockerfile    -t soxie:$(shell ./devops/scripts/go-checksum.sh soxie)
 	docker build . -f devops/dockerfiles/debugger.Dockerfile -t debugger:latest
 
 #TODO: add wait for services... mongo startup is longer than the default wait timeout
@@ -22,10 +22,10 @@ upgrade: #images
 	--set common.auth0RedirectUri=http://`minikube ip`:30080/callback \
 	--set roxie.loginSuccessTarget=http://`minikube ip`:30080/sc \
 	--set frontend.socketHost=`minikube ip`:30081 \
-	--set hats.tag=$(TAG) \
+	--set hats.tag=$(shell ./devops/scripts/go-checksum.sh hats) \
+	--set roxie.tag=$(shell ./devops/scripts/go-checksum.sh roxie) \
+	--set soxie.tag=$(shell ./devops/scripts/go-checksum.sh soxie) \
 	--set website.tag=$(TAG) \
-	--set roxie.tag=$(TAG) \
-	--set soxie.tag=$(TAG) \
 	--set frontend.tag=$(TAG)
 
 dev:
