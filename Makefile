@@ -25,8 +25,8 @@ upgrade: #images
 	--set hats.tag=$(shell ./devops/scripts/go-checksum.sh hats) \
 	--set roxie.tag=$(shell ./devops/scripts/go-checksum.sh roxie) \
 	--set soxie.tag=$(shell ./devops/scripts/go-checksum.sh soxie) \
-	--set website.tag=$(TAG) \
-	--set frontend.tag=$(TAG)
+	--set website.tag=$(shell ./devops/scripts/js-checksum.sh website) \
+	--set frontend.tag=$(shell ./devops/scripts/js-checksum.sh frontend)
 
 dev:
 	kubectl create namespace dev || true
