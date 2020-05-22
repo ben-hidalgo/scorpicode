@@ -1,8 +1,6 @@
 # DO NOT FORGET
 # eval $(minikube docker-env)
 
-TAG=latest
-
 images:
 	docker build . -f devops/dockerfiles/hats.Dockerfile     -t hats:$(shell ./devops/scripts/go-checksum.sh hats)
 	docker build . -f devops/dockerfiles/website.Dockerfile  -t website:$(shell ./devops/scripts/js-checksum.sh website)
@@ -18,7 +16,6 @@ upgrade: #images
 	helm upgrade --install scorpicode ./devops/helmchart \
 	-f devops/helmchart/local.yaml \
 	-f devops/helmchart/local.plain.yaml \
-	--set common.cacheBuster=`date +%s` \
 	--set common.auth0RedirectUri=http://`minikube ip`:30080/callback \
 	--set roxie.loginSuccessTarget=http://`minikube ip`:30080/sc \
 	--set frontend.socketHost=`minikube ip`:30081 \
