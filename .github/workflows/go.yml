@@ -35,7 +35,6 @@ jobs:
       working-directory: ./backend
       run: |
         go vet ./...
-        golint -set_exit_status ./...
 
     - name: Test
       working-directory: ./backend
