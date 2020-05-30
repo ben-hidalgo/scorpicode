@@ -25,16 +25,14 @@ jobs:
     - name: Get dependencies
       working-directory: ./backend
       run: |
+        go get -u golang.org/x/lint/golint
         go get -v -t -d ./...
-        if [ -f Gopkg.toml ]; then
-            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-            dep ensure
-        fi
 
     - name: Vet
       working-directory: ./backend
       run: |
         go vet ./...
+        golint -set_exit_status ./...
 
     - name: Test
       working-directory: ./backend
