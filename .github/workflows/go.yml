@@ -46,6 +46,14 @@ jobs:
 
     - name: Docker Build
       working-directory: .
-      run: |
-        ./devops/scripts/docker-build.sh
+      run: ./devops/scripts/docker-build.sh
   
+    - name: Zip Helmchart
+      working-directory: .
+      run: tar cvzf helmchart-${{ github.run_number }}.tar.gz ./devops/helmchart/
+
+    - name: Upload Helmchart Artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: helmchart
+        path: helmchart-${{ github.run_number }}.tar.gz
