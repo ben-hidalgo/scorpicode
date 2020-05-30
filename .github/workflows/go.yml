@@ -34,6 +34,12 @@ jobs:
         go vet ./...
         golint -set_exit_status ./...
 
-    - name: Test
+    - name: Unit Test
       working-directory: ./backend
       run: go test ./... -short -v
+
+    - name: Write Checksum Tags
+      working-directory: .
+      run: |
+        ./devops/scripts/write-tags.sh
+        cat ./devops/helmchart/tags.yaml
