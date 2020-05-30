@@ -22,7 +22,7 @@ jobs:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
 
-    - name: Get dependencies
+    - name: Get Dependencies
       working-directory: ./backend
       run: |
         go get -u golang.org/x/lint/golint
@@ -43,3 +43,9 @@ jobs:
       run: |
         ./devops/scripts/write-tags.sh
         cat ./devops/helmchart/tags.yaml
+
+    - name: Docker Build
+      working-directory: .
+      run: |
+        ./devops/scripts/docker-build.sh
+  
