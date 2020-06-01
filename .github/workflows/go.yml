@@ -47,7 +47,17 @@ jobs:
     - name: Docker Build
       working-directory: .
       run: ./devops/scripts/docker-build.sh
-  
+
+    - name: Install Minikube
+      working-directory: .
+      run: |
+        sudo apt-get update 
+        sudo apt install virtualbox
+        wget https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+        chmod +x minikube-linux-amd64
+        sudo mv minikube-linux-amd64 /usr/local/bin/minikube
+        minikube version
+
     - name: Zip Helmchart
       working-directory: .
       run: tar cvzf helmchart-${{ github.run_number }}.tar.gz ./devops/helmchart/
@@ -55,5 +65,5 @@ jobs:
     - name: Upload Helmchart Artifact
       uses: actions/upload-artifact@v1
       with:
-        name: helmchart
+        name: helmchart-${{ github.run_number }}.tar.gz
         path: helmchart-${{ github.run_number }}.tar.gz
