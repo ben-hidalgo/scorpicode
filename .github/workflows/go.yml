@@ -60,7 +60,7 @@ jobs:
 
     - name: Start Minikube
       working-directory: .
-      run: minikube start --vm-driver=virtualbox
+      run: minikube start --driver=docker
   
     - name: Zip Helmchart
       working-directory: .
