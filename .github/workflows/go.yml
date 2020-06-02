@@ -58,6 +58,10 @@ jobs:
         sudo mv minikube-linux-amd64 /usr/local/bin/minikube
         minikube version
 
+    - name: Start Minikube
+      working-directory: .
+      run: minikube start --vm-driver=virtualbox
+  
     - name: Zip Helmchart
       working-directory: .
       run: tar cvzf helmchart-${{ github.run_number }}.tar.gz ./devops/helmchart/
