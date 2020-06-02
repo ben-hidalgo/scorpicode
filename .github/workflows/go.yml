@@ -62,12 +62,20 @@ jobs:
       working-directory: .
       run: minikube start --driver=docker
 
-    - name: Start Minikube
+    - name: Install Helm
       working-directory: .
       run: |
         curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
         chmod +x get_helm.sh
         ./get_helm.sh
+
+      # TODO: sops is not setup... using dev.yaml for integration tests
+    - name: Helm Upgrade
+      working-directory: .
+      run: |
+        ./devops/scripts/helm-upgrade.sh
+        sleep 90
+        kubectl get po
   
     - name: Zip Helmchart
       working-directory: .
