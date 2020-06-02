@@ -61,13 +61,20 @@ jobs:
     - name: Start Minikube
       working-directory: .
       run: minikube start --driver=docker
+
+    - name: Start Minikube
+      working-directory: .
+      run: |
+        curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+        chmod +x get_helm.sh
+        ./get_helm.sh
   
     - name: Zip Helmchart
       working-directory: .
-      run: tar cvzf helmchart-${{ github.run_number }}.tar.gz ./devops/helmchart/
+      run: tar cvzf helmchart-${{ github.run_number }}-${{ github.sha }}.tar.gz ./devops/helmchart/
 
     - name: Upload Helmchart Artifact
       uses: actions/upload-artifact@v1
       with:
-        name: helmchart-${{ github.run_number }}.tar.gz
-        path: helmchart-${{ github.run_number }}.tar.gz
+        name: helmchart-${{ github.run_number }}-${{ github.sha }}.tar.gz
+        path: helmchart-${{ github.run_number }}-${{ github.sha }}.tar.gz

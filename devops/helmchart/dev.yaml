@@ -42,7 +42,7 @@ rabbitmq-ha:
   rabbitmqUsername: scuser
   rabbitmqPassword: scpass
   rabbitmqVhost: schost
-  replicaCount: 1
+  replicaCount: 0
   service:
     type: LoadBalancer
   prometheus:
