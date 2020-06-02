@@ -74,7 +74,7 @@ jobs:
       working-directory: .
       run: |
         ./devops/scripts/helm-upgrade.sh
-        sleep 90
+        kubectl wait --for=condition=ready pod -l release=scorpicode --timeout=180s
         kubectl get po
   
     - name: Zip Helmchart
