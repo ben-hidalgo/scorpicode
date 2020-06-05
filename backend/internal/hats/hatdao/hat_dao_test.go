@@ -57,6 +57,10 @@ func startHat(mock *orderdaomock.Mock, rm *rabbitmock.Mock) (context.Context, *h
 
 func TestCreate(t *testing.T) {
 
+	if testing.Short() {
+		t.Skip()
+	}
+
 	// connect mongo
 	mongoClient, err := mongodb.Client()
 	if err != nil {
