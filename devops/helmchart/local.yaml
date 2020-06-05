@@ -12,6 +12,11 @@ common:
   auth0PemfilePath: /etc/scorpicode/scorpicode.pem
   auth0PemfileMount: /etc/scorpicode/
 
+  auth0ClientId: TODO_temporary_for_github_actions_debugging_without_sops
+  auth0ClientSecret: TODO_temporary_for_github_actions_debugging_without_sops
+  pem: TODO_temporary_for_github_actions_debugging_without_sops
+
+
 frontend:
   enabled: true
   name: frontend
@@ -37,6 +42,10 @@ hats:
   listendAddress: :8080
   mongoDb: hats
   amqpDsn: amqp://scuser:scpass@scorpicode-rabbitmq-ha:5672/schost
+
+  # TODO: temporarily here to allow github actions integration testing
+  mongoUri: mongodb://hats:hats@scorpicode-mongodb:27017/hats
+
 
 website:
   enabled: true

@@ -70,12 +70,19 @@ jobs:
         ./get_helm.sh
 
       # TODO: sops is not setup... using dev.yaml for integration tests
-    - name: Helm Upgrade
+    - name: Helm Upgrade Dev
       working-directory: .
       run: |
-        ./devops/scripts/helm-upgrade.sh
+        ./devops/scripts/helm-upgrade.sh dev
+        sleep 10
         kubectl wait --for=condition=ready pod -l release=scorpicode --timeout=180s
-        kubectl get po
+        kubectl get po -n dev
+
+    - name: Integration Tests
+      working-directory: .
+      run: |
+        ./devops/scripts/integration-tests.sh
+        helm delete scorpicode -n dev 
   
     - name: Zip Helmchart
       working-directory: .
