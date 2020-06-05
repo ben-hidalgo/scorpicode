@@ -8,6 +8,8 @@ NAMESPACE=$1
 # TODO: integrate SOPS with Github Actions
 #sops -d ./devops/helmchart/${NAMESPACE}.sops.yaml > ./devops/helmchart/${NAMESPACE}.plain.yaml
 
+kubectl create namespace ${NAMESPACE} || true
+
 helm upgrade --install -n ${NAMESPACE} scorpicode ./devops/helmchart \
 -f devops/helmchart/${NAMESPACE}.yaml \
 -f devops/helmchart/tags.yaml \
