@@ -26,7 +26,7 @@ const (
 	WANTED    = "but wanted"
 )
 
-func TestCreate(t *testing.T) {
+func TestHatDao(t *testing.T) {
 
 	if testing.Short() {
 		t.Skip()
@@ -125,6 +125,23 @@ func TestCreate(t *testing.T) {
 	}
 	if h1.Ordinal != DefaultOrdinal {
 		t.Fatalf(GOT, h1.Ordinal, WANTED, DefaultOrdinal)
+	}
+
+	// Query... TODO: if id matches hat.ID, verify fields match
+	hats, err := dao.Query(context.Background())
+	if err != nil {
+		t.Fatalf(GOT, err, WANTED, nil)
+	}
+	if hats == nil {
+		t.Fatalf(GOT, hats, WANTED, NOT_NIL)
+	}
+	if len(hats) == 0 {
+		t.Fatalf(GOT, len(hats), WANTED, NOT_EMPTY)
+	}
+	for _, h := range hats {
+		if h == nil {
+			t.Fatalf(GOT, h, WANTED, NOT_NIL)
+		}
 	}
 
 	// Delete

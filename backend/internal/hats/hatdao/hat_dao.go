@@ -95,7 +95,7 @@ func (i *impl) Find(ctx context.Context, id string) (*Hat, error) {
 	return h, nil
 }
 
-// Query .
+// Query . TODO: add pagination parameters
 func (i *impl) Query(ctx context.Context) ([]*Hat, error) {
 
 	// result := []Book{}
