@@ -38,8 +38,23 @@ func TestCreate(t *testing.T) {
 	}
 	defer mongoClient.Disconnect(context.Background())
 
+	// instantiate the hatdao
 	dao := hatdao.New(mongoClient)
 
+	// Not Found
+	hnf, err := dao.Find(context.Background(), "123")
+	if err != nil {
+		// this enforces that not found does not return an error
+		t.Fatalf(GOT, err, WANTED, nil)
+		// this is a design decision to avoid having to check for err == NotFoundError
+		// and differentiates actual failures from successfully retrieving nothing
+	}
+	// if the entity is not found, the response will be nil
+	if hnf != nil {
+		t.Fatalf(GOT, hnf, WANTED, nil)
+	}
+
+	// Create
 	id, _ := primitive.ObjectIDFromHex(DefaultOrderID)
 
 	hat := &hatdao.Hat{
@@ -75,6 +90,34 @@ func TestCreate(t *testing.T) {
 	}
 	if hat.Color != DefaultColor {
 		t.Fatalf(GOT, hat.Color, WANTED, DefaultColor)
+	}
+
+	// Found
+	h1, err := dao.Find(context.Background(), hat.ID.Hex())
+	if err != nil {
+		t.Fatalf(GOT, err, WANTED, nil)
+	}
+
+	if h1.GetID() == nil {
+		t.Fatalf(GOT, h1.GetID(), WANTED, NOT_NIL)
+	}
+	if h1.CreatedAt == (time.Time{}) {
+		t.Fatalf(GOT, h1.CreatedAt, WANTED, NOT_EMPTY)
+	}
+	if h1.UpdatedAt == (time.Time{}) {
+		t.Fatalf(GOT, h1.UpdatedAt, WANTED, NOT_EMPTY)
+	}
+	if h1.Version != 1 {
+		t.Fatalf(GOT, h1.Version, WANTED, 1)
+	}
+	if h1.Size != DefaultSize {
+		t.Fatalf(GOT, h1.Size, WANTED, DefaultSize)
+	}
+	if h1.Style != DefaultStyle {
+		t.Fatalf(GOT, h1.Style, WANTED, DefaultStyle)
+	}
+	if h1.Color != DefaultColor {
+		t.Fatalf(GOT, h1.Color, WANTED, DefaultColor)
 	}
 
 }

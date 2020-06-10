@@ -74,7 +74,8 @@ jobs:
       working-directory: .
       run: |
         ./devops/scripts/helm-upgrade.sh dev
-        sleep 5
+        sleep 10
+        kubectl get po -n dev
         kubectl wait --for=condition=ready pod -l release=scorpicode --timeout=180s -n dev
         kubectl get po -n dev
 
