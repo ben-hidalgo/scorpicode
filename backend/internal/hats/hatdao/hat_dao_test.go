@@ -6,54 +6,24 @@ import (
 	"context"
 	"testing"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
-	DefaultColor    = "RED"
-	DefaultStyle    = "FEDORA"
-	DefaultSize     = "06000"
-	DefaultQuantity = 10
-	DefaultNotes    = "Lorem ipsum"
-	DefaultHexID    = "5e8e20bbe6b38b8cb0870808"
-	DefaultSubject  = "google-oauth2|204673116516641832842"
+	DefaultColor   = "RED"
+	DefaultStyle   = "FEDORA"
+	DefaultSize    = "06000"
+	DefaultOrderID = "5e8e20bbe6b38b8cb0870808"
+	DefaultSubject = "google-oauth2|204673116516641832842"
 )
 
-var DefaultCreatedAt = time.Date(2020, time.January, 0, 0, 0, 0, 0, time.UTC)
-var DefaultUpdatedAt = time.Date(2020, time.January, 1, 1, 1, 1, 1, time.UTC)
-
-/*
-func startHat(mock *orderdaomock.Mock, rm *rabbitmock.Mock) (context.Context, *hatserver.Server, *hatspb.MakeHatsRequest) {
-
-	ctx := context.Background()
-
-	ctx = context.WithValue(ctx, orderdao.Key, mock)
-
-	ctx = context.WithValue(ctx, rabbit.Key, rm)
-
-	ctx = context.WithValue(ctx, authnz.Key, &authnz.BearerToken{
-		CC: &authnz.CustomClaims{
-			Roles: []authnz.Role{
-				authnz.HABERDASHER,
-			},
-			Claims: jwt.Claims{
-				Subject: DefaultSubject,
-			},
-		},
-	})
-
-	hs := hatserver.NewServer()
-
-	req := &hatspb.MakeHatsRequest{
-		Size:     DefaultSize,
-		Style:    DefaultStyle,
-		Color:    DefaultColor,
-		Quantity: DefaultQuantity,
-		Notes:    DefaultNotes,
-	}
-
-	return ctx, hs, req
-}
-*/
+const (
+	NOT_NIL   = "not nil"
+	NOT_EMPTY = "not empty"
+	GOT       = "got '%v' %s '%v'"
+	WANTED    = "but wanted"
+)
 
 func TestCreate(t *testing.T) {
 
@@ -64,13 +34,47 @@ func TestCreate(t *testing.T) {
 	// connect mongo
 	mongoClient, err := mongodb.Client()
 	if err != nil {
-		t.Fatalf("%s", err)
+		t.Fatalf(GOT, err, WANTED, nil)
 	}
 	defer mongoClient.Disconnect(context.Background())
 
 	dao := hatdao.New(mongoClient)
 
-	t.Logf("XXXXX %#v", mongoClient)
-	t.Logf("XXXXX %#v", dao)
+	id, _ := primitive.ObjectIDFromHex(DefaultOrderID)
+
+	hat := &hatdao.Hat{
+		Color:     DefaultColor,
+		Style:     DefaultStyle,
+		Size:      DefaultSize,
+		Ordinal:   1, // one indexed
+		OrderID:   id,
+		CreatedBy: DefaultSubject,
+	}
+	err = dao.Create(context.Background(), hat)
+	if err != nil {
+		t.Fatalf(GOT, err, WANTED, nil)
+	}
+
+	if hat.GetID() == nil {
+		t.Fatalf(GOT, hat.GetID(), WANTED, NOT_NIL)
+	}
+	if hat.CreatedAt == (time.Time{}) {
+		t.Fatalf(GOT, hat.CreatedAt, WANTED, NOT_EMPTY)
+	}
+	if hat.UpdatedAt == (time.Time{}) {
+		t.Fatalf(GOT, hat.UpdatedAt, WANTED, NOT_EMPTY)
+	}
+	if hat.Version != 1 {
+		t.Fatalf(GOT, hat.Version, WANTED, 1)
+	}
+	if hat.Size != DefaultSize {
+		t.Fatalf(GOT, hat.Size, WANTED, DefaultSize)
+	}
+	if hat.Style != DefaultStyle {
+		t.Fatalf(GOT, hat.Style, WANTED, DefaultStyle)
+	}
+	if hat.Color != DefaultColor {
+		t.Fatalf(GOT, hat.Color, WANTED, DefaultColor)
+	}
 
 }
