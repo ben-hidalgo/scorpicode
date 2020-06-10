@@ -39,12 +39,8 @@ go-happy:
 	go fmt ./... && \
 	go mod tidy)
 
-TEST_ARGS=\
-REDIS_ADDRESS=`minikube ip`:`kubectl get svc scorpicode-redis-master -n dev -o json | jq '.spec.ports[0].nodePort'` \
-REDIS_PASSWORD=redispassword
-
 test:
-	(cd backend && ${TEST_ARGS} go test ./... -v -count=1)
+	./devops/scripts/integration-tests.sh dev
 
 start-backend: # uses a script to trap killall
 	./devops/scripts/start.sh

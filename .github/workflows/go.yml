@@ -80,7 +80,7 @@ jobs:
     - name: Integration Tests
       working-directory: .
       run: |
-        ./devops/scripts/integration-tests.sh
+        ./devops/scripts/integration-tests.sh dev
         helm delete scorpicode -n dev 
   
     - name: Zip Helmchart
