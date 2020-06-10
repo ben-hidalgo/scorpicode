@@ -14,6 +14,7 @@ const (
 	DefaultColor   = "RED"
 	DefaultStyle   = "FEDORA"
 	DefaultSize    = "06000"
+	DefaultOrdinal = 1
 	DefaultOrderID = "5e8e20bbe6b38b8cb0870808"
 	DefaultSubject = "google-oauth2|204673116516641832842"
 )
@@ -61,7 +62,7 @@ func TestCreate(t *testing.T) {
 		Color:     DefaultColor,
 		Style:     DefaultStyle,
 		Size:      DefaultSize,
-		Ordinal:   1, // one indexed
+		Ordinal:   DefaultOrdinal,
 		OrderID:   id,
 		CreatedBy: DefaultSubject,
 	}
@@ -91,6 +92,9 @@ func TestCreate(t *testing.T) {
 	if hat.Color != DefaultColor {
 		t.Fatalf(GOT, hat.Color, WANTED, DefaultColor)
 	}
+	if hat.Ordinal != DefaultOrdinal {
+		t.Fatalf(GOT, hat.Ordinal, WANTED, DefaultOrdinal)
+	}
 
 	// Found
 	h1, err := dao.Find(context.Background(), hat.ID.Hex())
@@ -118,6 +122,24 @@ func TestCreate(t *testing.T) {
 	}
 	if h1.Color != DefaultColor {
 		t.Fatalf(GOT, h1.Color, WANTED, DefaultColor)
+	}
+	if h1.Ordinal != DefaultOrdinal {
+		t.Fatalf(GOT, h1.Ordinal, WANTED, DefaultOrdinal)
+	}
+
+	// Delete
+	err = dao.Delete(context.Background(), h1)
+	if err != nil {
+		t.Fatalf(GOT, err, WANTED, nil)
+	}
+
+	// Not Found, Deleted
+	h2, err := dao.Find(context.Background(), h1.ID.Hex())
+	if err != nil {
+		t.Fatalf(GOT, err, WANTED, nil)
+	}
+	if h2 != nil {
+		t.Fatalf(GOT, h2, WANTED, nil)
 	}
 
 }
