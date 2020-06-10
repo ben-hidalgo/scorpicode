@@ -11,7 +11,7 @@ images:
 
 #TODO: add wait for services... mongo startup is longer than the default wait timeout
 # there is a bug in helm upgrade which intermittently doesn't not accept stdin from sops using: -f -
-upgrade: #images
+upgrade-local: #images
 	sops -d ./devops/helmchart/local.sops.yaml > ./devops/helmchart/local.plain.yaml
 	helm upgrade --install scorpicode ./devops/helmchart \
 	-f devops/helmchart/local.yaml \
@@ -25,7 +25,7 @@ upgrade: #images
 	--set website.tag=$(shell ./devops/scripts/js-checksum.sh website) \
 	--set frontend.tag=$(shell ./devops/scripts/js-checksum.sh frontend)
 
-dev:
+upgrade-dev:
 	kubectl create namespace dev || true
 	helm upgrade --install scorpicode ./devops/helmchart \
 	-f devops/helmchart/dev.yaml \
