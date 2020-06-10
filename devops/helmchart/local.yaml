@@ -124,7 +124,7 @@ rabbitmq-ha:
   rabbitmqUsername: scuser
   rabbitmqPassword: scpass
   rabbitmqVhost: schost
-  replicaCount: 0
+  replicaCount: 1
   service:
     type: LoadBalancer
   prometheus:
