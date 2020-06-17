@@ -90,7 +90,14 @@ jobs:
       run: |
         minikube addons enable registry
         cat /etc/docker/daemon.json
-
+        ls -al /etc/docker/daemon.json
+        sudo rm /etc/docker/daemon.json
+        sudo cat <<EOT >> /etc/docker/daemon.json
+        {"cgroup-parent": "/actions_job", "insecure-registries" : [ "localhost:5000" ]}
+        EOT
+        sudo service docker stop
+        sudo service docker start
+        
     - name: Zip Helmchart
       working-directory: .
       run: tar cvzf helmchart-${{ github.run_number }}-${{ github.sha }}.tar.gz ./devops/helmchart/
