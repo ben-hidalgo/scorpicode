@@ -91,7 +91,8 @@ jobs:
         minikube addons enable registry
         cat /etc/docker/daemon.json
         ls -al /etc/docker/daemon.json
-        sudo rm /etc/docker/daemon.json
+        #fails... sudo rm /etc/docker/daemon.json
+        whoami
         sudo cat <<EOT >> /etc/docker/daemon.json
         {"cgroup-parent": "/actions_job", "insecure-registries" : [ "localhost:5000" ]}
         EOT
