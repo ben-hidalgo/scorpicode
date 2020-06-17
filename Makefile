@@ -62,8 +62,9 @@ minikube-start:
 	minikube delete
 	# using virtualbox so that ip will be one of: 192.168.99.100, 192.168.99.101, 192.168.99.102
 	# which are registered as callbacks in Auth0
-	minikube start --cpus 4 --memory 4096 --vm-driver=virtualbox
+	minikube start --cpus 4 --memory 4096 --vm-driver=virtualbox --insecure-registry="$(shell ipconfig getifaddr en0):5000"
 	minikube addons enable ingress
+	minikube addons enable registry
 
 # opens the load balancer at http://<minikube ip>:<roxie port>
 minikube-service-roxie-default:

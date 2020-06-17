@@ -60,7 +60,7 @@ jobs:
 
     - name: Start Minikube
       working-directory: .
-      run: minikube start --driver=docker
+      run: minikube start --driver=docker --insecure-registry="localhost:5000"
 
     - name: Install Helm
       working-directory: .
@@ -84,7 +84,13 @@ jobs:
       run: |
         ./devops/scripts/integration-tests.sh dev
         helm delete scorpicode -n dev 
-  
+
+    - name: Deploy Images Minikube
+      working-directory: .
+      run: |
+        minikube addons enable registry
+        cat /etc/docker/daemon.json
+
     - name: Zip Helmchart
       working-directory: .
       run: tar cvzf helmchart-${{ github.run_number }}-${{ github.sha }}.tar.gz ./devops/helmchart/
