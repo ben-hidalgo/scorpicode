@@ -68,6 +68,8 @@ jobs:
     - name: Install Helm
       working-directory: .
       run: |
+        docker build . -f devops/dockerfiles/roxie.Dockerfile    -t $(minikube ip):5000/roxie
+        docker build . -f devops/dockerfiles/roxie.Dockerfile    -t localhost:5000/roxie
         docker push $(minikube ip):5000/roxie || true
         docker push localhost:5000/roxie      || true
 
