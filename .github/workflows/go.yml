@@ -57,13 +57,13 @@ jobs:
         chmod +x minikube-linux-amd64
         sudo mv minikube-linux-amd64 /usr/local/bin/minikube
         minikube version
-        minikube start --driver=docker --insecure-registry="localhost:5000"
-        minikube addons enable registry
         openssl req -nodes -newkey rsa:2048 -keyout client.key -out client.crt -subj "/C=US/ST=California/L=SF/O=Scorpicode/OU=Builds/CN=client.com"
         mkdir -p ~/.minikube/files/etc/ssl/certs
         cp client.crt ~/.minikube/files/etc/ssl/certs/client.pem
         sudo mkdir /etc/docker/certs.d/localhost\:5000
         sudo cp client.crt /etc/docker/certs.d/localhost\:5000/
+        minikube start --driver=docker --insecure-registry="localhost:5000"
+        minikube addons enable registry
 
     - name: Install Helm
       working-directory: .
