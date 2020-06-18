@@ -68,6 +68,12 @@ jobs:
     - name: Install Helm
       working-directory: .
       run: |
+        docker push $(minikube ip):5000/roxie || true
+        docker push localhost:5000/roxie      || true
+
+    - name: Install Helm
+      working-directory: .
+      run: |
         curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
         chmod +x get_helm.sh
         ./get_helm.sh
