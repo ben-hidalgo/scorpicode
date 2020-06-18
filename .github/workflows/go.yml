@@ -44,10 +44,6 @@ jobs:
         ./devops/scripts/write-tags.sh
         cat ./devops/helmchart/tags.yaml
 
-    - name: Docker Build
-      working-directory: .
-      run: ./devops/scripts/docker-build.sh
-
     - name: Minikube
       working-directory: .
       run: |
@@ -64,10 +60,19 @@ jobs:
         sudo cp client.crt /etc/docker/certs.d/localhost\:5000/
         minikube start --driver=docker --insecure-registry="localhost:5000"
         minikube addons enable registry
+        minikube status
 
-    - name: Install Helm
+    - name: Docker Build
       working-directory: .
       run: |
+        docker images
+        ./devops/scripts/docker-build.sh
+        docker images
+  
+    - name: Push to Minikube
+      working-directory: .
+      run: |
+        sleep 30
         docker build . -f devops/dockerfiles/roxie.Dockerfile    -t $(minikube ip):5000/roxie
         docker build . -f devops/dockerfiles/roxie.Dockerfile    -t localhost:5000/roxie
         docker push $(minikube ip):5000/roxie || true
