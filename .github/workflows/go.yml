@@ -48,7 +48,7 @@ jobs:
       working-directory: .
       run: ./devops/scripts/docker-build.sh
 
-    - name: Install Minikube
+    - name: Minikube
       working-directory: .
       run: |
         sudo apt-get update 
@@ -57,10 +57,14 @@ jobs:
         chmod +x minikube-linux-amd64
         sudo mv minikube-linux-amd64 /usr/local/bin/minikube
         minikube version
-
-    - name: Start Minikube
-      working-directory: .
-      run: minikube start --driver=docker --insecure-registry="localhost:5000"
+        minikube start --driver=docker --insecure-registry="localhost:5000"
+        minikube addons enable registry
+        openssl genrsa -out client.key 4096
+        openssl req -new -x509 -text -key client.key -out client.crt
+        mkdir -p ~/.minikube/files/etc/ssl/certs
+        cp client.crt ~/.minikube/files/etc/ssl/certs/client.pem
+        sudo mkdir /etc/docker/certs.d/localhost\:5000
+        sudo cp client.crt /etc/docker/certs.d/localhost\:5000/
 
     - name: Install Helm
       working-directory: .
@@ -83,21 +87,7 @@ jobs:
       working-directory: .
       run: |
         ./devops/scripts/integration-tests.sh dev
-        helm delete scorpicode -n dev 
-
-    - name: Deploy Images Minikube
-      working-directory: .
-      run: |
-        minikube addons enable registry
-        cat /etc/docker/daemon.json
-        ls -al /etc/docker/daemon.json
-        #fails... sudo rm /etc/docker/daemon.json
-        whoami
-        sudo cat <<EOT >> /etc/docker/daemon.json
-        {"cgroup-parent": "/actions_job", "insecure-registries" : [ "localhost:5000" ]}
-        EOT
-        sudo service docker stop
-        sudo service docker start
+        helm delete scorpicode -n dev         
         
     - name: Zip Helmchart
       working-directory: .
