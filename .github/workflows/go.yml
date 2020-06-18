@@ -59,8 +59,7 @@ jobs:
         minikube version
         minikube start --driver=docker --insecure-registry="localhost:5000"
         minikube addons enable registry
-        openssl genrsa -out client.key 4096
-        openssl req -new -x509 -text -key client.key -out client.crt
+        openssl req -nodes -newkey rsa:2048 -keyout client.key -out client.crt -subj "/C=US/ST=California/L=SF/O=Scorpicode/OU=Builds/CN=client.com"
         mkdir -p ~/.minikube/files/etc/ssl/certs
         cp client.crt ~/.minikube/files/etc/ssl/certs/client.pem
         sudo mkdir /etc/docker/certs.d/localhost\:5000
