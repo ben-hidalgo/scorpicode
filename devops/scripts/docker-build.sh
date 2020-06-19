@@ -1,6 +1,8 @@
 #!/bin/bash
 set -exuo pipefail
 
+SHELL=bash
+
 eval $(minikube docker-env)
 
 docker build . -f devops/dockerfiles/hats.Dockerfile     -t hats:`./devops/scripts/go-checksum.sh hats`
