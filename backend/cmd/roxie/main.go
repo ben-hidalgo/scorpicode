@@ -28,6 +28,12 @@ func main() {
 			FromPath:   "/sc/",
 			ToPath:     "/",
 		},
+		// soxie
+		{
+			HostPrefix: config.SoxiePrefix,
+			FromPath:   "/ws",
+			ToPath:     "/ws",
+		},
 		// hats
 		{
 			HostPrefix: config.HatsPrefix,

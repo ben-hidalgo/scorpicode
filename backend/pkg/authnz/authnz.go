@@ -170,6 +170,10 @@ func ValidateRequest(r *http.Request) (Bearer, error) {
 // ValidateCookie .
 func ValidateCookie(name string, r *http.Request) (Bearer, error) {
 
+	for c := range r.Cookies() {
+		logrus.Infof("authnz.ValidateCookie() c=%#v", c)
+	}
+
 	cookie, err := r.Cookie(name)
 	if err != nil {
 		logrus.Errorf("authnz.ValidateCookie() cookie err=%#v", err)

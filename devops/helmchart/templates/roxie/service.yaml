@@ -7,9 +7,6 @@ spec:
   type: {{ .Values.roxie.serviceType }}
   ports:
     - name: http
-      # temporarily using a nodePort for minikube to allow a static IP locally
-      # TODO: avoid nodePort in Kubernetes so that any branch can be deployed without collision on the cloud nodes
-      nodePort: 30080
       port: {{ .Values.roxie.port }}
       targetPort: http
   selector:

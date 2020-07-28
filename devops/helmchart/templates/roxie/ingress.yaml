@@ -1,0 +1,13 @@
+{{- if .Values.roxie.enabled }}
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: {{ .Values.roxie.name }}
+  # annotations:
+  #   kubernetes.io/ingress.global-static-ip-name: {{ .Values.roxie.staticIpName }}
+  #   kubernetes.io/ingress.class: nginx
+spec:
+  backend:
+    serviceName: {{ .Values.roxie.name }}
+    servicePort: {{ .Values.roxie.port }}
+{{- end }}

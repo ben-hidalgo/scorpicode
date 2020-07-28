@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: {{ .Values.hats.name }}
-        image: {{ .Values.common.repository }}{{ .Values.hats.name }}:{{ .Values.hats.tag }}
+        image: "{{ .Values.common.repository }}{{ .Values.hats.name }}:{{ .Values.hats.tag }}"
         imagePullPolicy: {{ .Values.common.pullPolicy }}
         resources:
           limits:

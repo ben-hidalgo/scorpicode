@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: {{ .Values.soxie.name }}
-        image: {{ .Values.common.repository }}{{ .Values.soxie.name }}:{{ .Values.soxie.tag }}
+        image: "{{ .Values.common.repository }}{{ .Values.soxie.name }}:{{ .Values.soxie.tag }}"
         imagePullPolicy: {{ .Values.common.pullPolicy }}
         resources:
           limits:

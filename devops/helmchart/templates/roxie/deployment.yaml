@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: {{ .Values.roxie.name }}
-        image: {{ .Values.common.repository }}{{ .Values.roxie.name }}:{{ .Values.roxie.tag }}
+        image: "{{ .Values.common.repository }}{{ .Values.roxie.name }}:{{ .Values.roxie.tag }}"
         imagePullPolicy: {{ .Values.common.pullPolicy }}
         resources:
           limits:
@@ -27,7 +27,7 @@ spec:
         - containerPort: {{ .Values.roxie.port }}
           name: http
         env:
-{{- with .Values.website }}
+{{- with .Values.roxie }}
 {{ include "service.shared" . | indent 8 }}
 {{- end }} 
 {{ include "common.shared" . | indent 8 }}
@@ -38,6 +38,8 @@ spec:
           value: {{ .Values.roxie.frontendPrefix | quote }}
         - name: HATS_PREFIX
           value: {{ .Values.roxie.hatsPrefix | quote }}
+        - name: SOXIE_PREFIX
+          value: {{ .Values.roxie.soxiePrefix | quote }}
         - name: ENABLE_CORS
           value: {{ .Values.roxie.enableCors | quote }}
         - name: LOGIN_SUCCESS_TARGET

@@ -1,8 +1,13 @@
 #!/bin/bash
 set -exuo pipefail
 
-echo hats.tag: `./devops/scripts/go-checksum.sh hats` >> ./devops/helmchart/tags.yaml
-echo roxie.tag: `./devops/scripts/go-checksum.sh roxie` >> ./devops/helmchart/tags.yaml
-echo soxie.tag: `./devops/scripts/go-checksum.sh soxie` >> ./devops/helmchart/tags.yaml
-echo website.tag: `./devops/scripts/js-checksum.sh website` >> ./devops/helmchart/tags.yaml
-echo frontend.tag: `./devops/scripts/js-checksum.sh frontend` >> ./devops/helmchart/tags.yaml
+FILE=./devops/helmchart/tags.yaml
+
+echo -e "### `date`" > $FILE
+
+echo -e "hats:\n  tag: `./devops/scripts/go-checksum.sh hats`" >> $FILE
+echo -e "roxie:\n  tag: `./devops/scripts/go-checksum.sh roxie`" >> $FILE
+echo -e "soxie:\n  tag: `./devops/scripts/go-checksum.sh soxie`" >> $FILE
+echo -e "website:\n  tag: `./devops/scripts/js-checksum.sh website`" >> $FILE
+echo -e "frontend:\n  tag: `./devops/scripts/js-checksum.sh frontend`" >> $FILE
+echo -e "debugger:\n  tag: `./devops/scripts/debugger-checksum.sh`" >> $FILE

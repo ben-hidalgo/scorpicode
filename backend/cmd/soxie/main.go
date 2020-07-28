@@ -6,6 +6,7 @@ import (
 	"backend/internal/soxie/config"
 	"backend/internal/soxie/soxierabbit"
 	"backend/pkg/authnz"
+	_ "backend/pkg/logging" // init logrus
 	"backend/pkg/rabbit"
 	"encoding/json"
 	"log"

@@ -1,13 +1,20 @@
 # DO NOT FORGET
 # eval $(minikube docker-env)
 
-images:
-	docker build . -f devops/dockerfiles/hats.Dockerfile     -t hats:$(shell ./devops/scripts/go-checksum.sh hats)
-	docker build . -f devops/dockerfiles/website.Dockerfile  -t website:$(shell ./devops/scripts/js-checksum.sh website)
-	docker build . -f devops/dockerfiles/frontend.Dockerfile -t frontend:$(shell ./devops/scripts/js-checksum.sh frontend)
-	docker build . -f devops/dockerfiles/roxie.Dockerfile    -t roxie:$(shell ./devops/scripts/go-checksum.sh roxie)
-	docker build . -f devops/dockerfiles/soxie.Dockerfile    -t soxie:$(shell ./devops/scripts/go-checksum.sh soxie)
-	docker build . -f devops/dockerfiles/debugger.Dockerfile -t debugger:latest
+docker-build:
+	./devops/scripts/docker-build.sh
+
+#TODO: add PIPELINE_ID as first parameter with value `whoami`
+docker-push:
+	./devops/scripts/docker-push.sh
+
+helm-upgrade-master:
+	./devops/scripts/helm-upgrade.sh master
+
+tag-build-push:
+	./devops/scripts/write-tags.sh
+	./devops/scripts/docker-build.sh
+	./devops/scripts/docker-push.sh
 
 #TODO: add wait for services... mongo startup is longer than the default wait timeout
 # there is a bug in helm upgrade which intermittently doesn't not accept stdin from sops using: -f -
@@ -87,8 +94,8 @@ minikube-service-rabbit-default:
 helm-dependency-update:
 	(cd devops/helmchart && helm dependency update)
 
-logs-default:
-	kubectl logs -n default -f -l app.kubernetes.io/instance=scorpicode --max-log-requests=20
+logs-master:
+	kubectl logs -n master -f -l app.kubernetes.io/instance=scorpicode --max-log-requests=20
 
 logs-dev:
 	kubectl logs -n dev -f -l app.kubernetes.io/instance=scorpicode

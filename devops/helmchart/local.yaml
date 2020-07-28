@@ -39,7 +39,7 @@ hats:
   port: 8080
   serviceType: ClusterIP
 
-  listendAddress: :8080
+  listenAddress: :8080
   mongoDb: hats
   amqpDsn: amqp://scuser:scpass@scorpicode-rabbitmq-ha:5672/schost
 
@@ -56,7 +56,7 @@ website:
   port: 80
   serviceType: ClusterIP
 
-  listendAddress: :8080
+  listenAddress: :8080
   # staticPath: ./cmd/website/static
   # loginSuccessTarget: ./sc
 
@@ -69,7 +69,7 @@ roxie:
   port: 8080
   serviceType: LoadBalancer
 
-  listendAddress: :8080
+  listenAddress: :8080
   hatsPrefix: http://hats:8080
   websitePrefix: http://website
   frontendPrefix: http://frontend
@@ -90,7 +90,7 @@ soxie:
   port: 8080
   serviceType: LoadBalancer
 
-  listendAddress: :8080
+  listenAddress: :8080
   writeWaitSeconds: 10
   pongWaitSeconds: 60
 

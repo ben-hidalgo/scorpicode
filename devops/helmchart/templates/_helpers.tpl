@@ -30,7 +30,7 @@
 - name: APP_NAME
   value: {{ .name | quote }}
 - name: LISTEN_ADDRESS
-  value: {{ .listendAddress | quote }}
+  value: {{ .listenAddress | quote }}
 - name: CACHE_BUSTER
   value: {{ .cacheBuster | default "1" | quote }}
 {{- end -}}

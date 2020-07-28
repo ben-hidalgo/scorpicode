@@ -19,6 +19,9 @@ var FrontendPrefix = "http://localhost:3000"
 // HatsPrefix .
 var HatsPrefix = "http://localhost:8083"
 
+// SoxiePrefix .
+var SoxiePrefix = "http://localhost:8084"
+
 // EnableCors .
 var EnableCors = true
 
@@ -58,6 +61,7 @@ func init() {
 	envconfig.SetString("WEBSITE_PREFIX", &WebsitePrefix)
 	envconfig.SetString("FRONTEND_PREFIX", &FrontendPrefix)
 	envconfig.SetString("HATS_PREFIX", &HatsPrefix)
+	envconfig.SetString("SOXIE_PREFIX", &SoxiePrefix)
 	envconfig.SetBool("ENABLE_CORS", &EnableCors)
 	envconfig.SetString("LOCAL_HEADERS_PATH", &LocalHeadersPath)
 
