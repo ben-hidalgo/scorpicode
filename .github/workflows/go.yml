@@ -6,15 +6,16 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  GCR_HOSTNAME: ${{ secrets.GCR_HOSTNAME }}
+  GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
+
 jobs:
 
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      env:
-        GCR_HOSTNAME: ${{ secrets.GCR_HOSTNAME }}
-        GCR_PROJECT: ${{ secrets.GCR_PROJECT }}
     - name: Set up Go 1.x
       uses: actions/setup-go@v2
       with:
