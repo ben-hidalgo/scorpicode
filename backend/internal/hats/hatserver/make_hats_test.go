@@ -23,7 +23,7 @@ const (
 	DefaultColor    = "RED"
 	DefaultStyle    = "FEDORA"
 	DefaultSize     = "06000"
-	DefaultQuantity = 10
+	DefaultQuantity = 101
 	DefaultNotes    = "Lorem ipsum"
 	DefaultHexID    = "5e8e20bbe6b38b8cb0870808"
 	DefaultSubject  = "google-oauth2|204673116516641832842"
@@ -160,7 +160,7 @@ func TestHatSuccess(t *testing.T) {
 
 }
 
-func TestMissingRole(t *testing.T) {
+func TestMissingHaberdasherRole(t *testing.T) {
 
 	ctx, hs, req := startHat(orderdaomock.New(), rabbitmock.New())
 
@@ -169,6 +169,7 @@ func TestMissingRole(t *testing.T) {
 		CC: nil,
 	})
 
+	// 100 is max allowed quantity
 	res, err := hs.MakeHats(ctx, req)
 
 	if err == nil {

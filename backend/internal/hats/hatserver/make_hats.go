@@ -18,7 +18,7 @@ func (hs *Server) MakeHats(ctx context.Context, req *hatspb.MakeHatsRequest) (*h
 
 	bearer := authnz.GetBearer(ctx)
 	// only haberdasher role is allowed to make hats
-	if !bearer.HasRole(authnz.HABERDASHER) {
+	if !bearer.HasRole(authnz.HABERDASHER) && req.GetQuantity() > 100 {
 		return nil, util.PermissionDeniedError(MakeHatsForbidden)
 	}
 
