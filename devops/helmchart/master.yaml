@@ -1,0 +1,132 @@
+# local values
+
+common:
+  enabled: true
+  name: common
+  pullPolicy: Always
+  logLevel: trace
+  logFormat: text
+
+  pemfileVolume: pemfilevolume
+  auth0PemfilePath: /etc/scorpicode/scorpicode.pem
+  auth0PemfileMount: /etc/scorpicode/
+  auth0RedirectUri: http://scorpicode.com/callback
+
+frontend:
+  enabled: true
+  name: frontend
+  replicaCount: 1
+  limitsMemory: 128Mi
+  limitsCpu: 100m
+  port: 80
+  serviceType: ClusterIP
+
+  socketHost: scorpicode.com:80
+
+  socketDebug: true
+
+hats:
+  enabled: true
+  name: hats
+  replicaCount: 1
+  limitsMemory: 128Mi
+  limitsCpu: 50m
+  port: 8080
+  serviceType: ClusterIP
+
+  listenAddress: :8080
+  mongoDb: hats
+  amqpDsn: amqp://scuser:scpass@scorpicode-rabbitmq-ha:5672/schost
+
+  # TODO: temporarily here to allow github actions integration testing
+  mongoUri: mongodb://hats:hats@scorpicode-mongodb:27017/hats
+
+
+website:
+  enabled: true
+  name: website
+  replicaCount: 1
+  limitsMemory: 128Mi
+  limitsCpu: 50m
+  port: 80
+  serviceType: ClusterIP
+
+  listenAddress: :8080
+  # staticPath: ./cmd/website/static
+  # loginSuccessTarget: ./sc
+
+roxie:
+  enabled: true
+  name: roxie
+  replicaCount: 1
+  limitsMemory: 128Mi
+  limitsCpu: 50m
+  port: 8080
+  serviceType: ClusterIP
+  nodePort:
+
+  listenAddress: :8080
+  websitePrefix: http://website
+  frontendPrefix: http://frontend
+  soxiePrefix: http://soxie:8080
+  hatsPrefix: http://hats:8080
+  enableCors: false
+
+  loginSuccessTarget: /sc
+
+  staticIpName: roxie-ingress-master
+
+soxie:
+  enabled: true
+  name: soxie
+  replicaCount: 1
+  limitsMemory: 128Mi
+  limitsCpu: 50m
+  port: 8080
+  serviceType: LoadBalancer
+
+  listenAddress: :8080
+  writeWaitSeconds: 10
+  pongWaitSeconds: 60
+
+  # TODO: move amqpDsn to SOPS
+  amqpDsn: amqp://scuser:scpass@scorpicode-rabbitmq-ha:5672/schost
+
+  ingressEnabled: false
+  staticIpName: soxie-ingress-master
+  
+debugger:
+  enabled: false
+  name: debugger
+  limitsMemory: 128Mi
+  limitsCpu: 50m
+
+# ingress:
+#   enabled: true
+#   name: scingress
+        
+nginx:
+  enabled: false
+
+mongodb:
+  enabled: true
+  mongodbUsername: hats
+  mongodbPassword: hats
+  mongodbDatabase: hats
+
+rabbitmq-ha:
+  enabled: true
+  managementUsername: scuser
+  managementPassword: scpass
+  rabbitmqUsername: scuser
+  rabbitmqPassword: scpass
+  rabbitmqVhost: schost
+  replicaCount: 1
+  service:
+    type: ClusterIP
+  prometheus:
+    operator:
+      enabled: false
+  
+redis:
+  enabled: false
