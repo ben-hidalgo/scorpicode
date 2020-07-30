@@ -47,24 +47,6 @@ jobs:
         ./devops/scripts/write-tags.sh
         cat ./devops/helmchart/tags.yaml
 
-    - name: Minikube
-      working-directory: .
-      run: |
-        sudo apt-get update 
-        sudo apt install virtualbox
-        wget https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-        chmod +x minikube-linux-amd64
-        sudo mv minikube-linux-amd64 /usr/local/bin/minikube
-        minikube version
-        openssl req -nodes -newkey rsa:2048 -keyout client.key -out client.crt -subj "/C=US/ST=California/L=SF/O=Scorpicode/OU=Builds/CN=client.com"
-        mkdir -p ~/.minikube/files/etc/ssl/certs
-        cp client.crt ~/.minikube/files/etc/ssl/certs/client.pem
-        sudo mkdir -p /etc/docker/certs.d/localhost\:5000
-        sudo cp client.crt /etc/docker/certs.d/localhost\:5000/
-        minikube start --driver=docker --insecure-registry="localhost:5000"
-        minikube addons enable registry
-        minikube status
-
     - name: Docker Build
       working-directory: .
       run: |
@@ -73,15 +55,17 @@ jobs:
         bash ./devops/scripts/docker-build.sh
         docker images
   
-    - name: Push to Minikube
+    - name: Minikube
       working-directory: .
       run: |
-        sleep 30
-        docker build . -f devops/dockerfiles/roxie.Dockerfile    -t $(minikube ip):5000/roxie
-        docker build . -f devops/dockerfiles/roxie.Dockerfile    -t localhost:5000/roxie
-        docker push $(minikube ip):5000/roxie || true
-        docker push localhost:5000/roxie      || true
-
+        sudo apt-get update 
+        wget https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+        chmod +x minikube-linux-amd64
+        sudo mv minikube-linux-amd64 /usr/local/bin/minikube
+        minikube version
+        minikube start --driver=docker
+        minikube status
+  
     - name: Install Helm
       working-directory: .
       run: |
@@ -89,7 +73,7 @@ jobs:
         chmod +x get_helm.sh
         ./get_helm.sh
 
-      # TODO: sops is not setup... using dev.yaml for integration tests
+    # TODO: sops is not setup... using dev.yaml for integration tests
     - name: Helm Upgrade Dev
       working-directory: .
       run: |
