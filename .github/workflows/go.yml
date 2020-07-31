@@ -22,19 +22,6 @@ jobs:
     - name: Check out
       uses: actions/checkout@v2
 
-    # Setup gcloud CLI
-    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-      with:
-        version: '290.0.1'
-        service_account_key: ${{ secrets.GKE_SA_KEY }}
-        project_id: ${{ secrets.GKE_PROJECT }}
-
-    # Configure Docker to use the gcloud command-line tool as a credential helper for authentication
-    - run: gcloud --quiet auth configure-docker
-
-    # Get the GKE credentials so we can deploy to the cluster
-    - run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
-
     - name: Set up Go 1.x
       uses: actions/setup-go@v2
       with:
@@ -104,7 +91,35 @@ jobs:
       run: |
         ./devops/scripts/integration-tests.sh dev
         helm delete scorpicode -n dev         
-        
+
+    # Setup gcloud CLI
+    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        version: '290.0.1'
+        service_account_key: ${{ secrets.GKE_SA_KEY }}
+        project_id: ${{ secrets.GKE_PROJECT }}
+
+    # Configure Docker to use the gcloud command-line tool as a credential helper for authentication
+    - run: gcloud --quiet auth configure-docker
+
+    # Get the GKE credentials so we can deploy to the cluster
+    - run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
+
+    # TODO: branch name is not an env var??? https://stackoverflow.com/questions/58033366/how-to-get-current-branch-within-github-actions
+    - name: Docker Push
+      working-directory: .
+      run: |
+        bash ./devops/scripts/docker-push.sh master
+
+    - name: Helm Upgrade Master
+      working-directory: .
+      run: |
+        ./devops/scripts/helm-upgrade.sh master
+        sleep 10
+        kubectl get po -n master
+        kubectl wait --for=condition=ready pod -l release=scorpicode --timeout=180s -n master
+        kubectl get po -n master
+  
     - name: Zip Helmchart
       working-directory: .
       run: tar cvzf helmchart-${{ github.run_number }}-${{ github.sha }}.tar.gz ./devops/helmchart/
