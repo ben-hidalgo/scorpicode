@@ -52,7 +52,7 @@ const HatQuantity = observer(() => {
 
   return (
     <div className="field">
-      <label className="label">Quantity</label>
+      <label className="label">Quantity (max 100)</label>
       <input type="text" value={hatStore.draft.quantity} onChange={(ce) => {
         hatStore.draft.quantity = ce.target.value
       }}/>

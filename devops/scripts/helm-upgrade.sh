@@ -19,14 +19,25 @@ else
     PLAIN_YAML="${TARGET_DIR}/_gcp-default.plain.yaml"
 fi
 
-# TODO: integrate SOPS with Github Actions
-sops -d $SOPS_YAML > $PLAIN_YAML
-
 kubectl create namespace $NAMESPACE || true
 
-# TODO: helm still doesn't seem to support STDIN to avoid writing plain.yaml
-helm upgrade --install scorpicode $TARGET_DIR \
--n $NAMESPACE \
--f $TAGS_YAML \
--f $VALUES_YAML \
--f $PLAIN_YAML
+# TODO: temporary block until sops works in GHA
+if [ $NAMESPACE == "dev" ]; then
+    echo "skipping sops"
+
+    helm upgrade --install scorpicode $TARGET_DIR \
+    -n $NAMESPACE \
+    -f $TAGS_YAML \
+    -f $VALUES_YAML
+
+else
+    # TODO: integrate SOPS with Github Actions
+    sops -d $SOPS_YAML > $PLAIN_YAML
+
+    # TODO: helm still doesn't seem to support STDIN to avoid writing plain.yaml
+    helm upgrade --install scorpicode $TARGET_DIR \
+    -n $NAMESPACE \
+    -f $TAGS_YAML \
+    -f $VALUES_YAML \
+    -f $PLAIN_YAML
+fi

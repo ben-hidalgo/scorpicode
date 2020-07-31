@@ -31,7 +31,7 @@ class HatStore {
       size: '',
       style: 'UNKNOWN_STYLE', // protobuf enum
       notes: '',
-      quantity: 1,
+      quantity: 100,
     }
     this.error = null
   }
