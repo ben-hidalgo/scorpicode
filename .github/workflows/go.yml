@@ -7,10 +7,11 @@ on:
     branches: [ master ]
 
 env:
-  GCR_HOSTNAME: ${{ secrets.GCR_HOSTNAME }}
-  GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: test
   GKE_ZONE: us-west1-a
+  GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
+  GCR_HOSTNAME: ${{ secrets.GCR_HOSTNAME }}
+  GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
 
 jobs:
 
