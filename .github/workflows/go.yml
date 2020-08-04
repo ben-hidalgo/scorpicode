@@ -113,7 +113,8 @@ jobs:
         bash ./devops/scripts/docker-push.sh master
 
     # gcloud default login
-    - run: gcloud auth application-default login
+    - run: gcloud --quiet auth login
+    - run: gcloud --quiet auth application-default login
 
     - uses: rmb938/sops-decrypt-action@master
       with:
