@@ -3,20 +3,19 @@ set -exuo pipefail
 
 NAMESPACE=$1
 
-TARGET_DIR=./devops/helmchart
-NAMESPACE_YAML="${TARGET_DIR}/${NAMESPACE}.yaml"
-TAGS_YAML="${TARGET_DIR}/tags.yaml"
+HELM_DIR=./devops/helmchart
+SECRETS_DIR=./secrets/decrypted
+NAMESPACE_YAML="${HELM_DIR}/${NAMESPACE}.yaml"
+TAGS_YAML="${HELM_DIR}/tags.yaml"
 
 # if a yaml specific to the passed in namespace is found, use it
 if test -f $NAMESPACE_YAML; then
     VALUES_YAML=$NAMESPACE_YAML
-    SOPS_YAML="${TARGET_DIR}/${NAMESPACE}.sops.yaml"
-    PLAIN_YAML="${TARGET_DIR}/${NAMESPACE}.plain.yaml"
+    SECRETS_YAML="${SECRETS_DIR}/${NAMESPACE}.yaml"
 else
     # otherwise, use the default for gcp
-    VALUES_YAML="${TARGET_DIR}/_gcp-default.yaml"
-    SOPS_YAML="${TARGET_DIR}/_gcp-default.sops.yaml"
-    PLAIN_YAML="${TARGET_DIR}/_gcp-default.plain.yaml"
+    VALUES_YAML="${HELM_DIR}/_gcp-default.yaml"
+    SECRETS_YAML="${SECRETS_DIR}/_gcp-default.yaml"
 fi
 
 kubectl create namespace $NAMESPACE || true
@@ -25,19 +24,16 @@ kubectl create namespace $NAMESPACE || true
 if [ $NAMESPACE == "dev" ]; then
     echo "skipping sops"
 
-    helm upgrade --install scorpicode $TARGET_DIR \
+    helm upgrade --install scorpicode $HELM_DIR \
     -n $NAMESPACE \
     -f $TAGS_YAML \
     -f $VALUES_YAML
 
 else
-    # TODO: integrate SOPS with Github Actions
-    sops -d $SOPS_YAML > $PLAIN_YAML
 
-    # TODO: helm still doesn't seem to support STDIN to avoid writing plain.yaml
-    helm upgrade --install scorpicode $TARGET_DIR \
+    helm upgrade --install scorpicode $HELM_DIR \
     -n $NAMESPACE \
     -f $TAGS_YAML \
     -f $VALUES_YAML \
-    -f $PLAIN_YAML
+    -f $SECRETS_YAML
 fi

@@ -19,4 +19,5 @@ ignored
 
 *.plain.yaml
 tags.yaml
+secrets/decrypted
 
