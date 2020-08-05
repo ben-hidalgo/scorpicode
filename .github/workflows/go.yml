@@ -116,12 +116,13 @@ jobs:
     - name: Decrypt
       working-directory: .
       run: |
+        echo $GKE_SA_KEY
         echo $GKE_SA_KEY > $GOOGLE_APPLICATION_CREDENTIALS
+        cat $GOOGLE_APPLICATION_CREDENTIALS
         gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
-  
-    - uses: rmb938/sops-decrypt-action@master
-      with:
-        secrets-directory: secrets
+        wget https://github.com/mozilla/sops/releases/download/v3.6.0/sops_3.6.0_amd64.deb
+        dpkg -i sops_3.6.0_amd64.deb
+        sops -d ./secrets/encrypted/master.yaml > ./secrets/decrypted/master.yaml
 
     - name: Helm Upgrade Master
       working-directory: .
