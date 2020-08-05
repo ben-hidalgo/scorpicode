@@ -112,10 +112,12 @@ jobs:
       run: |
         bash ./devops/scripts/docker-push.sh master
 
-    # gcloud default login
-    # - run: gcloud --quiet auth login
-    # - run: gcloud --quiet auth application-default login
-
+    - name: Decrypt
+      working-directory: .
+      run: |
+        echo $GKE_SA_KEY > ./gsa-key.json
+        gcloud auth activate-service-account --key-file=./gsa-key.json
+  
     - uses: rmb938/sops-decrypt-action@master
       with:
         secrets-directory: secrets
