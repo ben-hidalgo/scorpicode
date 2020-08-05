@@ -9,6 +9,7 @@ on:
 env:
   GKE_CLUSTER: test
   GKE_ZONE: us-west1-a
+  GKE_SA_KEY: ${{ secrets.GKE_SA_KEY }}
   GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
   GCR_HOSTNAME: ${{ secrets.GCR_HOSTNAME }}
   GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
