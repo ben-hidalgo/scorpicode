@@ -12,7 +12,7 @@ env:
   GKE_SA_KEY: ${{ secrets.GKE_SA_KEY }}
   GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
   GCR_HOSTNAME: ${{ secrets.GCR_HOSTNAME }}
-  GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+  GOOGLE_APPLICATION_CREDENTIALS: "./gsa-key.json"
 
 jobs:
 
@@ -116,8 +116,8 @@ jobs:
     - name: Decrypt
       working-directory: .
       run: |
-        echo $GKE_SA_KEY > ./gsa-key.json
-        gcloud auth activate-service-account --key-file=./gsa-key.json
+        echo $GKE_SA_KEY > $GOOGLE_APPLICATION_CREDENTIALS
+        gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
   
     - uses: rmb938/sops-decrypt-action@master
       with:
