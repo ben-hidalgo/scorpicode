@@ -121,7 +121,7 @@ jobs:
         cat $GOOGLE_APPLICATION_CREDENTIALS
         gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
         wget https://github.com/mozilla/sops/releases/download/v3.6.0/sops_3.6.0_amd64.deb
-        dpkg -i sops_3.6.0_amd64.deb
+        sudo dpkg -i sops_3.6.0_amd64.deb
         sops -d ./secrets/encrypted/master.yaml > ./secrets/decrypted/master.yaml
 
     - name: Helm Upgrade Master
