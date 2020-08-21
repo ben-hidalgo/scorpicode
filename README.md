@@ -1,14 +1,19 @@
 # Scorpicode
 
 Scorpicode is a technical architecture prototype demonstrating a microservices monorepo.  
+
 It contains a React/Mobx frontend, multiple GoLang backend services, a Gatsby website and a GitHub Actions CI/CD pipeline supporting multi-developer, multi-branch development workflows.
+
 There is support for role-based user authentication (signup / signin) using Auth0 and JWT via micro-frontends.
+
 Kubernetes artifact creation and updates are managed via Helm with secrets storage using SOPS.
+
 Minikube is used to run development dependencies locally.
 
 ## Getting Started
 
 > git clone https://github.com/ben-hidalgo/scorpicode.git
+
 > cd scorpicode
 
 The [Makefile](Makefile) contains many helpful targets.
