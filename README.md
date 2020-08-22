@@ -6,9 +6,9 @@ It contains a React/Mobx frontend, multiple GoLang backend services, a Gatsby we
 
 There is support for role-based user authentication (signup / signin) using Auth0 and JWT via micro-frontends.
 
-Kubernetes artifact creation and updates are managed via Helm with secrets storage using SOPS.
+Kubernetes artifact creation & updates are Helm managed and secrets encryption / decryption uses SOPS yaml files.
 
-Minikube is used to run development dependencies locally.
+Minikube is used to run development dependencies locally, also with Helm charts "stable."
 
 ## Getting Started
 
@@ -26,6 +26,14 @@ Scorpicode uses
 * npm 6.14.8
 * sops 3.6.0
 * minikube 1.11.0
+
+## Local Runtimes
+
+### Website
+
+> make start-website
+
+> open http://localhost:8000/
 
 ## License
 

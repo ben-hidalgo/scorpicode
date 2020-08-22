@@ -58,6 +58,9 @@ start-frontend:
 	REACT_APP_SOCKET_DEBUG=true \
 	npm start)
 
+start-website:
+	(cd website && npm start)
+
 login:
 	open http://localhost:8080/login
 

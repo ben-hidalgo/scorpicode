@@ -67,6 +67,17 @@ const Midsection = () => (
 				</div>
 			</div>
 		</section>
+		<section className="section">
+			<div className="content">
+				<p><a href="https://github.com/ben-hidalgo/scorpicode">Scorpicode</a>  is a technical architecture prototype demonstrating a microservices monorepo.</p>
+				<p>
+					It contains a React/Mobx frontend, multiple GoLang backend services, a Gatsby website and a GitHub Actions CI/CD pipeline supporting multi-developer, multi-branch development workflows.
+				</p>
+				<p>There is support for role-based user authentication (signup / signin) using Auth0 and JWT via micro-frontends.</p>
+				<p>Kubernetes artifact creation & updates are Helm managed and secrets encryption / decryption uses SOPS yaml files.</p>
+				<p>Minikube is used to run development dependencies locally, also with Helm charts "stable."</p>
+			</div>
+		</section>
 	</div>
 );
 
