@@ -47,38 +47,32 @@ jobs:
       run: go test ./... -short -v
 
     - name: Write Checksum Tags
-      working-directory: .
       run: |
         ./devops/scripts/write-tags.sh
         cat ./devops/helmchart/tags.yaml
 
     - name: Docker Build
-      working-directory: .
       run: |
         docker images
         GO111MODULE=on go get github.com/mikefarah/yq/v3
         bash ./devops/scripts/docker-build.sh
         docker images
-    
-    - name: Install Helm
-      working-directory: .
-      run: |
-        curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
-        chmod +x get_helm.sh
-        ./get_helm.sh
 
-
-    - name: Terraform
-      working-directory: .
+    - name: Install Terraform
       run: |
         curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
         sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
         sudo apt-get update
         sudo apt-get install terraform
         (cd ./devops/terraform/local/ && terraform apply -auto-approve)
-  
+
+    - name: Terraform
+      working-directory: ./devops/terraform/local/
+      run: |
+        terraform init  
+        terraform apply -auto-approve
+
     - name: Integration Tests
-      working-directory: .
       run: ./devops/scripts/integration-tests.sh dev
   
           
@@ -97,12 +91,10 @@ jobs:
 
     # TODO: branch name is not an env var??? https://stackoverflow.com/questions/58033366/how-to-get-current-branch-within-github-actions
     - name: Docker Push
-      working-directory: .
       run: |
         bash ./devops/scripts/docker-push.sh master
 
     - name: Decrypt
-      working-directory: .
       run: |
         echo $GKE_SA_KEY
         echo $GKE_SA_KEY > $GOOGLE_APPLICATION_CREDENTIALS
@@ -113,8 +105,13 @@ jobs:
         mkdir -p ./secrets/decrypted/
         sops -d ./secrets/encrypted/master.yaml > ./secrets/decrypted/master.yaml
 
+    - name: Install Helm
+      run: |
+        curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+        chmod +x get_helm.sh
+        ./get_helm.sh
+  
     - name: Helm Upgrade Master
-      working-directory: .
       run: |
         ./devops/scripts/helm-upgrade.sh master
         sleep 10
@@ -123,7 +120,6 @@ jobs:
         kubectl get po -n master
   
     - name: Zip Helmchart
-      working-directory: .
       run: tar cvzf helmchart-${{ github.run_number }}-${{ github.sha }}.tar.gz ./devops/helmchart/
 
     - name: Upload Helmchart Artifact
