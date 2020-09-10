@@ -10,6 +10,8 @@ Kubernetes artifact creation & updates are Helm managed and secrets encryption /
 
 Minikube is used to run development dependencies locally, also with Helm charts "stable."
 
+[http://scorpicode.com/](scorpicode.com)
+
 ## Getting Started
 
 > git clone https://github.com/ben-hidalgo/scorpicode.git
@@ -34,6 +36,14 @@ Scorpicode uses
 > make start-website
 
 > open http://localhost:8000/
+
+## Next steps
+
+- [ ] Health checks
+- [ ] TLS / https SSL certificates 
+- [ ] Cluster friendly web socket routing
+- [ ] Debug rolling upgrade issue on "website" by checksum
+
 
 ## License
 

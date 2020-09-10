@@ -19,14 +19,14 @@ go run main.go) &
 # TODO: use kubectl output jsonpath
 (cd backend/cmd/hats/ && \
 LOG_LEVEL=trace \
-MONGO_URI=mongodb://scuser:scpass@`minikube ip`:`kubectl get svc scorpicode-mongodb -n dev -o json | jq '.spec.ports[0].nodePort'`/scdata \
-AMQP_DSN=amqp://scuser:scpass@`minikube ip`:`kubectl get svc scorpicode-rabbitmq-ha -n dev -o json | jq '.spec.ports[1].nodePort'`/schost \
+MONGO_URI=mongodb://localhost:27017 \
+AMQP_DSN=amqp://guest:guest@localhost:5672/ \
 go run main.go) &
 
 (cd backend/cmd/soxie/ && \
 LOG_LEVEL=trace \
 HOME_PATH=/ \
-AMQP_DSN=amqp://scuser:scpass@`minikube ip`:`kubectl get svc scorpicode-rabbitmq-ha -n dev -o json | jq '.spec.ports[1].nodePort'`/schost \
+AMQP_DSN=amqp://guest:guest@localhost:5672/ \
 go run main.go) &
 
 cat

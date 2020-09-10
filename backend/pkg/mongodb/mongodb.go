@@ -13,7 +13,7 @@ import (
 var DatabaseName = "scdata"
 
 // MongoURI .
-var MongoURI = "mongodb://scuser:scpass@localhost:27017/scdata"
+var MongoURI = "mongodb://localhost:27017"
 
 func init() {
 	envconfig.SetString("MONGO_DB", &DatabaseName)

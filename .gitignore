@@ -21,3 +21,7 @@ ignored
 tags.yaml
 secrets/decrypted
 
+.terraform
+*.tfstate
+*.tfstate.*
+

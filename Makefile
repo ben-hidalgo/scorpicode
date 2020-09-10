@@ -49,7 +49,7 @@ go-happy:
 test:
 	./devops/scripts/integration-tests.sh dev
 
-start-backend: # uses a script to trap killall
+start-backend: terraform-apply-local # uses a script to trap killall
 	./devops/scripts/start.sh
 
 start-frontend:
@@ -102,3 +102,9 @@ logs-master:
 
 logs-dev:
 	kubectl logs -n dev -f -l app.kubernetes.io/instance=scorpicode
+
+terraform-apply-local:
+	(cd ./devops/terraform/local/ && terraform apply -auto-approve)
+
+terraform-destroy-local:
+	(cd ./devops/terraform/local/ && terraform destroy -auto-approve)
