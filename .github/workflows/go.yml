@@ -59,18 +59,7 @@ jobs:
         GO111MODULE=on go get github.com/mikefarah/yq/v3
         bash ./devops/scripts/docker-build.sh
         docker images
-  
-    - name: Minikube
-      working-directory: .
-      run: |
-        sudo apt-get update 
-        wget https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-        chmod +x minikube-linux-amd64
-        sudo mv minikube-linux-amd64 /usr/local/bin/minikube
-        minikube version
-        minikube start --driver=docker
-        minikube status
-  
+    
     - name: Install Helm
       working-directory: .
       run: |
@@ -78,22 +67,21 @@ jobs:
         chmod +x get_helm.sh
         ./get_helm.sh
 
-    # TODO: sops is not setup... using dev.yaml for integration tests
-    - name: Helm Upgrade Dev
+
+    - name: Terraform
       working-directory: .
       run: |
-        ./devops/scripts/helm-upgrade.sh dev
-        sleep 10
-        kubectl get po -n dev
-        kubectl wait --for=condition=ready pod -l release=scorpicode --timeout=180s -n dev
-        kubectl get po -n dev
-
+        curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+        sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+        sudo apt-get update
+        sudo apt-get install terraform
+        (cd ./devops/terraform/local/ && terraform apply -auto-approve)
+  
     - name: Integration Tests
       working-directory: .
-      run: |
-        ./devops/scripts/integration-tests.sh dev
-        helm delete scorpicode -n dev         
-
+      run: ./devops/scripts/integration-tests.sh dev
+  
+          
     # Setup gcloud CLI
     - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
