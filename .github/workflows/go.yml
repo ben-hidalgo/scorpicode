@@ -72,7 +72,11 @@ jobs:
         terraform apply -auto-approve
 
     - name: Integration Tests
-      run: ./devops/scripts/integration-tests.sh dev
+      run:  |
+        docker ps
+        curl -s -u guest:guest http://localhost:15672/api/vhosts || true
+        curl -s -u guest:guest http://127.0.0.1:15672/api/vhosts || true
+        ./devops/scripts/integration-tests.sh dev
   
           
     # Setup gcloud CLI
