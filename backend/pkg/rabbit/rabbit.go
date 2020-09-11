@@ -11,7 +11,7 @@ import (
 )
 
 // AmqpDsn .
-var AmqpDsn = "amqp://guest:guest@localhost:5672/"
+var AmqpDsn = "amqp://scuser:scpass@localhost:5672/sc"
 
 func init() {
 	envconfig.SetString("AMQP_DSN", &AmqpDsn)

@@ -108,3 +108,6 @@ terraform-apply-local:
 
 terraform-destroy-local:
 	(cd ./devops/terraform/local/ && terraform destroy -auto-approve)
+
+terraform-init-local:
+	(cd ./devops/terraform/local/ && terraform init)

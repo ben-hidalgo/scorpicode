@@ -9,14 +9,13 @@ terraform {
 provider "docker" {}
 
 
-
 resource "docker_image" "mongo" {
   name = "mongo:latest"
 }
 
 resource "docker_container" "mongo" {
   image = docker_image.mongo.latest
-  name = "mongo"
+  name  = "mongo"
 
   ports {
     internal = 27017
@@ -24,13 +23,14 @@ resource "docker_container" "mongo" {
   }
 }
 
+
 resource "docker_image" "rabbitmq" {
-  name = "rabbitmq:latest"
+  name = "rabbitmq:3.8.8-management"
 }
 
 resource "docker_container" "rabbitmq" {
   image = docker_image.rabbitmq.latest
-  name = "rabbitmq"
+  name  = "rabbitmq"
 
   ports {
     internal = 5672
@@ -42,6 +42,15 @@ resource "docker_container" "rabbitmq" {
   }
 
   provisioner "local-exec" {
-    command = "docker exec rabbitmq rabbitmq-plugins enable rabbitmq_management"
-  }  
+    command = <<EOT
+      docker exec rabbitmq apt-get update
+      docker exec rabbitmq apt-get install -q -y netcat
+      docker exec rabbitmq sh -c "while ! /bin/nc -z localhost 5672; do sleep 1; done"
+      docker exec rabbitmq rabbitmqctl add_user scuser scpass
+      docker exec rabbitmq rabbitmqctl set_user_tags scuser administrator
+      docker exec rabbitmq rabbitmqctl set_user_tags scuser management
+      docker exec rabbitmq rabbitmqctl add_vhost sc
+      docker exec rabbitmq rabbitmqctl set_permissions -p sc scuser ".*" ".*" ".*"
+EOT
+  }
 }
