@@ -1,16 +1,14 @@
 # Scorpicode
 
-Scorpicode is a technical architecture prototype demonstrating a microservices monorepo.  
+Scorpicode is a technical architecture prototype demonstrating microservices in a monorepo.  
 
 It contains a React/Mobx frontend, multiple GoLang backend services, a Gatsby website and a GitHub Actions CI/CD pipeline supporting multi-developer, multi-branch development workflows.
 
-There is support for role-based user authentication (signup / signin) using Auth0 and JWT via micro-frontends.
+There is support for role-based user authentication (signup / signin) using Auth0 and JWT utilizing micro-frontends.
 
 Kubernetes artifact creation & updates are Helm managed and secrets encryption / decryption uses SOPS yaml files.
 
-Minikube is used to run development dependencies locally, also with Helm charts "stable."
-
-[http://scorpicode.com/](scorpicode.com)
+Terraform is used to run development dependencies locally.
 
 ## Getting Started
 
@@ -18,7 +16,7 @@ Minikube is used to run development dependencies locally, also with Helm charts 
 
 > cd scorpicode
 
-The [Makefile](Makefile) contains many helpful targets.
+The [Makefile](Makefile) contains many helpful targets.  There are significant setup steps not yet documented...
 
 ### Prerequisites
 
@@ -27,9 +25,7 @@ Scorpicode uses
 * GoLang 1.13 
 * npm 6.14.8
 * sops 3.6.0
-* minikube 1.11.0
-
-## Local Runtimes
+* Terraform v0.13.0
 
 ### Website
 
@@ -43,7 +39,6 @@ Scorpicode uses
 - [ ] TLS / https SSL certificates 
 - [ ] Cluster friendly web socket routing
 - [ ] Debug rolling upgrade issue on "website" by checksum
-
 
 ## License
 
