@@ -15,7 +15,6 @@ require (
 	github.com/stretchr/objx v0.2.0 // indirect
 	github.com/twitchtv/twirp v5.10.1+incompatible
 	go.mongodb.org/mongo-driver v1.3.2
-	golang.org/x/crypto v0.0.0-20200317142112-1b76d66859c6 // indirect
-	golang.org/x/sys v0.0.0-20200113162924-86b910548bc1 // indirect
+	golang.org/x/crypto v0.1.0 // indirect
 	gopkg.in/square/go-jose.v2 v2.5.1
 )
